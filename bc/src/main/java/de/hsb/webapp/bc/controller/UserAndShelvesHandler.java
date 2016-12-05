@@ -1,5 +1,7 @@
 package de.hsb.webapp.bc.controller;
 
+import java.io.Serializable;
+
 import javax.annotation.Resource;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.bean.ManagedBean;
@@ -13,9 +15,14 @@ import javax.transaction.UserTransaction;
  * @author Thomas Schrul, Michael Günster, Andre Schriever
  *
  */
-@SessionScoped
 @ManagedBean(name = "userAndShelvesHandler")
-public class UserAndShelvesHandler {
+@SessionScoped
+public class UserAndShelvesHandler implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 2449443003535807049L;
 
 	/**
 	 * Entity Manger for the user and shelves.

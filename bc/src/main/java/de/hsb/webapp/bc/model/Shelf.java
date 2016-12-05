@@ -1,6 +1,8 @@
 package de.hsb.webapp.bc.model;
 
 import java.io.Serializable;
+import java.util.Collection;
+import java.util.List;
 import java.util.Vector;
 
 import javax.persistence.CascadeType;
@@ -8,7 +10,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.NamedQuery;
 import javax.validation.constraints.Size;
 
@@ -43,8 +45,8 @@ public class Shelf implements Serializable {
 	 * A shelf may have many books and a book may appear in different shelves.
 	 * They will be stored in a vector.
 	 */
-	@ManyToMany(cascade = CascadeType.ALL)
-	private Vector<Book> books;
+	@OneToMany(cascade = CascadeType.ALL)
+	private Collection<Book> books;
 
 	// End ---Declaration of variables---
 
@@ -66,7 +68,6 @@ public class Shelf implements Serializable {
 	public Shelf(String name) {
 		super();
 		this.name = name;
-		this.books = new Vector<Book>();
 	}
 
 	/**
@@ -78,7 +79,7 @@ public class Shelf implements Serializable {
 	 * @param books
 	 *            Vector of books.
 	 */
-	public Shelf(String name, Vector<Book> books) {
+	public Shelf(String name, Collection<Book> books) {
 		super();
 		this.name = name;
 		this.books = books;
@@ -110,7 +111,7 @@ public class Shelf implements Serializable {
 	 * 
 	 * @return All books of the current shelf.
 	 */
-	public Vector<Book> getBooks() {
+	public Collection<Book> getBooks() {
 		return books;
 	}
 
@@ -120,7 +121,7 @@ public class Shelf implements Serializable {
 	 * @param books
 	 *            Vector with books.
 	 */
-	public void setBooks(Vector<Book> books) {
+	public void setBooks(Collection<Book> books) {
 		this.books = books;
 	}
 
