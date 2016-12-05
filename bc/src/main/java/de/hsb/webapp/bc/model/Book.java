@@ -45,7 +45,7 @@ public class Book implements Serializable {
 	/**
 	 * ISBN of the book.
 	 */
-	private int isbn;
+	private String isbn;
 
 	/**
 	 * Author of the book. Different books may have the same author.
@@ -89,7 +89,7 @@ public class Book implements Serializable {
 	 * @param release
 	 *            Release date of the book.
 	 */
-	public Book(String title, int isbn, Author author, GenreType genre, Date release) {
+	public Book(String title, String isbn, Author author, GenreType genre, Date release) {
 		super();
 		this.title = title;
 		this.isbn = isbn;
@@ -124,7 +124,7 @@ public class Book implements Serializable {
 	 * 
 	 * @return ISBN of the book.
 	 */
-	public int getIsbn() {
+	public String getIsbn() {
 		return isbn;
 	}
 
@@ -134,7 +134,7 @@ public class Book implements Serializable {
 	 * @param isbn
 	 *            New ISBN.
 	 */
-	public void setIsbn(int isbn) {
+	public void setIsbn(String isbn) {
 		this.isbn = isbn;
 	}
 
