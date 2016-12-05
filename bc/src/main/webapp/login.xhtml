@@ -1,0 +1,55 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+xmlns:ui="http://java.sun.com/jsf/facelets"
+xmlns:f="http://java.sun.com/jsf/core"
+xmlns:c="http://java.sun.com/jstl/core"
+xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+<!-- 	<link rel="stylesheet" href="resources/alleKunden.css" type="text/css" /> -->
+	<title>
+		<ui:insert name="title">Anmeldung</ui:insert>
+	</title>
+</h:head>
+	<h:body>
+		<div id="header">
+			<ui:insert name="header"></ui:insert>
+		</div>
+		<div id="content">
+			<ui:insert name="content">
+				<h:form>
+					<p:panelGrid var="Anmeldung" value="" headerClass="header" footerClass="footer" style="margin-top:100px;margin-left:100px" >
+	    				<f:facet name="header">
+	        				<p:row>
+	       						<p:column colspan="2">Anmeldung</p:column>
+	       					</p:row>
+	       				</f:facet>
+	       					<p:row>
+	        					<p:column>Anmeldename:</p:column>
+	       						<p:column colspan="2">
+	       							<p:inputText id="login_username" required="true"/>
+	       						</p:column>
+	    					</p:row>
+	    					<p:row>
+	        					<p:column>Passwort:</p:column>
+	        					<p:column>
+	       							<p:password id="login_password" match="pwd2" label="Password 1" required="false" />
+	       						</p:column>
+	    					</p:row>
+	    					<p:row>
+	        					<p:column colspan="2" ><p:commandButton value="Anmelden" icon="ui-icon-check"></p:commandButton></p:column>
+	       					</p:row>
+	       			</p:panelGrid>	
+				</h:form>
+			
+			</ui:insert>
+		</div>
+		<div id="footer">
+			<ui:insert name="footer"></ui:insert>
+		</div>
+	</h:body>
+</html>

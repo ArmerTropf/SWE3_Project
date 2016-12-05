@@ -1,0 +1,72 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+		xmlns:ui="http://java.sun.com/jsf/facelets"
+		xmlns:f="http://java.sun.com/jsf/core"
+		xmlns:c="http://java.sun.com/jstl/core"
+		xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+		xmlns:h="http://java.sun.com/jsf/html"
+      	xmlns:p="http://primefaces.org/ui">
+
+	<h:head>
+	<!-- 	<link rel="stylesheet" href="resources/alleKunden.css" type="text/css" /> -->
+		<title>
+			<ui:insert name="title">Anschrift aendern/bearbeiten</ui:insert>
+		</title>
+	</h:head>
+	<h:body>
+		<div id="header">
+			<ui:insert name="header"></ui:insert>
+		</div>
+		<div id="content">
+			<ui:insert name="content">
+				<h:form>			
+					<p:panelGrid style="margin-top:0px;margin-left:0px" >
+					    <f:facet name="header">
+						    <p:row>
+						    	<p:column rowspan="1" colspan="8"><h3>Benutzerverwaltung</h3></p:column>
+						    </p:row>
+					        <p:row>
+					            <p:column colspan="1">Vorname</p:column>
+					            <p:column colspan="1">Name</p:column>
+					            <p:column colspan="1">Anmeldename</p:column>
+					            <p:column colspan="1">Admin</p:column>
+					            <p:column colspan="1">Aktiviert</p:column>
+					            <p:column colspan="3">Bearbeiten</p:column>
+					        </p:row>
+					 
+					    </f:facet>
+					 
+					    <p:row>
+					        <p:column style="font-weight: bold;">Michael</p:column>
+					        <p:column style="font-weight: bold;">Günster</p:column>
+					        <p:column style="font-weight: bold;">mguenster</p:column>
+					        <p:column style="font-weight: bold;">true</p:column>
+					        <p:column style="font-weight: bold;">true</p:column>
+					        <p:column style="font-weight: bold;">
+					        	<p:commandButton value="löschen"  icon="ui-icon-check"></p:commandButton>
+					        </p:column>
+					        <p:column style="font-weight: bold;">
+					        	<p:commandButton value="bearbeiten"  icon="ui-icon-check"></p:commandButton>
+					        </p:column>
+					        <p:column style="font-weight: bold;">
+					        	<p:commandButton value="Passwort setzen"  icon="ui-icon-check"></p:commandButton>
+					        </p:column>
+					    </p:row>
+					    <p:row>
+					    	
+					    </p:row>
+					   
+					   
+					</p:panelGrid>
+				</h:form>
+			</ui:insert>
+		</div>
+		<div id="footer">
+			<h:form>
+				<p:commandButton value="Neuer Nutzer"  icon="ui-icon-check"></p:commandButton>
+				<p:commandButton value="Abbrechen"  icon="ui-icon-check"></p:commandButton>
+			</h:form>
+		</div>
+	</h:body>
+</html>
