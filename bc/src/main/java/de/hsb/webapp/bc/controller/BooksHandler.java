@@ -9,6 +9,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.UserTransaction;
 
+import de.hsb.webapp.bc.model.GenreType;
+
 /**
  * With this class you will handle the books actions.
  * 
@@ -35,4 +37,9 @@ public class BooksHandler implements Serializable {
 	 */
 	@Resource
 	private UserTransaction utx;
+	
+	public GenreType[] getGenreValues() 
+	{
+		return GenreType.values();
+	}
 }
