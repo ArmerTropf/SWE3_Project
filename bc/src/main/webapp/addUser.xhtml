@@ -66,11 +66,12 @@ xmlns:fn="http://java.sun.com/jsp/jstl/functions"
 						    </p:row>
 	    					<p:row>
 	        					<p:column>
-		        						<p:commandButton action="#{userAndShelvesHandler.saveUser()}" value="#{msg['addUser_button_save']}"  icon="ui-icon-check"></p:commandButton>
+		        						<p:commandButton action="#{userAndShelvesHandler.saveUser()}" value="#{msg['addUser_button_save']}"  icon="ui-icon-check" />
 	        					</p:column>
 								<p:column>								
 										<p:commandButton action="#{userAndShelvesHandler.cancelUser()}" immediate="true" value="#{msg['addUser_button_cancel']}"  icon="ui-icon-check"></p:commandButton>
 								</p:column>
+								
 	       					</p:row>		
 	     			</p:panelGrid>
 				</h:form>

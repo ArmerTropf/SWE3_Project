@@ -183,6 +183,7 @@ public class UserAndShelvesHandler  {
 			e.printStackTrace();
 		}
 		System.out.println("deleteUser done");
+		
 		return "userAdministration";
 	}
 	
