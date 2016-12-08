@@ -2,7 +2,6 @@ package de.hsb.webapp.bc.model;
 
 import java.io.Serializable;
 import java.util.Collection;
-import java.util.List;
 import java.util.Vector;
 
 import javax.persistence.CascadeType;
@@ -62,6 +61,12 @@ public class User implements Serializable {
 	 * "false".
 	 */
 	private boolean isAdmin = false;
+	
+	/**
+	 * isActivated says wether the account is activated for login.
+	 * Default ist "false".
+	 */
+	private boolean isActivated = false;
 
 	/**
 	 * A user may have many shelves. They will be stored in a vector.
@@ -94,12 +99,13 @@ public class User implements Serializable {
 	 * @param login
 	 *            Login name of user.
 	 */
-	public User(String lastname, String firstname, String password, String login) {
+	public User(String lastname, String firstname, String password, String login, boolean isActivated) {
 		super();
 		this.lastname = lastname;
 		this.firstname = firstname;
 		this.password = password;
 		this.login = login;
+		this.isActivated = isActivated;
 	}
 
 	/**
@@ -116,13 +122,14 @@ public class User implements Serializable {
 	 * @param shelves
 	 *            Shelves of user.
 	 */
-	public User(String lastname, String firstname, String password, String login, Collection<Shelf> shelves) {
+	public User(String lastname, String firstname, String password, String login, Collection<Shelf> shelves, boolean isActivated) {
 		super();
 		this.lastname = lastname;
 		this.firstname = firstname;
 		this.password = password;
 		this.login = login;
 		this.shelves = shelves;
+		this.isActivated = isActivated;
 	}
 
 	/**
@@ -140,13 +147,14 @@ public class User implements Serializable {
 	 * @param isAdmin
 	 *            Says if user is an administrator.
 	 */
-	public User(String lastname, String firstname, String password, String login, Boolean isAdmin) {
+	public User(String lastname, String firstname, String password, String login, Boolean isAdmin, boolean isActivated) {
 		super();
 		this.lastname = lastname;
 		this.firstname = firstname;
 		this.password = password;
 		this.login = login;
 		this.isAdmin = isAdmin;
+		this.isActivated = isActivated;
 	}
 
 	/**
@@ -167,7 +175,7 @@ public class User implements Serializable {
 	 *            Shelves of user.
 	 */
 	public User(String lastname, String firstname, String password, String login, boolean isAdmin,
-			Collection<Shelf> shelves) {
+			Collection<Shelf> shelves, boolean isActivated) {
 		super();
 		this.lastname = lastname;
 		this.firstname = firstname;
@@ -291,6 +299,28 @@ public class User implements Serializable {
 	 */
 	public void setShelves(Collection<Shelf> shelves) {
 		this.shelves = shelves;
+	}
+	
+	/**
+	 * Gets the isActivated of the user.
+	 * 
+	 * @return Current isActivated.
+	 */
+	public boolean getisActivated()
+	{
+		return this.isActivated;
+	}
+	
+	
+	/**
+	 * Sets the isActive of the user.
+	 * 
+	 * @param shelves
+	 *            Define new shelves.
+	 */
+	public void setisActivated(boolean isActivated)
+	{
+		this.isActivated = isActivated;
 	}
 
 	// End ---Getter & Setter---

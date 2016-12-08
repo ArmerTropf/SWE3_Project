@@ -6,7 +6,13 @@ import java.util.Locale;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
- 
+
+/**
+ * With this class you will handle the internationalization.
+ * 
+ * @author Thomas Schrul, Michael Günster, Andre Schriever
+ *
+ */
 @ManagedBean(name="language")
 @SessionScoped
 public class Language implements Serializable{

@@ -19,44 +19,50 @@ xmlns:fn="http://java.sun.com/jsp/jstl/functions"
 		<div id="header">
 			<h:form>
 				<h:commandButton action="#{language.changeLanguage('')}" value="Deutsch"/>
-				<h:outputText value=" " />
+				<h:outputText value=" " /> 
 				<h:commandButton action="#{language.changeLanguage('en')}" value="English" />
 			</h:form>
+			
 		</div>
 		<div id="content">
-			<ui:insert name="content">
-				<h:form>
-					<p:panelGrid var="Anmeldung" value="" headerClass="header" footerClass="footer" style="margin-top:100px;margin-left:100px" >
-	    				<f:facet name="header">
-	        				<p:row>
-	        					<p:commandButton value="Anmelden" icon="ui-icon-check"/>
-	        				</p:row>
-	        				<p:row>
-	       						<p:column colspan="2"><h:outputText value="#{msg['login_title']}" /></p:column>
-	       					</p:row>
-	       				</f:facet>
-	       					<p:row>
-	        					<p:column>#{msg['login_label_username']}</p:column>
-	       						<p:column colspan="2">
-	       							<p:inputText id="login_username" required="true"/>
-	       						</p:column>
-	    					</p:row>
-	    					<p:row>
-	        					<p:column>#{msg['login_label_password']}</p:column>
-	        					<p:column>
-	       							<p:password id="login_password" match="pwd2" label="Password 1" required="false" />
-	       						</p:column>
-	    					</p:row>
-	    					<p:row>
-	        					<p:column colspan="2" ><p:commandButton value="#{msg['login_button_login']}" icon="ui-icon-check"></p:commandButton></p:column>
-	       					</p:row>
-	       			</p:panelGrid>	
+			<ui:insert name="content" >
+				    <h:form>            
+				    <h:outputLink  value="javascript:void(0)" onclick="PF('dlg').show();" title="login" >
+				        	<h:outputLabel value="#{msg['login_title']}" />
+				    </h:outputLink>
+				 
+				    <p:growl id="growl" sticky="true" showDetail="true" life="3000" />
+				 
+				    <p:dialog header="Login" widgetVar="dlg" resizable="false">
+				        <h:panelGrid columns="2" cellpadding="5" >
+				            <h:outputLabel  value="#{msg.login_label_username}" />
+				            <p:inputText id="username" value="#{userLogin.username}" required="true" label="username" />
+				 
+				            <h:outputLabel for="password" value="#{msg.login_label_password}" />
+				            <p:password id="password" value="#{userLogin.password}" required="true" label="password" />
+				 
+				            <f:facet name="footer">
+				                <p:commandButton value="#{msg.login_button_login}" update="growl" actionListener="#{userLogin.login}"
+				                                 oncomplete="handleLoginRequest(xhr, status, args)" />
+				            </f:facet>  
+				        </h:panelGrid>
+				    </p:dialog>
 				</h:form>
-			
 			</ui:insert>
 		</div>
-		<div id="footer">
-			<ui:insert name="footer"></ui:insert>
-		</div>
+
+ 
+<script type="text/javascript">
+    function handleLoginRequest(xhr, status, args) {
+        if(args.validationFailed || !args.loggedIn) {
+            PF('dlg').jq.effect("shake", {times:10}, 100);
+        }
+        else {
+            PF('dlg').hide();
+            $('#loginLink').fadeOut();
+        }
+    }
+</script>
+
 	</h:body>
 </html>

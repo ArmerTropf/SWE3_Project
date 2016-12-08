@@ -12,67 +12,68 @@ xmlns:fn="http://java.sun.com/jsp/jstl/functions"
 	<h:head>
 	<!-- 	<link rel="stylesheet" href="resources/alleKunden.css" type="text/css" /> -->
 		<title>
-			<ui:insert name="title">Benutzer hinzfügen</ui:insert>
+			<ui:insert name="title">#{msg['addUser_title']}</ui:insert>
 		</title>
 	</h:head>
 	<h:body>
 		<div id="header">
-			<h:form>
-				<h:commandButton action="#{language.changeLanguage('')}" value="Deutsch"/>
-				<h:outputText value=" " />
-				<h:commandButton action="#{language.changeLanguage('en')}" value="English" />
-			</h:form>
+			<ui:insert name="header">
+				<h:form id="headerform">
+					<h:commandButton action="#{language.changeLanguage('')}" value="Deutsch"/>
+					<h:outputText value=" " />
+					<h:commandButton action="#{language.changeLanguage('en')}" value="English" />
+				</h:form>
+			</ui:insert>
 		</div>
 		<div id="content">
 			<ui:insert name="content">
-				<h:form>
-					<p:panelGrid var="addBook" value="" headerClass="header" footerClass="footer" style="margin-top:0px;margin-left:0px" >
+
+					<p:panelGrid id="form1" headerClass="header" footerClass="footer" style="margin-top:0px;margin-left:0px" >
 	    				<f:facet name="header">
 	        				<p:row>
 	       						<p:column colspan="2">#{msg['addUser_title']}</p:column>
 	       					</p:row>
 	       				</f:facet>
 	    					<p:row>
-	        					<p:column>#{msg['addUser_surname']}</p:column>
+	        					<p:column>#{msg['addUser_firstname']}</p:column>
 	        					<p:column>
-	       							<p:inputText id="addUser_surname" required="false"/>
+	       								<p:inputText id="addUser_firstname" required="false" value="#{userAndShelvesHandler.rememberUser.firstname}"/>
 	       						</p:column>
 	    					</p:row>
 	    					<p:row>
 	        					<p:column>#{msg['addUser_lastname']}</p:column>
 	        					<p:column>
-	       							<p:inputText id="addUser_lastname" required="false"/>
+	       								<p:inputText id="addUser_lastname" required="false" value="#{userAndShelvesHandler.rememberUser.lastname}"/>
 	       						</p:column>
 	    					</p:row>
 	    					<p:row>
 	        					<p:column>#{msg['addUser_loginname']}</p:column>
-	        					<p:column>
-	       							<p:inputText id="addUser_loginname" required="false"/>
-	       						</p:column>
+		        					<p:column>
+	       									<p:inputText id="addUser_loginname" required="false" value="#{userAndShelvesHandler.rememberUser.login}"/>
+		       						</p:column>
 	    					</p:row>
 	    					<p:row>
 	    						<p:column>#{msg['addUser_admin']}</p:column>
-		    					<p:column>
-			    					<p:selectManyCheckbox id="basic">
-								        <f:selectItem itemLabel="" itemValue="muss gesetzt" />
-								    </p:selectManyCheckbox>
-							    </p:column>
+			    					<p:column>
+										 	<p:selectBooleanCheckbox  itemValue="#{userAndShelvesHandler.rememberUser.admin}" value="#{userAndShelvesHandler.rememberUser.admin}"/>
+								    </p:column>    
 						    </p:row>
 						    <p:row>
 		    					<p:column>#{msg['addUser_activated']}</p:column>
 		    					<p:column>
-			    					<p:selectManyCheckbox id="basic2">
-								        <f:selectItem itemLabel="" itemValue="muss gesetzt " />
-								    </p:selectManyCheckbox>
+									        <p:selectBooleanCheckbox itemValue="#{userAndShelvesHandler.rememberUser.isActivated}" value="#{userAndShelvesHandler.rememberUser.isActivated}" />   
 							    </p:column>
 						    </p:row>
 	    					<p:row>
-	        					<p:column><p:commandButton value="#{msg['button_save']}"  icon="ui-icon-check"></p:commandButton></p:column>
-								<p:column><p:commandButton value="#{msg['button_cancel']}"  icon="ui-icon-check"></p:commandButton></p:column>
-	       					</p:row>
-	       			</p:panelGrid>	
-				</h:form>
-			
+	        					<p:column>
+		        						<p:commandButton process="@this,form1" action="#{userAndShelvesHandler.saveUser()}" value="#{msg['addUser_button_save']}"  icon="ui-icon-check"></p:commandButton>
+	        					</p:column>
+								<p:column>								
+										<p:commandButton action="#{userAndShelvesHandler.cancelUser()}" immediate="true" value="#{msg['addUser_button_cancel']}"  icon="ui-icon-check"></p:commandButton>
+								</p:column>
+	       					</p:row>		
+	     			</p:panelGrid>
+
 			</ui:insert>
 		</div>
 		<div id="footer">
