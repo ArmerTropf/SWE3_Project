@@ -28,7 +28,7 @@ xmlns:fn="http://java.sun.com/jsp/jstl/functions"
 		<div id="content">
 			<ui:insert name="content">
 
-					<p:panelGrid id="form1" headerClass="header" footerClass="footer" style="margin-top:0px;margin-left:0px" >
+					<p:panelGrid headerClass="header" footerClass="footer" style="margin-top:0px;margin-left:0px" >
 	    				<f:facet name="header">
 	        				<p:row>
 	       						<p:column colspan="2">#{msg['addUser_title']}</p:column>
@@ -66,13 +66,14 @@ xmlns:fn="http://java.sun.com/jsp/jstl/functions"
 						    </p:row>
 	    					<p:row>
 	        					<p:column>
-		        						<p:commandButton process="@this,form1" action="#{userAndShelvesHandler.saveUser()}" value="#{msg['addUser_button_save']}"  icon="ui-icon-check"></p:commandButton>
+		        					<p:commandButton id="submit" action="#{userAndShelvesHandler.saveUser()}" value="#{msg['addUser_button_save']}"  icon="ui-icon-check"></p:commandButton>	
 	        					</p:column>
 								<p:column>								
 										<p:commandButton action="#{userAndShelvesHandler.cancelUser()}" immediate="true" value="#{msg['addUser_button_cancel']}"  icon="ui-icon-check"></p:commandButton>
 								</p:column>
 	       					</p:row>		
 	     			</p:panelGrid>
+	     			
 
 			</ui:insert>
 		</div>
