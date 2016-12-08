@@ -25,40 +25,41 @@
 		<div id="content">
 			<ui:insert name="content">
 				<h:form>			
-					<p:panelGrid style="margin-top:0px;margin-left:0px" >
-					    <f:facet name="header">
-						    <p:row>
-						    	<p:column rowspan="1" colspan="8"><h3>#{msg['showBooksOverview_title']}</h3></p:column>
-						    </p:row>
-					        <p:row>
-					            <p:column colspan="1">#{msg['showBooksOverview_bookTitle']}</p:column>
-					            <p:column colspan="1">#{msg['showBooksOverview_author']}</p:column>
-					            <p:column colspan="1">#{msg['showBooksOverview_ISBN']}</p:column>
-					            <p:column colspan="4">#{msg['showBooksOverview_button_edit']}</p:column>
-					        </p:row>
-					 
-					    </f:facet>
-					 
-					    <p:row>
-					        <p:column style="font-weight: bold;">#{booksHandler.books}</p:column>
-					        <p:column style="font-weight: bold;">Günster</p:column>
-					        <p:column style="font-weight: bold;">mguenster</p:column>
+					<p:dataTable var="books" value="#{booksHandler.books}" rowClasses="odd,even" headerClass="header">	
+						    <f:facet name="header">#{msg['showBooksOverview_title']}</f:facet>
+				            <p:column>
+				            	<f:facet name="header">#{msg['showBooksOverview_bookTitle']}</f:facet>
+				            	<h:outputText value="#{books.title}" />
+				            </p:column>
+				            <p:column>
+				            	<f:facet name="header">#{msg['showBooksOverview_author']}</f:facet>
+				            	<h:outputText value="#{books.author.firstname}" />
+				            	<h:outputText value=" #{books.author.lastname}" />
+				            </p:column>
+				            <p:column>
+				            	<f:facet name="header">#{msg['showBooksOverview_ISBN']}</f:facet>
+				            	<h:outputText value="#{books.isbn}" />
+				            </p:column>
+				            <p:column>
+				            	<f:facet name="header">Genre</f:facet>
+				            	<h:outputText value="#{books.genre.genre}" />
+				            </p:column>
 					        <p:column style="font-weight: bold;">
-					        	<p:commandButton value="#{msg['showBooksOverview_button_edit']}"  icon="ui-icon-check"></p:commandButton>
+					        	<f:facet name="header">#{msg['showBooksOverview_button_edit']}</f:facet>
+					        	<p:commandButton action="#{booksHandler.editBook()}" value="#{msg['showBooksOverview_button_edit']}"  icon="ui-icon-check"/>
 					        </p:column>
 					        <p:column style="font-weight: bold;">
-					        	<p:commandButton value="#{msg['showBooksOverview_button_delete']}"  icon="ui-icon-check"></p:commandButton>
+					        	<f:facet name="header">#{msg['showBooksOverview_button_delete']}</f:facet>
+					        	<p:commandButton update="@form" action="#{booksHandler.deleteBook()}" value="#{msg['showBooksOverview_button_delete']}"  icon="ui-icon-check"/>
 					        </p:column>
-					        
-					    </p:row>
-					</p:panelGrid>
+					</p:dataTable>
 				</h:form>
 			</ui:insert>
 		</div>
 		<div id="footer">
 			<h:form>
-				<p:commandButton value="#{msg['showBooksOverview_button_newBook']}"  icon="ui-icon-check"></p:commandButton>
-				<p:commandButton value="#{msg['showBooksOverview_button_cancel']}"  icon="ui-icon-check"></p:commandButton>
+				<p:commandButton action="#{booksHandler.newBook()}" value="#{msg['showBooksOverview_button_newBook']}"  icon="ui-icon-check"></p:commandButton>
+				<p:commandButton action="#{booksHandler.cancelEditOrAddBook()}" value="#{msg['showBooksOverview_button_cancel']}"  icon="ui-icon-check"></p:commandButton>
 			</h:form>
 		</div>
 	</h:body>

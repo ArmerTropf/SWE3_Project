@@ -49,19 +49,14 @@
 							<f:facet name="header">#{msg['userAdministration_activated']}</f:facet>
 							<h:outputText value="#{user.isActivated}" />
 						</p:column>
-						<p:column>
-							
-							
-							<f:facet name="header">#{msg['userAdministration_button_delete']}</f:facet>
-								<p:commandButton update="@form" action="#{userAndShelvesHandler.deleteUser()}" value="#{msg['userAdministration_button_delete']}" icon="ui-icon-check" />
-								
-						</p:column>
-						<p:column>	
-						<h:form>
-							<f:facet name="header">#{msg['userAdministration_button_edit']}</f:facet>	
+							<p:column>
+								<f:facet name="header">#{msg['userAdministration_button_delete']}</f:facet>
+									<p:commandButton update="@form" action="#{userAndShelvesHandler.deleteUser()}" value="#{msg['userAdministration_button_delete']}" icon="ui-icon-check" />		
+							</p:column>
+							<p:column>	
+								<f:facet name="header">#{msg['userAdministration_button_edit']}</f:facet>	
 								<p:commandButton action="#{userAndShelvesHandler.editUser()}" value="#{msg['userAdministration_button_edit']}" icon="ui-icon-check" />
-						</h:form>
-						</p:column>
+							</p:column>
 					</p:dataTable>
 				</h:form>
 			</ui:insert>

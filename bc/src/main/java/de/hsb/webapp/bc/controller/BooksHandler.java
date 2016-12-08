@@ -6,8 +6,8 @@ import java.util.GregorianCalendar;
 import javax.annotation.PostConstruct;
 
 import javax.annotation.Resource;
-import javax.enterprise.context.SessionScoped;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.SessionScoped;
 import javax.faces.model.DataModel;
 import javax.faces.model.ListDataModel;
 import javax.persistence.EntityManager;
@@ -88,6 +88,10 @@ public class BooksHandler implements Serializable {
 				new GregorianCalendar(2008, 8, 1).getTime()));
 		em.persist(new Book("Metro 2033", "9783453529687", new Author("Dmitry", "Glukhovsky"),
 				GenreType.SCIENCE_FICTION, new GregorianCalendar(2012, 11, 12).getTime()));
+		em.persist(new Book("Metro 2033", "9783453529687", new Author("Dmitry", "Glukhovsky"),
+				GenreType.SCIENCE_FICTION, new GregorianCalendar(2012, 11, 12).getTime()));
+		em.persist(new Book("Metro 2033", "9783453529687", new Author("Dmitry", "Glukhovsky"),
+				GenreType.SCIENCE_FICTION, new GregorianCalendar(2012, 11, 12).getTime()));
 
 		books = new ListDataModel<Book>();
 		books.setWrappedData(em.createNamedQuery("SelectBook").getResultList());
@@ -141,7 +145,7 @@ public class BooksHandler implements Serializable {
 		} catch (SystemException e) {
 			e.printStackTrace();
 		}
-		return "XHTML page where to return";
+		return "showBooksOverview";
 	}
 
 	/**
@@ -151,7 +155,8 @@ public class BooksHandler implements Serializable {
 	 */
 	public String editBook() {
 		rememberBook = books.getRowData();
-		return "XHTML page for new book";
+		System.out.println("editBook done");
+		return "addBook";
 	}
 
 	/**
@@ -161,7 +166,8 @@ public class BooksHandler implements Serializable {
 	 */
 	public String newBook() {
 		rememberBook = new Book();
-		return "XHTML page for new book";
+		System.out.println("newBook done");
+		return "addBook";
 	}
 
 	/**
@@ -172,7 +178,7 @@ public class BooksHandler implements Serializable {
 	public String editAuthor() {
 		rememberBook = books.getRowData();
 		rememberAuthor = rememberBook.getAuthor();
-		return "XHTML page for editing an author";
+		return "XHTML page to book list";
 	}
 
 	/**
@@ -181,7 +187,7 @@ public class BooksHandler implements Serializable {
 	 * @return XHTML page where all books are listed.
 	 */
 	public String cancelEditOrAddBook() {
-		return "XHTML page to book list";
+		return "showBooksOverview";
 	}
 
 	/**
@@ -224,7 +230,7 @@ public class BooksHandler implements Serializable {
 		} catch (SystemException e) {
 			e.printStackTrace();
 		}
-		return "xhtml page with list of all books";
+		return "showBooksOverview";
 	}
 
 	/**
