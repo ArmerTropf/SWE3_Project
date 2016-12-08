@@ -1,0 +1,65 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+		xmlns:ui="http://java.sun.com/jsf/facelets"
+		xmlns:f="http://java.sun.com/jsf/core"
+		xmlns:c="http://java.sun.com/jstl/core"
+		xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+		xmlns:h="http://java.sun.com/jsf/html"
+      	xmlns:p="http://primefaces.org/ui">
+
+	<h:head>
+	<!-- 	<link rel="stylesheet" href="resources/alleKunden.css" type="text/css" /> -->
+		<title>
+			<ui:insert name="title">#{msg['showBooksOverview_title']}</ui:insert>
+		</title>
+	</h:head>
+	<h:body>
+		<div id="header">
+			<h:form>
+				<h:commandButton action="#{language.changeLanguage('')}" value="Deutsch"/>
+				<h:outputText value=" " />
+				<h:commandButton action="#{language.changeLanguage('en')}" value="English" />
+			</h:form>
+		</div>
+		<div id="content">
+			<ui:insert name="content">
+				<h:form>			
+					<p:panelGrid style="margin-top:0px;margin-left:0px" >
+					    <f:facet name="header">
+						    <p:row>
+						    	<p:column rowspan="1" colspan="8"><h3>#{msg['showBooksOverview_title']}</h3></p:column>
+						    </p:row>
+					        <p:row>
+					            <p:column colspan="1">#{msg['showBooksOverview_bookTitle']}</p:column>
+					            <p:column colspan="1">#{msg['showBooksOverview_author']}</p:column>
+					            <p:column colspan="1">#{msg['showBooksOverview_ISBN']}</p:column>
+					            <p:column colspan="4">#{msg['showBooksOverview_button_edit']}</p:column>
+					        </p:row>
+					 
+					    </f:facet>
+					 
+					    <p:row>
+					        <p:column style="font-weight: bold;">#{booksHandler.books}</p:column>
+					        <p:column style="font-weight: bold;">Günster</p:column>
+					        <p:column style="font-weight: bold;">mguenster</p:column>
+					        <p:column style="font-weight: bold;">
+					        	<p:commandButton value="#{msg['showBooksOverview_button_edit']}"  icon="ui-icon-check"></p:commandButton>
+					        </p:column>
+					        <p:column style="font-weight: bold;">
+					        	<p:commandButton value="#{msg['showBooksOverview_button_delete']}"  icon="ui-icon-check"></p:commandButton>
+					        </p:column>
+					        
+					    </p:row>
+					</p:panelGrid>
+				</h:form>
+			</ui:insert>
+		</div>
+		<div id="footer">
+			<h:form>
+				<p:commandButton value="#{msg['showBooksOverview_button_newBook']}"  icon="ui-icon-check"></p:commandButton>
+				<p:commandButton value="#{msg['showBooksOverview_button_cancel']}"  icon="ui-icon-check"></p:commandButton>
+			</h:form>
+		</div>
+	</h:body>
+</html>

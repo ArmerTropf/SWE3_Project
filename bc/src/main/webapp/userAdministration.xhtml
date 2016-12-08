@@ -16,54 +16,59 @@
 	</h:head>
 	<h:body>
 		<div id="header">
-			<h:form>
-				<h:commandButton action="#{language.changeLanguage('')}" value="Deutsch"/>
-				<h:outputText value=" " />
-				<h:commandButton action="#{language.changeLanguage('en')}" value="English" />
-			</h:form>
+			<ui:insert name="header">
+				<h:form>
+					<h:commandButton action="#{language.changeLanguage('')}" value="Deutsch"/>
+					<h:outputText value=" " />
+					<h:commandButton action="#{language.changeLanguage('en')}" value="English" />
+				</h:form>
+			</ui:insert>
 		</div>
 		<div id="content">
 			<ui:insert name="content">
 				<h:form>			
-					<p:panelGrid style="margin-top:0px;margin-left:0px" >
-					    <f:facet name="header">
-						    <p:row>
-						    	<p:column rowspan="1" colspan="8"><h3>#{msg['userAdministration_title']}</h3></p:column>
-						    </p:row>
-					        <p:row>
-					            <p:column colspan="1">#{msg['userAdministration_surname']}</p:column>
-					            <p:column colspan="1">#{msg['userAdministration_lastname']}</p:column>
-					            <p:column colspan="1">#{msg['userAdministration_loginname']}</p:column>
-					            <p:column colspan="1">#{msg['userAdministration_admin']}</p:column>
-					            <p:column colspan="1">#{msg['userAdministration_activated']}</p:column>
-					            <p:column colspan="3">#{msg['userAdministration_edit']}</p:column>
-					        </p:row>
-					 
-					    </f:facet>
-					 
-					    <p:row>
-					        <p:column style="font-weight: bold;">Michael</p:column>
-					        <p:column style="font-weight: bold;">Günster</p:column>
-					        <p:column style="font-weight: bold;">mguenster</p:column>
-					        <p:column style="font-weight: bold;">true</p:column>
-					        <p:column style="font-weight: bold;">true</p:column>
-					        <p:column style="font-weight: bold;">
-					        	<p:commandButton value="#{msg['userAdministration_button_delete']}"  icon="ui-icon-check"></p:commandButton>
-					        </p:column>
-					        <p:column style="font-weight: bold;">
-					        	<p:commandButton value="#{msg['userAdministration_button_edit']}"  icon="ui-icon-check"></p:commandButton>
-					        </p:column>
-					        <p:column style="font-weight: bold;">
-					        	<p:commandButton value="#{msg['userAdministration_button_setPassword']}"  icon="ui-icon-check"></p:commandButton>
-					        </p:column>
-					    </p:row>
-					</p:panelGrid>
+					<p:dataTable id="form1" var="user" value="#{userAndShelvesHandler.user}" rowClasses="odd,even" headerClass="header">	
+					<f:facet name="header">User</f:facet>
+						<p:column>
+							<f:facet name="header">#{msg['userAdministration_firstname']}</f:facet>
+							<h:outputText value="#{user.firstname}" />
+						</p:column>
+						<p:column>
+							<f:facet name="header">#{msg['userAdministration_lastname']}</f:facet>
+							<h:outputText value="#{user.lastname}" />
+						</p:column>
+						<p:column>
+							<f:facet name="header">#{msg['userAdministration_loginname']}</f:facet>
+							<h:outputText value="#{user.login}" />
+						</p:column>
+						<p:column>
+							<f:facet name="header">#{msg['userAdministration_admin']}</f:facet>
+							<h:outputText value="#{user.admin}" />
+						</p:column>
+						<p:column>
+							<f:facet name="header">#{msg['userAdministration_activated']}</f:facet>
+							<h:outputText value="#{user.isActivated}" />
+						</p:column>
+						<p:column>
+							
+							
+							<f:facet name="header">#{msg['userAdministration_button_delete']}</f:facet>
+								<p:commandButton process="@this,form1" action="#{userAndShelvesHandler.deleteUser()}" value="#{msg['userAdministration_button_delete']}" icon="ui-icon-check" />
+							
+						</p:column>
+						<p:column>	
+						<h:form>
+							<f:facet name="header">#{msg['userAdministration_button_edit']}</f:facet>	
+								<p:commandButton action="#{userAndShelvesHandler.editUser()}" value="#{msg['userAdministration_button_edit']}" icon="ui-icon-check" />
+						</h:form>
+						</p:column>
+					</p:dataTable>
 				</h:form>
 			</ui:insert>
 		</div>
 		<div id="footer">
 			<h:form>
-				<p:commandButton value="#{msg['userAdministration_button_newUser']}"  icon="ui-icon-check"></p:commandButton>
+				<p:commandButton action="#{userAndShelvesHandler.newUser()}" value="#{msg['userAdministration_button_newUser']}"  icon="ui-icon-check"></p:commandButton>
 				<p:commandButton value="#{msg['userAdministration_button_cancel']}"  icon="ui-icon-check"></p:commandButton>
 			</h:form>
 		</div>
