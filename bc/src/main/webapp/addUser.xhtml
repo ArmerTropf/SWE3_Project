@@ -10,7 +10,7 @@ xmlns:fn="http://java.sun.com/jsp/jstl/functions"
       xmlns:p="http://primefaces.org/ui">
 
 	<h:head>
-	<!-- 	<link rel="stylesheet" href="resources/alleKunden.css" type="text/css" /> -->
+		<link rel="stylesheet" href="resources/alleKunden.css" type="text/css" />
 		<title>
 			<ui:insert name="title">#{msg['addUser_title']}</ui:insert>
 		</title>
@@ -27,8 +27,8 @@ xmlns:fn="http://java.sun.com/jsp/jstl/functions"
 		</div>
 		<div id="content">
 			<ui:insert name="content">
-
-					<p:panelGrid headerClass="header" footerClass="footer" style="margin-top:0px;margin-left:0px" >
+				<h:form>
+					<p:panelGrid  headerClass="header" footerClass="footer" style="margin-top:0px;margin-left:0px" >
 	    				<f:facet name="header">
 	        				<p:row>
 	       						<p:column colspan="2">#{msg['addUser_title']}</p:column>
@@ -66,15 +66,14 @@ xmlns:fn="http://java.sun.com/jsp/jstl/functions"
 						    </p:row>
 	    					<p:row>
 	        					<p:column>
-		        					<p:commandButton id="submit" action="#{userAndShelvesHandler.saveUser()}" value="#{msg['addUser_button_save']}"  icon="ui-icon-check"></p:commandButton>	
+		        						<p:commandButton action="#{userAndShelvesHandler.saveUser()}" value="#{msg['addUser_button_save']}"  icon="ui-icon-check"></p:commandButton>
 	        					</p:column>
 								<p:column>								
 										<p:commandButton action="#{userAndShelvesHandler.cancelUser()}" immediate="true" value="#{msg['addUser_button_cancel']}"  icon="ui-icon-check"></p:commandButton>
 								</p:column>
 	       					</p:row>		
 	     			</p:panelGrid>
-	     			
-
+				</h:form>
 			</ui:insert>
 		</div>
 		<div id="footer">
