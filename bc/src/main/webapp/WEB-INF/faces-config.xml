@@ -24,7 +24,7 @@
         http://xmlns.jcp.org/xml/ns/javaee/web-facesconfig_2_2.xsd">
  <application>
      	<locale-config>
-            <default-locale>de</default-locale>
+            <default-locale></default-locale>
             <supported-locale>en</supported-locale>
         </locale-config>
 		<resource-bundle>
