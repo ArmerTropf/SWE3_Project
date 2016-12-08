@@ -26,47 +26,49 @@ xmlns:fn="http://java.sun.com/jsp/jstl/functions"
 		<div id="content">
 			<ui:insert name="content">
 				<h:form>
-					<p:panelGrid var="addBook" value="" headerClass="header" footerClass="footer" style="margin-top:0px;margin-left:0px" >
+					<p:panelGrid headerClass="header" footerClass="footer" style="margin-top:0px;margin-left:0px" >
 	    				<f:facet name="header">
 	        				<p:row>
 	       						<p:column colspan="2">#{msg['addBook_title']}</p:column>
 	       					</p:row>
 	       				</f:facet>
-	       					<p:row>
-	        					<p:column>#{msg['addBook_bookTitle']}</p:column>
-	       						<p:column colspan="2">
-	       							<p:inputText id="addBook_title" required="false"/>
-	       						</p:column>
-	    					</p:row>
-	    					<p:row>
-	        					<p:column>#{msg['addBook_author']}</p:column>
-	        					<p:column>
-	       							<p:inputText id="addBook_author" required="false"/>
-	       						</p:column>
-	    					</p:row>
-	    					<p:row>
-	        					<p:column>#{msg['addBook_ISBN']}</p:column>
-	        					<p:column>
-	       							<p:inputText id="addBook_isbn" required="false"/>
-	       						</p:column>
-	    					</p:row>
-	    					<p:row>
-	        					<p:column>Genre:</p:column>
-	        					<p:column>
-		    						<h:panelGroup>
-										<h:selectOneMenu id="genre" value="">
-											<f:selectItems var="form" value="#{booksHandler.genreValues}" itemValue="#{form}" itemLabel="#{form.genre}" effect="fade"/>
-										</h:selectOneMenu>
-									</h:panelGroup>
-								</p:column>
-	    					</p:row>
-	    					<p:row>
-	        					<p:column><p:commandButton value="#{msg['addBook_button_save']}"  icon="ui-icon-check"></p:commandButton></p:column>
-								<p:column><p:commandButton value="#{msg['addBook_button_cancel']}"  icon="ui-icon-check"></p:commandButton></p:column>
-	       					</p:row>
+       					<p:row>
+        					<p:column>#{msg['addBook_bookTitle']}</p:column>
+       						<p:column colspan="2">
+       							<p:inputText id="addBook_title" required="false" value="#{booksHandler.rememberBook.title}"/>
+       						</p:column>
+    					</p:row>
+    					<p:row>
+        					<p:column>#{msg['addBook_author']}</p:column>
+        					<p:column>
+       							<p:inputText id="addBook_author" required="false" value="#{booksHandler.rememberBook.author.firstname}"/>
+       						</p:column>
+    					</p:row>
+    					<p:row>
+        					<p:column>#{msg['addBook_ISBN']}</p:column>
+        					<p:column>
+       							<p:inputText id="addBook_isbn" required="false" value="#{booksHandler.rememberBook.isbn}"/>
+       						</p:column>
+    					</p:row>
+    					<p:row>
+        					<p:column>Genre:</p:column>
+        					<p:column>
+	    						<h:selectOneMenu id="genre" value="#{booksHandler.rememberBook.genre}">
+									<f:selectItems var="form" value="#{booksHandler.genreValues}" itemValue="#{genreType}" itemLabel="#{genreType.genre}" />
+								</h:selectOneMenu>
+							</p:column>
+    					</p:row>
+    					<p:row>
+        					<p:column>
+        						<p:commandButton action="#{booksHandler.saveBook()}" value="#{msg['addBook_button_save']}"  icon="ui-icon-check"></p:commandButton>
+							</p:column>
+							<p:column>
+								<p:commandButton action="#{booksHandler.cancelEditOrAddBook()}" value="#{msg['addBook_button_cancel']}" immediate="true" icon="ui-icon-check"></p:commandButton>
+							</p:column>
+       					</p:row>
 	       			</p:panelGrid>	
 				</h:form>
-			
+
 			</ui:insert>
 		</div>
 		<div id="footer">
