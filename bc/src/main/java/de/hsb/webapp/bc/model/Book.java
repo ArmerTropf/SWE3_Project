@@ -13,7 +13,7 @@ import javax.persistence.NamedQuery;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.Past;
-
+import javax.validation.constraints.Size;
 
 /**
  * With this class you can create books.
@@ -39,7 +39,7 @@ public class Book implements Serializable {
 	/**
 	 * Title of the book.
 	 */
-//	@Size(min = 2, max = 50)
+	// @Size(min = 2, max = 50)
 	private String title;
 
 	/**

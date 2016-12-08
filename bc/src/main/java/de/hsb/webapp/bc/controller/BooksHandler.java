@@ -1,6 +1,5 @@
 package de.hsb.webapp.bc.controller;
 
-
 import java.io.Serializable;
 import java.util.GregorianCalendar;
 import javax.annotation.PostConstruct;
@@ -34,7 +33,12 @@ import de.hsb.webapp.bc.model.GenreType;
 public class BooksHandler implements Serializable {
 
 	/**
-	 * 
+	 * "The serialization runtime associates with each serializable class a
+	 * version number, called a serialVersionUID, which is used during
+	 * deserialization to verify that the sender and receiver of a serialized
+	 * object have loaded classes for that object that are compatible with
+	 * respect to serialization" -
+	 * https://docs.oracle.com/javase/7/docs/api/java/io/Serializable.html
 	 */
 	private static final long serialVersionUID = -4704269543724333039L;
 
@@ -68,10 +72,6 @@ public class BooksHandler implements Serializable {
 	/**
 	 * Initializes the data model with some books.
 	 */
-	
-	/**
-	 * Init data for first use.
-	 */
 	@PostConstruct
 	public void init() {
 		try {
@@ -81,8 +81,6 @@ public class BooksHandler implements Serializable {
 		} catch (SystemException e) {
 			e.printStackTrace();
 		}
-
-		
 		em.persist(new Book("Metal Gear Solid - Der offizielle Roman zum Konami-Game-Hit von Hideo Kojima",
 				"9783833217418", new Author("Raymond", "Benson"), GenreType.THRILLER,
 				new GregorianCalendar(2008, 8, 1).getTime()));

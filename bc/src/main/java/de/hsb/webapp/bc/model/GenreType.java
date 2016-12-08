@@ -1,7 +1,5 @@
 package de.hsb.webapp.bc.model;
 
-import javax.faces.bean.ManagedBean;
-
 /**
  * With this enumeration you can handle the genre types for the books.
  * 
