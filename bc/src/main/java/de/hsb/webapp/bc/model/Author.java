@@ -1,6 +1,8 @@
 package de.hsb.webapp.bc.model;
 
 import java.io.Serializable;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -63,6 +65,7 @@ public class Author implements Serializable {
 		super();
 		this.firstname = firstname;
 		this.lastname = lastname;
+		
 	}
 
 	// Start ---Getter & Setter---
@@ -106,4 +109,6 @@ public class Author implements Serializable {
 	}
 
 	// End ---Getter & Setter---
+	
+		
 }

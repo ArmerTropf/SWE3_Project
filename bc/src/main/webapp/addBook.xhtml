@@ -39,10 +39,12 @@ xmlns:fn="http://java.sun.com/jsp/jstl/functions"
        						</p:column>
     					</p:row>
     					<p:row>
-        					<p:column>#{msg['addBook_author']}</p:column>
+        					<p:column>Autor:</p:column>
         					<p:column>
-       							<p:inputText id="addBook_author" required="false" value="#{booksHandler.rememberBook.author.firstname}"/>
-       						</p:column>
+	    						<h:selectOneMenu value="#{authorHandler.favCoffee2Value}">
+   									<f:selectItems value="#{authorHandler.favCoffee2Value}" />
+   								</h:selectOneMenu>
+							</p:column>
     					</p:row>
     					<p:row>
         					<p:column>#{msg['addBook_ISBN']}</p:column>

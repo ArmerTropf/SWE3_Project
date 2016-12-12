@@ -3,6 +3,7 @@ package de.hsb.webapp.bc.controller;
 import de.hsb.webapp.bc.model.*;
 
 import java.io.Serializable;
+import java.util.Vector;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
@@ -59,6 +60,11 @@ public class UserAndShelvesHandler implements Serializable {
 	 * Stores all user.
 	 */
 	private DataModel<User> user;
+	
+	/**
+	 * LoggedIn user.
+	 */
+	private DataModel<User> loggedInUser;
 
 	/**
 	 * Remembers the current user.
@@ -83,6 +89,8 @@ public class UserAndShelvesHandler implements Serializable {
 
 		user = new ListDataModel<User>();
 		user.setWrappedData(em.createNamedQuery("SelectUser").getResultList());
+		
+		loggedInUser = new ListDataModel<User>();
 
 		try {
 			utx.commit();
@@ -131,6 +139,8 @@ public class UserAndShelvesHandler implements Serializable {
 		rememberUser = em.merge(rememberUser);
 		em.remove(rememberUser);
 		user.setWrappedData(em.createNamedQuery("SelectUser").getResultList());
+		
+		
 
 		try {
 			utx.commit();
@@ -252,4 +262,53 @@ public class UserAndShelvesHandler implements Serializable {
 	public void setrememberUser(User rememberUser) {
 		this.rememberUser = rememberUser;
 	}
+	
+	public void getUserToShow(String homoUsername)
+	{
+		
+		
+		
+		
+		
+	}
+	
+	public String logout()
+	{
+		rememberUser = null;
+		return "login";
+	}
+	
+	public String login(String username, String password)
+	{
+		System.out.println("FUCK YOU LOGIN");
+		
+		
+		loggedInUser.setWrappedData(em.createQuery("Select u from User u where u.firstname = 'Michael' ").getResultList());
+		rememberUser = loggedInUser.getRowData();
+		System.out.println(rememberUser.getFirstname());
+		
+//		rememberUser.getShelves().add(new Shelf("BUMS"));
+		
+		System.out.println(rememberUser.getShelves().size());  
+
+		
+		Vector<Shelf> go = new Vector<Shelf>(); 
+		
+		for (Shelf shelf : 	rememberUser.getShelves() )	 
+		{	
+		  go.add(shelf);
+		}
+		System.out.println("SHELF 0 " + go.get(0).getName());
+		
+		
+		
+//		getUserToShow(username);
+
+		return "showOwnLibrary";
+	}
+	
+
+	
+	
+	
 }

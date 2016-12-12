@@ -26,43 +26,10 @@ xmlns:fn="http://java.sun.com/jsp/jstl/functions"
 		</div>
 		<div id="content">
 			<ui:insert name="content" >
-				    <h:form>            
-				    <h:outputLink  value="javascript:void(0)" onclick="PF('dlg').show();" title="login" >
-				        	<h:outputLabel value="#{msg['login_title']}" />
-				    </h:outputLink>
-				 
-				    <p:growl id="growl" sticky="true" showDetail="true" life="3000" />
-				 
-				    <p:dialog header="Login" widgetVar="dlg" resizable="false">
-				        <h:panelGrid columns="2" cellpadding="5" >
-				            <h:outputLabel  value="#{msg.login_label_username}" />
-				            <p:inputText id="username" value="#{userLogin.username}" required="true" label="username" />
-				 
-				            <h:outputLabel for="password" value="#{msg.login_label_password}" />
-				            <p:password id="password" value="#{userLogin.password}" required="true" label="password" />
-				 
-				            <f:facet name="footer">
-				                <p:commandButton value="#{msg.login_button_login}" update="growl" actionListener="#{userLogin.login}"
-				                                 oncomplete="handleLoginRequest(xhr, status, args)" />
-				            </f:facet>  
-				        </h:panelGrid>
-				    </p:dialog>
+				<h:form>            
+	 				<p:commandButton action="#{userAndShelvesHandler.login('hans', 'seinPasswort')}" value="test" />
 				</h:form>
 			</ui:insert>
 		</div>
-
- 
-<script type="text/javascript">
-    function handleLoginRequest(xhr, status, args) {
-        if(args.validationFailed || !args.loggedIn) {
-            PF('dlg').jq.effect("shake", {times:10}, 100);
-        }
-        else {
-            PF('dlg').hide();
-            $('#loginLink').fadeOut();
-        }
-    }
-</script>
-
 	</h:body>
 </html>

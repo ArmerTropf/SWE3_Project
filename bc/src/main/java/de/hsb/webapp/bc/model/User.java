@@ -6,6 +6,7 @@ import java.util.Vector;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -71,7 +72,7 @@ public class User implements Serializable {
 	/**
 	 * A user may have many shelves. They will be stored in a collection.
 	 */
-	@OneToMany(cascade = CascadeType.ALL)
+	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	private Collection<Shelf> shelves;
 
 	// End ---Declaration of variables---
@@ -81,9 +82,8 @@ public class User implements Serializable {
 	 * "Mein Hauptregal".
 	 */
 	public User() {
-		super();
-		this.shelves = new Vector<Shelf>();
-		this.shelves.add(new Shelf("Mein Hauptregal"));
+
+		
 	}
 
 	/**
@@ -102,11 +102,17 @@ public class User implements Serializable {
 	 */
 	public User(String lastname, String firstname, String password, String login, boolean isActivated) {
 		super();
+		
 		this.lastname = lastname;
 		this.firstname = firstname;
 		this.password = password;
 		this.login = login;
 		this.isActivated = isActivated;
+		
+		this.shelves = new Vector<Shelf>();
+		this.shelves.add(new Shelf("Mein Hauptregal"));
+		
+		System.out.println("Nutzer angelegt");
 	}
 
 	/**
