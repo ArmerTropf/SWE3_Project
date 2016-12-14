@@ -2,6 +2,7 @@ package de.hsb.webapp.bc.model;
 
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.List;
 import java.util.Vector;
 
 import javax.persistence.CascadeType;
@@ -45,7 +46,7 @@ public class Shelf implements Serializable {
 	 * They will be stored in a collection.
 	 */
 	@ManyToMany(cascade = CascadeType.ALL)
-	private Collection<Book> books;
+	private List<Book> books;
 
 	// End ---Declaration of variables---
 
@@ -79,7 +80,7 @@ public class Shelf implements Serializable {
 	 * @param books
 	 *            Collection of books.
 	 */
-	public Shelf(String name, Collection<Book> books) {
+	public Shelf(String name, List<Book> books) {
 		super();
 		this.name = name;
 		this.books = books;
@@ -111,7 +112,7 @@ public class Shelf implements Serializable {
 	 * 
 	 * @return All books of the current shelf.
 	 */
-	public Collection<Book> getBooks() {
+	public List<Book> getBooks() {
 		return books;
 	}
 
@@ -121,7 +122,7 @@ public class Shelf implements Serializable {
 	 * @param books
 	 *            Collection with books.
 	 */
-	public void setBooks(Collection<Book> books) {
+	public void setBooks(List<Book> books) {
 		this.books = books;
 	}
 

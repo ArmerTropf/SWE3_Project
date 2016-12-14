@@ -3,19 +3,21 @@ package de.hsb.webapp.bc.controller;
 import de.hsb.webapp.bc.model.*;
 
 import java.io.Serializable;
-import java.util.Vector;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
-
+import javax.enterprise.inject.New;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.faces.context.FacesContext;
 import javax.faces.model.DataModel;
 import javax.faces.model.ListDataModel;
 
 import javax.persistence.EntityManager;
 
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.transaction.HeuristicMixedException;
 import javax.transaction.HeuristicRollbackException;
 import javax.transaction.NotSupportedException;
@@ -74,6 +76,12 @@ public class UserAndShelvesHandler implements Serializable {
 	/**
 	 * Initializes the data model with some user for the first use.
 	 */
+	
+	private Shelf rememberShelf = new Shelf();
+	
+	private String username;
+	private String password;
+	
 	@PostConstruct
 	public void init() {
 		try {
@@ -84,8 +92,8 @@ public class UserAndShelvesHandler implements Serializable {
 			e.printStackTrace();
 		}
 		em.persist(new User("Guenster", "Hans", "12345", "mguenster", true));
-		em.persist(new User("Guenster", "Albert", "12345", "mguenster", true));
-		em.persist(new User("Guenster", "Michael", "12345", "mguenster", false));
+		em.persist(new User("Guenster", "Albert", "12345", "aschriever", true));
+		em.persist(new User("Guenster", "Michael", "12345", "hmahrt", false));
 
 		user = new ListDataModel<User>();
 		user.setWrappedData(em.createNamedQuery("SelectUser").getResultList());
@@ -128,7 +136,9 @@ public class UserAndShelvesHandler implements Serializable {
 	 *         userAdministration.xhtml.
 	 */
 	public String deleteUser() {
+		
 		rememberUser = user.getRowData();
+		
 		try {
 			utx.begin();
 		} catch (NotSupportedException e) {
@@ -263,14 +273,23 @@ public class UserAndShelvesHandler implements Serializable {
 		this.rememberUser = rememberUser;
 	}
 	
-	public void getUserToShow(String homoUsername)
-	{
 		
-		
-		
-		
-		
-	}
+	public String getUsername() {
+	        return username;
+    }
+ 
+    public void setUsername(String username) {
+        this.username = username;
+    }
+ 
+    public String getPassword() {
+        return password;
+    }
+ 
+    public void setPassword(String password) {
+        this.password = password;
+    }	
+
 	
 	public String logout()
 	{
@@ -278,37 +297,121 @@ public class UserAndShelvesHandler implements Serializable {
 		return "login";
 	}
 	
-	public String login(String username, String password)
-	{
-		System.out.println("FUCK YOU LOGIN");
 		
-		
-		loggedInUser.setWrappedData(em.createQuery("Select u from User u where u.firstname = 'Michael' ").getResultList());
-		rememberUser = loggedInUser.getRowData();
-		System.out.println(rememberUser.getFirstname());
-		
-//		rememberUser.getShelves().add(new Shelf("BUMS"));
-		
-		System.out.println(rememberUser.getShelves().size());  
-
-		
-		Vector<Shelf> go = new Vector<Shelf>(); 
-		
-		for (Shelf shelf : 	rememberUser.getShelves() )	 
-		{	
-		  go.add(shelf);
+    public String showUser()
+    {
+    	return "userAdministration";
+    }
+	
+    
+    /**
+     * @return
+     */
+    public String login() 
+    {
+    	FacesMessage message = null;
+    	
+    	System.out.println(this.username);
+    	System.out.println(this.password);
+    		
+      try {
+			utx.begin();
+		} catch (NotSupportedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SystemException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-		System.out.println("SHELF 0 " + go.get(0).getName());
-		
-		
-		
-//		getUserToShow(username);
 
-		return "showOwnLibrary";
-	}
-	
+	  	Query query = em.createNamedQuery("User.findByName")
+	  			.setParameter("login", this.username)
+	  			.setParameter("password", this.password);
+     	
+	  	if(query.getResultList().isEmpty())
+	  	{
+	  		System.out.println("Name oder passord falsch nutte");
+	  		message = new FacesMessage(FacesMessage.SEVERITY_WARN, "Loggin Error", "Invalid credentials");
+	  		FacesContext.getCurrentInstance().addMessage(null, message);
+	  		
+	  		try {
+				utx.commit();
+			} catch (SecurityException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IllegalStateException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (RollbackException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (HeuristicMixedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (HeuristicRollbackException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (SystemException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}	  
+	  		
+	  		
+	  		return "login";
+	  	}
+	  	else 
+	  	{
+	  		User hit = new User();
+	  	  	hit = (User) query.getSingleResult();
+	  	  	System.out.println(hit.getLogin());
+	  	  	this.rememberUser = hit;
+	  	  	
+	  	  	rememberUser.getShelves().add(new Shelf("HOMOHSHELF"));
+//	  	  	rememberUser.getShelves().get(0).getBooks().add(new Book("MEin", "11234", new Author(), "haare", "keins"));
+//	  	  	rememberUser = em.merge(rememberUser);
+//	  	  	em.persist(rememberUser);
+	  	  	System.out.println("in login");
+	  	  	
+	  	  	message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Welcome", this.username);
+	  	  	FacesContext.getCurrentInstance().addMessage(null, message);
+	  	  	
+	  	  	
+	  	  try {
+				utx.commit();
+			} catch (SecurityException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IllegalStateException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (RollbackException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (HeuristicMixedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (HeuristicRollbackException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (SystemException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}	  	
+	  	  	
+	  	  	
+	  	  
+	  	  	return "showOwnLibrary";
+	  	}
+  
+    } 
+    
+    public void homo()
+    {
+    	System.out.println("HAHAHSAA");
+    }
+  
+   
 
-	
-	
-	
+  
+
 }

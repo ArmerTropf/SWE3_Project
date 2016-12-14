@@ -2,6 +2,7 @@ package de.hsb.webapp.bc.model;
 
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.List;
 import java.util.Vector;
 
 import javax.persistence.CascadeType;
@@ -10,6 +11,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.Size;
@@ -22,6 +24,12 @@ import javax.validation.constraints.Size;
  */
 @SuppressWarnings("serial")
 @NamedQuery(name = "SelectUser", query = "Select u from User u")
+@NamedQueries({
+    @NamedQuery(name="User.findAll",
+                query="Select u from User u"),
+    @NamedQuery(name="User.findByName",
+                query="SELECT c FROM User c WHERE c.login = :login AND c.password = :password"),
+}) 
 @Entity
 public class User implements Serializable {
 
@@ -73,7 +81,7 @@ public class User implements Serializable {
 	 * A user may have many shelves. They will be stored in a collection.
 	 */
 	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-	private Collection<Shelf> shelves;
+	private List<Shelf> shelves;
 
 	// End ---Declaration of variables---
 
@@ -113,6 +121,8 @@ public class User implements Serializable {
 		this.shelves.add(new Shelf("Mein Hauptregal"));
 		
 		System.out.println("Nutzer angelegt");
+		
+		
 	}
 
 	/**
@@ -130,7 +140,7 @@ public class User implements Serializable {
 	 *            Shelves of user.
 	 * @param isActivated Says if the user account is activated.  
 	 */
-	public User(String lastname, String firstname, String password, String login, Collection<Shelf> shelves, boolean isActivated) {
+	public User(String lastname, String firstname, String password, String login, List<Shelf> shelves, boolean isActivated) {
 		super();
 		this.lastname = lastname;
 		this.firstname = firstname;
@@ -187,7 +197,7 @@ public class User implements Serializable {
 	 * @param isActivated Says if the user account is activated.           
 	 */
 	public User(String lastname, String firstname, String password, String login, boolean isAdmin,
-			Collection<Shelf> shelves, boolean isActivated) {
+			List<Shelf> shelves, boolean isActivated) {
 		super();
 		this.lastname = lastname;
 		this.firstname = firstname;
@@ -299,7 +309,7 @@ public class User implements Serializable {
 	 * 
 	 * @return Current shelves.
 	 */
-	public Collection<Shelf> getShelves() {
+	public List<Shelf> getShelves() {
 		return shelves;
 	}
 
@@ -309,7 +319,7 @@ public class User implements Serializable {
 	 * @param shelves
 	 *            Define new shelves.
 	 */
-	public void setShelves(Collection<Shelf> shelves) {
+	public void setShelves(List<Shelf> shelves) {
 		this.shelves = shelves;
 	}
 	

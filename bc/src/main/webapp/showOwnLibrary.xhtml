@@ -30,10 +30,7 @@
 				        	<p:row>
 				        		<p:column>
 				        			<h:outputText value="Angemeldeter Nutzer: #{userAndShelvesHandler.rememberUser.firstname}" />
-				        			<p:commandButton action="#{userAndShelvesHandler.getUserToShow('hans')}" value="Anmelden" />
 				        		</p:column>
-				        			
-				        		
 				        	</p:row>
 				        	<p:row>
 				        		<p:column>
@@ -41,8 +38,17 @@
 				        		</p:column>
 				        	</p:row>
 				        	<p:row>
+        					<p:column>
+	    						<h:selectOneMenu value="#{userAndShelvesHandler.rememberUser.shelves.get(0).name}" >
+   									<f:selectItems value="#{userAndShelvesHandler.rememberUser.shelves}" var="c"
+   												itemLabel="#{c.name}" itemValue="#{c.name}"/>
+   								</h:selectOneMenu>
+							</p:column>
+    					</p:row>
+
+				        	<p:row>
 				        		<p:column>
-				        			<p:commandButton value="Bücher anzeigen" />
+				        			<p:commandButton action="#{userAndShelvesHandler.showUser()}" value="user" />
 				        		</p:column>
 				        	</p:row>
 				        	<p:row>
