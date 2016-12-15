@@ -358,9 +358,13 @@ public class UserAndShelvesHandler implements Serializable {
 	  	  	rememberUser.getShelves().add(new Shelf("HOMOHSHELF"));
 	  	  	System.out.println(rememberUser.getShelves().get(0).getName());
 	  	  	rememberUser.getShelves().get(0).getBooks().add(new Book("HOMO", "123456", GenreType.FANTASY, new GregorianCalendar(2010, 9, 26).getTime()));
+	  	  rememberUser.getShelves().get(0).getBooks().add(new Book("HOMO", "123456", GenreType.FANTASY, new GregorianCalendar(2010, 9, 26).getTime()));
+	  	rememberUser.getShelves().get(0).getBooks().add(new Book("HOMO", "123456", GenreType.FANTASY, new GregorianCalendar(2010, 9, 26).getTime()));
+	  	rememberUser.getShelves().get(0).getBooks().add(new Book("HOMO", "123456", GenreType.FANTASY, new GregorianCalendar(2010, 9, 26).getTime()));
+	  	rememberUser.getShelves().get(0).getBooks().add(new Book("HOMO", "123456", GenreType.FANTASY, new GregorianCalendar(2010, 9, 26).getTime()));
 
-//	  	  	rememberUser = em.merge(rememberUser);
-//	  	  	em.persist(rememberUser);
+	  	  	rememberUser = em.merge(rememberUser);
+	  	  	em.persist(rememberUser);
 	  	  	System.out.println("in login");
 	  	  	
 	  	  	message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Welcome", this.username);

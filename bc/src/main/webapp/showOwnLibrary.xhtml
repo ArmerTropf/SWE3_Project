@@ -23,17 +23,7 @@
 			<ui:insert name="content"> 
 				<p:layout style="min-width:1024px;min-height:768px;">
 				    <p:layoutUnit position="north" resizable="true" size="100" minSize="40" maxSize="200">
-				        <p:dataTable  var="books" value="#{userAndShelvesHandler.rememberUser.shelves.get(0).books}" rowClasses="odd,even" >
-	    					<p:column>
-								<f:facet name="header">#{msg['userAdministration_firstname']}</f:facet>
-								<h:outputText value="#{books.title}" />
-							</p:column>
-							<p:column>
-				        			<p:commandButton action="#{userAndShelvesHandler.logout()}" value="Anzeigen" />
-				        			<p:commandButton action="#{userAndShelvesHandler.logout()}" value="löschen" />
-				        			<p:commandButton action="#{userAndShelvesHandler.logout()}" value="bearbeiten" />
-				        	</p:column>
-    					</p:dataTable>
+				        
 				    </p:layoutUnit>
 				    <p:layoutUnit position="west" resizable="true" size="500" minSize="40" maxSize="200">
 				        <p:panelGrid>
@@ -96,36 +86,17 @@
 				    <p:layoutUnit position="center">
 						<div id="content">
 							<ui:insert name="content">
-								<h:form>			
-									<p:dataTable var="books" value="#{booksHandler.books}" rowClasses="odd,even" headerClass="header">	
-										    <f:facet name="header">#{msg['showBooksOverview_title']}</f:facet>
-								            <p:column>
-								            	<f:facet name="header">#{msg['showBooksOverview_bookTitle']}</f:facet>
-								            	<h:outputText value="#{books.title}" />
-								            </p:column>
-								            <p:column>
-								            	<f:facet name="header">#{msg['showBooksOverview_author']}</f:facet>
-								            	<h:outputText value="#{books.author.firstname}" />
-								            	<h:outputText value=" #{books.author.lastname}" />
-								            </p:column>
-								            <p:column>
-								            	<f:facet name="header">#{msg['showBooksOverview_ISBN']}</f:facet>
-								            	<h:outputText value="#{books.isbn}" />
-								            </p:column>
-								            <p:column>
-								            	<f:facet name="header">Genre</f:facet>
-								            	<h:outputText value="#{books.genre.genre}" />
-								            </p:column>
-									        <p:column style="font-weight: bold;">
-									        	<f:facet name="header">#{msg['showBooksOverview_button_edit']}</f:facet>
-									        	<p:commandButton action="#{booksHandler.editBook()}" value="#{msg['showBooksOverview_button_edit']}"  icon="ui-icon-check"/>
-									        </p:column>
-									        <p:column style="font-weight: bold;">
-									        	<f:facet name="header">#{msg['showBooksOverview_button_delete']}</f:facet>
-									        	<p:commandButton update="@form" action="#{booksHandler.deleteBook()}" value="#{msg['showBooksOverview_button_delete']}"  icon="ui-icon-check"/>
-									        </p:column>
-									</p:dataTable>
-								</h:form>
+								<p:dataTable  var="books" value="#{userAndShelvesHandler.rememberUser.shelves.get(0).books}" rowClasses="odd,even" >
+			    					<p:column>
+										<f:facet name="header">#{msg['userAdministration_firstname']}</f:facet>
+										<h:outputText value="#{books.title}" />
+									</p:column>
+									<p:column>
+						        			<p:commandButton action="#{userAndShelvesHandler.logout()}" value="Anzeigen" />
+						        			<p:commandButton action="#{userAndShelvesHandler.logout()}" value="löschen" />
+						        			<p:commandButton action="#{userAndShelvesHandler.logout()}" value="bearbeiten" />
+						        	</p:column>
+		    					</p:dataTable>
 							</ui:insert>
 						</div>				
 				    </p:layoutUnit>

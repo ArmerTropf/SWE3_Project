@@ -104,8 +104,7 @@ public class User implements Serializable {
 
 		super();
 		this.shelves = new ArrayList<Shelf>();
-		this.shelves.add(new Shelf("Mein Hauptregal"));
-		this.shelves.add(new Shelf("HOMO"));
+		
 		//this.shelves.get(0).getBooks().add(new Book("HOMO", "123456", GenreType.FANTASY, new GregorianCalendar().getTime()));
 		
 
@@ -136,7 +135,8 @@ public class User implements Serializable {
 		this.isActivated = isActivated;
 
 		this.shelves = new ArrayList<Shelf>();
-		this.shelves.add(new Shelf("Mein Hauptregal"));
+		this.shelves.add(new Shelf("Mein l"));
+		this.shelves.add(new Shelf("Hallo"));
 
 	}
 
