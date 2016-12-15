@@ -21,6 +21,7 @@ import javax.transaction.UserTransaction;
 import de.hsb.webapp.bc.model.Author;
 import de.hsb.webapp.bc.model.Book;
 import de.hsb.webapp.bc.model.GenreType;
+import de.hsb.webapp.bc.model.Shelf;
 
 /**
  * With this class you will handle the books actions.
@@ -59,6 +60,10 @@ public class BooksHandler implements Serializable {
 	 */
 	private DataModel<Book> books;
 
+	private DataModel<Shelf> shelves;
+
+	private DataModel<Author> authors;
+
 	/**
 	 * Remembers the current book.
 	 */
@@ -76,39 +81,26 @@ public class BooksHandler implements Serializable {
 	public void init() {
 		try {
 			utx.begin();
-		} catch (NotSupportedException e) {
-			e.printStackTrace();
-		} catch (SystemException e) {
-			e.printStackTrace();
-		}
-		em.persist(new Book("Metal Gear Solid - Der offizielle Roman zum Konami-Game-Hit von Hideo Kojima",
-				"9783833217418", new Author("Raymond", "Benson"), GenreType.THRILLER,
-				new GregorianCalendar(2008, 8, 1).getTime()));
-		em.persist(new Book("Metro 2033", "9783453529687", new Author("Dmitry", "Glukhovsky"),
-				GenreType.SCIENCE_FICTION, new GregorianCalendar(2012, 11, 12).getTime()));
-		em.persist(new Book("Metro 2033", "9783453529687", new Author("Dmitry", "Glukhovsky"),
-				GenreType.SCIENCE_FICTION, new GregorianCalendar(2012, 11, 12).getTime()));
-		em.persist(new Book("Metro 2033", "9783453529687", new Author("Dmitry", "Glukhovsky"),
-				GenreType.SCIENCE_FICTION, new GregorianCalendar(2012, 11, 12).getTime()));
-
-		books = new ListDataModel<Book>();
-		books.setWrappedData(em.createNamedQuery("SelectBook").getResultList());
-		try {
+			books = new ListDataModel<Book>();
+			books.setWrappedData(em.createNamedQuery("SelectBook").getResultList());
+			shelves = new ListDataModel<Shelf>();
+			shelves.setWrappedData(em.createNamedQuery("SelectShelf").getResultList());
+			authors = new ListDataModel<Author>();
+			authors.setWrappedData(em.createNamedQuery("SelectAuthor").getResultList());
 			utx.commit();
-		} catch (SecurityException e) {
-			e.printStackTrace();
-		} catch (IllegalStateException e) {
-			e.printStackTrace();
-		} catch (RollbackException e) {
-			e.printStackTrace();
-		} catch (HeuristicMixedException e) {
-			e.printStackTrace();
-		} catch (HeuristicRollbackException e) {
-			e.printStackTrace();
-		} catch (SystemException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		System.out.println("INIT done");
+	}
+
+	/**
+	 * Add a new book.
+	 * 
+	 * @return XHTML page for adding a new book.
+	 */
+	public String newBook() {
+		rememberBook = new Book();
+		return "addBook";
 	}
 
 	/**
@@ -120,27 +112,13 @@ public class BooksHandler implements Serializable {
 		rememberBook = books.getRowData();
 		try {
 			utx.begin();
-		} catch (NotSupportedException e) {
-			e.printStackTrace();
-		} catch (SystemException e) {
-			e.printStackTrace();
-		}
-		rememberBook = em.merge(rememberBook);
-		em.remove(rememberBook);
-		books.setWrappedData(em.createNamedQuery("SelectBook").getResultList());
-		try {
+			rememberBook = em.merge(rememberBook);
+			em.remove(rememberBook);
+			books.setWrappedData(em.createNamedQuery("SelectBook").getResultList());
+			authors.setWrappedData(em.createNamedQuery("SelectAuthor").getResultList());
+			shelves.setWrappedData(em.createNamedQuery("SelectShelf").getResultList());
 			utx.commit();
-		} catch (SecurityException e) {
-			e.printStackTrace();
-		} catch (IllegalStateException e) {
-			e.printStackTrace();
-		} catch (RollbackException e) {
-			e.printStackTrace();
-		} catch (HeuristicMixedException e) {
-			e.printStackTrace();
-		} catch (HeuristicRollbackException e) {
-			e.printStackTrace();
-		} catch (SystemException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return "showBooksOverview";
@@ -153,48 +131,7 @@ public class BooksHandler implements Serializable {
 	 */
 	public String editBook() {
 		rememberBook = books.getRowData();
-		System.out.println("editBook done");
 		return "addBook";
-	}
-
-	/**
-	 * Add a new book.
-	 * 
-	 * @return XHTML page for adding a new book.
-	 */
-	public String newBook() {
-		rememberBook = new Book();
-		System.out.println("newBook done");
-		return "addBook";
-	}
-
-	/**
-	 * Edit an existing author.
-	 * 
-	 * @return XHTML page for editing an author.
-	 */
-	public String editAuthor() {
-		rememberBook = books.getRowData();
-		rememberAuthor = rememberBook.getAuthor();
-		return "XHTML page to book list";
-	}
-
-	/**
-	 * Cancel process for adding/editing a book.
-	 * 
-	 * @return XHTML page where all books are listed.
-	 */
-	public String cancelEditOrAddBook() {
-		return "showBooksOverview";
-	}
-
-	/**
-	 * Cancel process for editing an author.
-	 * 
-	 * @return XHTML page where all books are listed.
-	 */
-	public String cancelEditAuthor() {
-		return "XHTML page to book list";
 	}
 
 	/**
@@ -205,67 +142,23 @@ public class BooksHandler implements Serializable {
 	public String saveBook() {
 		try {
 			utx.begin();
-		} catch (NotSupportedException e) {
-			e.printStackTrace();
-		} catch (SystemException e) {
-			e.printStackTrace();
-		}
-		rememberBook = em.merge(rememberBook);
-		em.persist(rememberBook);
-		books.setWrappedData(em.createNamedQuery("SelectBook").getResultList());
-		try {
+			rememberBook = em.merge(rememberBook);
+			books.setWrappedData(em.createNamedQuery("SelectBook").getResultList());
 			utx.commit();
-		} catch (SecurityException e) {
-			e.printStackTrace();
-		} catch (IllegalStateException e) {
-			e.printStackTrace();
-		} catch (RollbackException e) {
-			e.printStackTrace();
-		} catch (HeuristicMixedException e) {
-			e.printStackTrace();
-		} catch (HeuristicRollbackException e) {
-			e.printStackTrace();
-		} catch (SystemException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return "showBooksOverview";
 	}
 
+
 	/**
-	 * Saves the new book or the changes of it.
+	 * Cancel process for adding/editing a book.
 	 * 
 	 * @return XHTML page where all books are listed.
 	 */
-	public String saveAuthor() {
-		rememberBook.setAuthor(rememberAuthor);
-		try {
-			utx.begin();
-		} catch (NotSupportedException e) {
-			e.printStackTrace();
-		} catch (SystemException e) {
-			e.printStackTrace();
-		}
-		rememberBook = em.merge(rememberBook);
-		rememberAuthor = em.merge(rememberAuthor);
-		em.persist(rememberBook);
-		em.persist(rememberAuthor);
-		books.setWrappedData(em.createNamedQuery("SelectKunden").getResultList());
-		try {
-			utx.commit();
-		} catch (SecurityException e) {
-			e.printStackTrace();
-		} catch (IllegalStateException e) {
-			e.printStackTrace();
-		} catch (RollbackException e) {
-			e.printStackTrace();
-		} catch (HeuristicMixedException e) {
-			e.printStackTrace();
-		} catch (HeuristicRollbackException e) {
-			e.printStackTrace();
-		} catch (SystemException e) {
-			e.printStackTrace();
-		}
-		return "XHTML page with list off all books";
+	public String cancelEditOrAddBook() {
+		return "showBooksOverview";
 	}
 
 	/**
@@ -333,4 +226,21 @@ public class BooksHandler implements Serializable {
 	public void setRememberAuthor(Author rememberAuthor) {
 		this.rememberAuthor = rememberAuthor;
 	}
+
+	public DataModel<Shelf> getShelves() {
+		return shelves;
+	}
+
+	public void setShelves(DataModel<Shelf> shelves) {
+		this.shelves = shelves;
+	}
+
+	public DataModel<Author> getAuthors() {
+		return authors;
+	}
+
+	public void setAuthors(DataModel<Author> authors) {
+		this.authors = authors;
+	}
+
 }

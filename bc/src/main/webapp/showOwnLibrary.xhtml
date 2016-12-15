@@ -23,7 +23,17 @@
 			<ui:insert name="content">
 				<p:layout style="min-width:1024px;min-height:768px;">
 				    <p:layoutUnit position="north" resizable="true" size="100" minSize="40" maxSize="200">
-				        
+				        <p:dataTable  var="books" value="#{userAndShelvesHandler.rememberUser.shelves.get(0).books}" rowClasses="odd,even" >
+	    					<p:column>
+								<f:facet name="header">#{msg['userAdministration_firstname']}</f:facet>
+								<h:outputText value="#{books.title}" />
+							</p:column>
+							<p:column>
+				        			<p:commandButton action="#{userAndShelvesHandler.logout()}" value="Anzeigen" />
+				        			<p:commandButton action="#{userAndShelvesHandler.logout()}" value="löschen" />
+				        			<p:commandButton action="#{userAndShelvesHandler.logout()}" value="bearbeiten" />
+				        	</p:column>
+    					</p:dataTable>
 				    </p:layoutUnit>
 				    <p:layoutUnit position="west" resizable="true" size="500" minSize="40" maxSize="200">
 				        <p:panelGrid>
@@ -37,14 +47,7 @@
 				        			<p:separator/>
 				        		</p:column>
 				        	</p:row>
-				        	<p:row>
-        					<p:column>
-	    						<h:selectOneMenu value="#{userAndShelvesHandler.rememberUser.shelves.get(0).name}" >
-   									<f:selectItems value="#{userAndShelvesHandler.rememberUser.shelves}" var="c"
-   												itemLabel="#{c.name}" itemValue="#{c.name}"/>
-   								</h:selectOneMenu>
-							</p:column>
-    					</p:row>
+				        
 
 				        	<p:row>
 				        		<p:column>
@@ -78,7 +81,17 @@
 				
 				    </p:layoutUnit>
 					<p:layoutUnit position="south" resizable="true" size="100" minSize="40" maxSize="200">
-				        SOUTH
+    					<p:dataTable  var="shelf" value="#{userAndShelvesHandler.rememberUser.shelves}" rowClasses="odd,even" headerClass="header">
+	    					<p:column>
+								<f:facet name="header">#{msg['userAdministration_firstname']}</f:facet>
+								<h:outputText value="#{shelf.name}" />
+							</p:column>
+							<p:column>
+				        			<p:commandButton action="#{userAndShelvesHandler.logout()}" value="Anzeigen" />
+				        			<p:commandButton action="#{userAndShelvesHandler.logout()}" value="löschen" />
+				        			<p:commandButton action="#{userAndShelvesHandler.logout()}" value="bearbeiten" />
+				        	</p:column>
+    					</p:dataTable>
 				    </p:layoutUnit>				 
 				    <p:layoutUnit position="center">
 						<div id="content">

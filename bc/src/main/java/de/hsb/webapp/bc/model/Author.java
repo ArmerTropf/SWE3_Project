@@ -1,14 +1,18 @@
 package de.hsb.webapp.bc.model;
 
 import java.io.Serializable;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
+
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.validation.constraints.Size;
 
 /**
@@ -17,12 +21,21 @@ import javax.validation.constraints.Size;
  * @author Thomas Schrul, Michael Günster, Andre Schriever
  *
  */
-@SuppressWarnings("serial")
 @NamedQuery(name = "SelectAuthor", query = "Select a from Author a")
 @Entity
 public class Author implements Serializable {
 
 	// Start ---Declaration of variables---
+
+	/**
+	 * "The serialization runtime associates with each serializable class a
+	 * version number, called a serialVersionUID, which is used during
+	 * deserialization to verify that the sender and receiver of a serialized
+	 * object have loaded classes for that object that are compatible with
+	 * respect to serialization" -
+	 * https://docs.oracle.com/javase/7/docs/api/java/io/Serializable.html
+	 */
+	private static final long serialVersionUID = 3979776198682570305L;
 
 	/**
 	 * Author ID is the primary key for a author. A UUID will be generated
@@ -43,6 +56,9 @@ public class Author implements Serializable {
 	 */
 	@Size(min = 2, max = 30)
 	private String lastname;
+
+	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "author")
+	private List<Book> books;
 
 	// End ---Declaration of variables---
 
@@ -65,7 +81,7 @@ public class Author implements Serializable {
 		super();
 		this.firstname = firstname;
 		this.lastname = lastname;
-		
+
 	}
 
 	// Start ---Getter & Setter---
@@ -106,6 +122,14 @@ public class Author implements Serializable {
 	 */
 	public void setLastname(String lastname) {
 		this.lastname = lastname;
+	}
+
+	public List<Book> getBooks() {
+		return books;
+	}
+
+	public void setBooks(List<Book> books) {
+		this.books = books;
 	}
 
 	// End ---Getter & Setter---
