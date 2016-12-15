@@ -1,19 +1,23 @@
 package de.hsb.webapp.bc.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQuery;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.Past;
-import javax.validation.constraints.Size;
 
 /**
  * With this class you can create books.
@@ -21,12 +25,21 @@ import javax.validation.constraints.Size;
  * @author Thomas Schrul, Michael Günster, Andre Schriever
  *
  */
-@SuppressWarnings("serial")
 @NamedQuery(name = "SelectBook", query = "Select b from Book b")
 @Entity
 public class Book implements Serializable {
 
 	// Start ---Declaration of variables---
+
+	/**
+	 * "The serialization runtime associates with each serializable class a
+	 * version number, called a serialVersionUID, which is used during
+	 * deserialization to verify that the sender and receiver of a serialized
+	 * object have loaded classes for that object that are compatible with
+	 * respect to serialization" -
+	 * https://docs.oracle.com/javase/7/docs/api/java/io/Serializable.html
+	 */
+	private static final long serialVersionUID = 1561167190666127500L;
 
 	/**
 	 * Book ID is the primary key for a book. A UUID will be generated
@@ -50,8 +63,12 @@ public class Book implements Serializable {
 	/**
 	 * Author of the book. Different books may have the same author.
 	 */
-	@ManyToOne(cascade = CascadeType.ALL)
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "author_aid")
 	private Author author;
+
+	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "books")
+	private List<Shelf> shelves;
 
 	/**
 	 * Genre of the book.
@@ -73,6 +90,7 @@ public class Book implements Serializable {
 	public Book() {
 		super();
 		this.author = new Author();
+		this.shelves = new ArrayList<Shelf>();
 	}
 
 	/**
@@ -89,13 +107,14 @@ public class Book implements Serializable {
 	 * @param release
 	 *            Release date of the book.
 	 */
-	public Book(String title, String isbn, Author author, GenreType genre, Date release) {
+	public Book(String title, String isbn, GenreType genre, Date release) {
 		super();
 		this.title = title;
 		this.isbn = isbn;
-		this.author = author;
 		this.genre = genre;
 		this.release = release;
+		this.author = new Author();
+		this.shelves = new ArrayList<Shelf>();
 	}
 
 	// Start ---Getter & Setter---
@@ -193,6 +212,14 @@ public class Book implements Serializable {
 	 */
 	public void setRelease(Date release) {
 		this.release = release;
+	}
+
+	public List<Shelf> getShelves() {
+		return shelves;
+	}
+
+	public void setShelves(List<Shelf> shelves) {
+		this.shelves = shelves;
 	}
 
 	// End ---Getter & Setter---

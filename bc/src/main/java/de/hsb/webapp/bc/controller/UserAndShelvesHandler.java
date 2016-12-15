@@ -60,10 +60,14 @@ public class UserAndShelvesHandler implements Serializable {
 	 */
 	private DataModel<User> user;
 
+	private DataModel<Shelf> shelves;
+
 	/**
 	 * Remembers the current user.
 	 */
 	private User rememberUser = new User();
+
+	private Shelf rememberShelf = new Shelf();
 
 	/**
 	 * Initializes the data model with some user for the first use.
@@ -72,36 +76,60 @@ public class UserAndShelvesHandler implements Serializable {
 	public void init() {
 		try {
 			utx.begin();
-		} catch (NotSupportedException e) {
-			e.printStackTrace();
-		} catch (SystemException e) {
-			e.printStackTrace();
-		}
-		em.persist(new User("Guenster", "Hans", "12345", "mguenster", true));
-		em.persist(new User("Guenster", "Albert", "12345", "mguenster", true));
-		em.persist(new User("Guenster", "Michael", "12345", "mguenster", false));
-
-		user = new ListDataModel<User>();
-		user.setWrappedData(em.createNamedQuery("SelectUser").getResultList());
-
-		try {
+			em.persist(new User("Guenster", "Hans", "12345", "mguenster", true));
+			user = new ListDataModel<User>();
+			user.setWrappedData(em.createNamedQuery("SelectUser").getResultList());
+			shelves = new ListDataModel<Shelf>();
+			shelves.setWrappedData(em.createNamedQuery("SelectShelf").getResultList());
 			utx.commit();
-		} catch (SecurityException e) {
-			e.printStackTrace();
-		} catch (IllegalStateException e) {
-			e.printStackTrace();
-		} catch (RollbackException e) {
-			e.printStackTrace();
-		} catch (HeuristicMixedException e) {
-			e.printStackTrace();
-		} catch (HeuristicRollbackException e) {
-			e.printStackTrace();
-		} catch (SystemException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		System.out.println("INIT UserAndShelves done");
 	}
 
+	public String newShelf(){
+		rememberUser = user.getRowData();
+		rememberShelf = new Shelf();
+		return "XHTML Page for creating new shelf";
+	}
+	
+	public String editShelf(){
+		rememberUser = user.getRowData();
+		rememberShelf = shelves.getRowData();
+		return "XHTML Page for editing shelf";
+	}
+	
+	public String saveShelf(){
+		try {
+			utx.begin();
+			rememberShelf = em.merge(rememberShelf);
+			user.setWrappedData(em.createNamedQuery("SelectUser").getResultList());
+			shelves.setWrappedData(em.createNamedQuery("SelectShelf").getResultList());
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return "XHTML Page with shelves";
+	}
+	
+	public String deleteShelf(){
+		rememberUser=user.getRowData();
+		rememberShelf=shelves.getRowData();
+		rememberUser.getShelves().remove(rememberShelf);
+		
+		try {
+			utx.begin();
+			rememberShelf = em.merge(rememberShelf);
+			em.remove(rememberShelf);
+			rememberUser=em.merge(rememberUser);
+			user.setWrappedData(em.createNamedQuery("SelectUser").getResultList());
+			shelves.setWrappedData(em.createNamedQuery("SelectShelf").getResultList());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return "XHTML Page with shelves";
+	}
+	
 	/**
 	 * Prepare remeberUser for first use. initialize with userobject.
 	 * 
@@ -109,7 +137,6 @@ public class UserAndShelvesHandler implements Serializable {
 	 */
 	public String newUser() {
 		rememberUser = new User();
-		System.out.println("newUser done");
 		return "addUser";
 	}
 
@@ -123,31 +150,14 @@ public class UserAndShelvesHandler implements Serializable {
 		rememberUser = user.getRowData();
 		try {
 			utx.begin();
-		} catch (NotSupportedException e) {
-			e.printStackTrace();
-		} catch (SystemException e) {
-			e.printStackTrace();
-		}
-		rememberUser = em.merge(rememberUser);
-		em.remove(rememberUser);
-		user.setWrappedData(em.createNamedQuery("SelectUser").getResultList());
-
-		try {
+			rememberUser = em.merge(rememberUser);
+			em.remove(rememberUser);
+			user.setWrappedData(em.createNamedQuery("SelectUser").getResultList());
+			shelves.setWrappedData(em.createNamedQuery("SelectShelf").getResultList());
 			utx.commit();
-		} catch (SecurityException e) {
-			e.printStackTrace();
-		} catch (IllegalStateException e) {
-			e.printStackTrace();
-		} catch (RollbackException e) {
-			e.printStackTrace();
-		} catch (HeuristicMixedException e) {
-			e.printStackTrace();
-		} catch (HeuristicRollbackException e) {
-			e.printStackTrace();
-		} catch (SystemException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		System.out.println("deleteUser done");
 		return "userAdministration";
 	}
 
@@ -158,40 +168,13 @@ public class UserAndShelvesHandler implements Serializable {
 	 *         userAdministration.xhtml.
 	 */
 	public String saveUser() {
-
 		try {
 			utx.begin();
-		} catch (NotSupportedException e) {
-			e.printStackTrace();
-		} catch (SystemException e) {
-			e.printStackTrace();
-		}
-		rememberUser = em.merge(rememberUser);
-		em.persist(rememberUser);
-		user.setWrappedData(em.createNamedQuery("SelectUser").getResultList());
-
-		try {
-			utx.commit();
-		} catch (SecurityException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IllegalStateException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (RollbackException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (HeuristicMixedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (HeuristicRollbackException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (SystemException e) {
-			// TODO Auto-generated catch block
+			rememberUser = em.merge(rememberUser);
+			user.setWrappedData(em.createNamedQuery("SelectUser").getResultList());
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		System.out.println("saveUser done");
 		return "userAdministration";
 	}
 
@@ -203,7 +186,6 @@ public class UserAndShelvesHandler implements Serializable {
 	 */
 	public String editUser() {
 		rememberUser = user.getRowData();
-		System.out.println("editUser done");
 		return "addUser";
 	}
 
@@ -214,7 +196,6 @@ public class UserAndShelvesHandler implements Serializable {
 	 *         userAdministration.xhtml
 	 */
 	public String cancelUser() {
-		System.out.println("cancelUser done");
 		return "userAdministration";
 	}
 
