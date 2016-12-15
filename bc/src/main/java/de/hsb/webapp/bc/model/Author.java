@@ -1,7 +1,6 @@
 package de.hsb.webapp.bc.model;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -66,7 +65,6 @@ public class Author implements Serializable {
 	 */
 	public Author() {
 		super();
-		this.books = new ArrayList<Book>();
 	}
 
 	/**
@@ -81,7 +79,6 @@ public class Author implements Serializable {
 		super();
 		this.firstname = firstname;
 		this.lastname = lastname;
-		this.books = new ArrayList<Book>();
 	}
 
 	// Start ---Getter & Setter---

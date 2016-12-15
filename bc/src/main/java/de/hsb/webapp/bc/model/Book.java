@@ -1,7 +1,6 @@
 package de.hsb.webapp.bc.model;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -89,8 +88,6 @@ public class Book implements Serializable {
 	 */
 	public Book() {
 		super();
-		this.author = new Author();
-		this.shelves = new ArrayList<Shelf>();
 	}
 
 	/**
@@ -113,8 +110,6 @@ public class Book implements Serializable {
 		this.isbn = isbn;
 		this.genre = genre;
 		this.release = release;
-		this.author = new Author();
-		this.shelves = new ArrayList<Shelf>();
 	}
 
 	// Start ---Getter & Setter---

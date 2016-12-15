@@ -1,7 +1,6 @@
 package de.hsb.webapp.bc.model;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Entity;
@@ -70,8 +69,6 @@ public class Shelf implements Serializable {
 	 */
 	public Shelf() {
 		super();
-		this.user = new User();
-		this.books = new ArrayList<Book>();
 	}
 
 	/**
@@ -84,8 +81,6 @@ public class Shelf implements Serializable {
 	public Shelf(String name) {
 		super();
 		this.name = name;
-		this.user = new User();
-		this.books = new ArrayList<Book>();
 	}
 
 	// Start ---Getter & Setter---
