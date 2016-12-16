@@ -1,26 +1,21 @@
 package de.hsb.webapp.bc.controller;
 
-import de.hsb.webapp.bc.model.*;
-
 import java.io.Serializable;
+import java.util.ArrayList;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
-
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.model.DataModel;
 import javax.faces.model.ListDataModel;
-
 import javax.persistence.EntityManager;
-
 import javax.persistence.PersistenceContext;
-import javax.transaction.HeuristicMixedException;
-import javax.transaction.HeuristicRollbackException;
-import javax.transaction.NotSupportedException;
-import javax.transaction.RollbackException;
-import javax.transaction.SystemException;
 import javax.transaction.UserTransaction;
+
+import de.hsb.webapp.bc.model.Book;
+import de.hsb.webapp.bc.model.Shelf;
+import de.hsb.webapp.bc.model.User;
 
 /**
  * With this class you will handle the user and shelves actions.
@@ -60,6 +55,9 @@ public class UserAndShelvesHandler implements Serializable {
 	 */
 	private DataModel<User> user;
 
+	/**
+	 * Stores all shelves.
+	 */
 	private DataModel<Shelf> shelves;
 
 	/**
@@ -67,7 +65,15 @@ public class UserAndShelvesHandler implements Serializable {
 	 */
 	private User rememberUser = new User();
 
+	/**
+	 * Remembers the current shelf.
+	 */
 	private Shelf rememberShelf = new Shelf();
+
+	/**
+	 * Remembers the current book.
+	 */
+	private Book rememberBook = new Book();
 
 	/**
 	 * Initializes the data model with some user for the first use.
@@ -76,7 +82,8 @@ public class UserAndShelvesHandler implements Serializable {
 	public void init() {
 		try {
 			utx.begin();
-			em.persist(new User("Guenster", "Hans", "12345", "mguenster", true));
+			em.persist(new User("Guenster", "Michael", "12345", "mguenster", true));
+			em.persist(new User("Schrul", "Thomas", "12345", "tschrul", true));
 			user = new ListDataModel<User>();
 			user.setWrappedData(em.createNamedQuery("SelectUser").getResultList());
 			shelves = new ListDataModel<Shelf>();
@@ -87,49 +94,96 @@ public class UserAndShelvesHandler implements Serializable {
 		}
 	}
 
-	public String newShelf(){
+	/**
+	 * Creates a new shelf.
+	 * 
+	 * @return
+	 */
+	public String newShelf() {
 		rememberUser = user.getRowData();
 		rememberShelf = new Shelf();
-		return "XHTML Page for creating new shelf";
+		if (rememberUser.getShelves() == null) {
+			rememberUser.setShelves(new ArrayList<Shelf>());
+		}
+		return "XHTML";
 	}
-	
-	public String editShelf(){
+
+	/**
+	 * Edits an existing shelf.
+	 * 
+	 * @return
+	 */
+	public String editShelf() {
 		rememberUser = user.getRowData();
 		rememberShelf = shelves.getRowData();
-		return "XHTML Page for editing shelf";
+		return "XHTML";
 	}
-	
-	public String saveShelf(){
-		try {
-			utx.begin();
-			rememberShelf = em.merge(rememberShelf);
-			user.setWrappedData(em.createNamedQuery("SelectUser").getResultList());
-			shelves.setWrappedData(em.createNamedQuery("SelectShelf").getResultList());
-			
-		} catch (Exception e) {
-			e.printStackTrace();
+
+	/**
+	 * Saves changes to the current shelf and adds a new shelf to the shelves
+	 * list of the user if the shelf is new.
+	 * 
+	 * @return
+	 */
+	public String saveShelf() {
+		if (rememberShelf.getSid() == null) {
+			try {
+				rememberUser.getShelves().add(rememberShelf);
+				utx.begin();
+				em.persist(rememberShelf);
+				user.setWrappedData(em.createNamedQuery("SelectUser").getResultList());
+				shelves.setWrappedData(em.createNamedQuery("SelectShelf").getResultList());
+				utx.commit();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		} else {
+			try {
+				utx.begin();
+				rememberShelf = em.merge(rememberShelf);
+				user.setWrappedData(em.createNamedQuery("SelectUser").getResultList());
+				shelves.setWrappedData(em.createNamedQuery("SelectShelf").getResultList());
+				utx.commit();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
-		return "XHTML Page with shelves";
+		return "XHTML";
 	}
-	
-	public String deleteShelf(){
-		rememberUser=user.getRowData();
-		rememberShelf=shelves.getRowData();
+
+	/**
+	 * Deletes the shelf from the current user and the database.
+	 * 
+	 * @return
+	 */
+	public String deleteShelf() {
+		rememberUser = user.getRowData();
+		rememberShelf = shelves.getRowData();
 		rememberUser.getShelves().remove(rememberShelf);
-		
+
 		try {
 			utx.begin();
 			rememberShelf = em.merge(rememberShelf);
 			em.remove(rememberShelf);
-			rememberUser=em.merge(rememberUser);
+			rememberUser = em.merge(rememberUser);
 			user.setWrappedData(em.createNamedQuery("SelectUser").getResultList());
 			shelves.setWrappedData(em.createNamedQuery("SelectShelf").getResultList());
+			utx.commit();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return "XHTML Page with shelves";
+		return "XHTML";
 	}
-	
+
+	/**
+	 * Cancels shelf editing mode.
+	 * 
+	 * @return
+	 */
+	public String cancelShelf() {
+		return "XHTML";
+	}
+
 	/**
 	 * Prepare remeberUser for first use. initialize with userobject.
 	 * 
@@ -138,6 +192,35 @@ public class UserAndShelvesHandler implements Serializable {
 	public String newUser() {
 		rememberUser = new User();
 		return "addUser";
+	}
+
+	/**
+	 * Edit rememberUser to edit
+	 * 
+	 * @return String "userAdministration" which is the redirect to
+	 *         userAdministration.xhtml
+	 */
+	public String editUser() {
+		rememberUser = user.getRowData();
+		return "addUser";
+	}
+
+	/**
+	 * Saves rememberUser from entity manager an set it into user (datamodel).
+	 * 
+	 * @return String "userAdministration" which is the redirect to
+	 *         userAdministration.xhtml.
+	 */
+	public String saveUser() {
+		try {
+			utx.begin();
+			rememberUser = em.merge(rememberUser);
+			user.setWrappedData(em.createNamedQuery("SelectUser").getResultList());
+			utx.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return "userAdministration";
 	}
 
 	/**
@@ -162,41 +245,72 @@ public class UserAndShelvesHandler implements Serializable {
 	}
 
 	/**
-	 * Saves rememberUser from entity manager an set it into user (datamodel).
-	 * 
-	 * @return String "userAdministration" which is the redirect to
-	 *         userAdministration.xhtml.
-	 */
-	public String saveUser() {
-		try {
-			utx.begin();
-			rememberUser = em.merge(rememberUser);
-			user.setWrappedData(em.createNamedQuery("SelectUser").getResultList());
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return "userAdministration";
-	}
-
-	/**
-	 * Edit rememberUser to edit
-	 * 
-	 * @return String "userAdministration" which is the redirect to
-	 *         userAdministration.xhtml
-	 */
-	public String editUser() {
-		rememberUser = user.getRowData();
-		return "addUser";
-	}
-
-	/**
-	 * Cancel adding or editing process of a user account.
+	 * Cancels adding or editing process of a user account.
 	 * 
 	 * @return String "userAdministration" which is the redirect to
 	 *         userAdministration.xhtml
 	 */
 	public String cancelUser() {
 		return "userAdministration";
+	}
+
+	/**
+	 * Cancels the user registration.
+	 * 
+	 * @return
+	 */
+	public String cancelUserRegistration() {
+		return "login";
+	}
+
+	/**
+	 * Adds a book to the current shelf.
+	 * 
+	 * @param book
+	 *            Book to add.
+	 * @return
+	 */
+	public String addBookToShelf(Book book) {
+		rememberBook = book;
+		rememberShelf = shelves.getRowData();
+		if (rememberShelf.getBooks() == null) {
+			rememberShelf.setBooks(new ArrayList<Book>());
+		}
+		rememberShelf.getBooks().add(rememberBook);
+		try {
+			utx.begin();
+			rememberShelf = em.merge(rememberShelf);
+			shelves.setWrappedData(em.createNamedQuery("SelectShelf").getResultList());
+			user.setWrappedData(em.createNamedQuery("SelectUser").getResultList());
+			utx.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return "XHTML";
+	}
+
+	/**
+	 * Deletes a book from the current shelf.
+	 * 
+	 * @param book
+	 *            Book to delete
+	 * @return
+	 */
+	public String deleteBookFromShelf(Book book) {
+		rememberBook = book;
+		rememberShelf = shelves.getRowData();
+		rememberShelf.getBooks().remove(rememberBook);
+		try {
+			utx.begin();
+			rememberShelf = em.merge(rememberShelf);
+			shelves.setWrappedData(em.createNamedQuery("SelectShelf").getResultList());
+			user.setWrappedData(em.createNamedQuery("SelectUser").getResultList());
+			utx.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return "XHTML";
 	}
 
 	/**
@@ -229,8 +343,43 @@ public class UserAndShelvesHandler implements Serializable {
 
 	/**
 	 * Sets the rememberUser.
+	 * 
+	 * @param rememberUser
 	 */
 	public void setrememberUser(User rememberUser) {
 		this.rememberUser = rememberUser;
 	}
+
+	public DataModel<Shelf> getShelves() {
+		return shelves;
+	}
+
+	public void setShelves(DataModel<Shelf> shelves) {
+		this.shelves = shelves;
+	}
+
+	public User getRememberUser() {
+		return rememberUser;
+	}
+
+	public void setRememberUser(User rememberUser) {
+		this.rememberUser = rememberUser;
+	}
+
+	public Shelf getRememberShelf() {
+		return rememberShelf;
+	}
+
+	public void setRememberShelf(Shelf rememberShelf) {
+		this.rememberShelf = rememberShelf;
+	}
+
+	public Book getRememberBook() {
+		return rememberBook;
+	}
+
+	public void setRememberBook(Book rememberBook) {
+		this.rememberBook = rememberBook;
+	}
+
 }

@@ -81,7 +81,7 @@ public class User implements Serializable {
 	/**
 	 * A user may have many shelves. They will be stored in a collection.
 	 */
-	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "user")
+	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	private List<Shelf> shelves;
 
 	// End ---Declaration of variables---

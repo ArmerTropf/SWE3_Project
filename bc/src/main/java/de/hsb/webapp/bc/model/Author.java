@@ -1,16 +1,12 @@
 package de.hsb.webapp.bc.model;
 
 import java.io.Serializable;
-import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
 import javax.validation.constraints.Size;
 
 /**
@@ -54,9 +50,6 @@ public class Author implements Serializable {
 	 */
 	@Size(min = 2, max = 30)
 	private String lastname;
-
-	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "author")
-	private List<Book> books;
 
 	// End ---Declaration of variables---
 
@@ -119,14 +112,6 @@ public class Author implements Serializable {
 	 */
 	public void setLastname(String lastname) {
 		this.lastname = lastname;
-	}
-
-	public List<Book> getBooks() {
-		return books;
-	}
-
-	public void setBooks(List<Book> books) {
-		this.books = books;
 	}
 
 	// End ---Getter & Setter---
