@@ -1,6 +1,7 @@
 package de.hsb.webapp.bc.controller;
 
 import java.io.Serializable;
+import java.util.GregorianCalendar;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
@@ -81,6 +82,23 @@ public class BooksHandler implements Serializable {
 	public void init() {
 		try {
 			utx.begin();
+			Author a1 = new Author("Joanne K.", "Rowling"), a2 = new Author("Bram", "Stoker"),
+					a3 = new Author("Mary", "Shelley");
+			em.persist(a1);
+			em.persist(a2);
+			em.persist(a3);
+			Book b1 = new Book("Frankenstein", "978-3866473768", GenreType.SCIENCE_FICTION,
+					new GregorianCalendar(2009, 02, 27).getTime());
+			b1.setAuthor(a3);
+			Book b2 = new Book("Dracula", "978-3866472938", GenreType.HORROR,
+					new GregorianCalendar(2008, 10, 01).getTime());
+			b2.setAuthor(a2);
+			Book b3 = new Book("Harry Potter und der Stein der Weisen", "978-3551354013", GenreType.FANTASY,
+					new GregorianCalendar(2005, 01, 01).getTime());
+			b3.setAuthor(a1);
+			em.persist(b1);
+			em.persist(b2);
+			em.persist(b3);
 			books = new ListDataModel<Book>();
 			books.setWrappedData(em.createNamedQuery("SelectBook").getResultList());
 			shelves = new ListDataModel<Shelf>();
@@ -181,7 +199,7 @@ public class BooksHandler implements Serializable {
 		}
 		return "showBooksOverview";
 	}
-	
+
 	public String deleteAuthor() {
 		rememberAuthor = authors.getRowData();
 		try {
