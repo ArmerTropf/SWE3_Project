@@ -1,0 +1,43 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:p="http://primefaces.org/ui">
+<h:head>
+	<!-- 	<link rel="stylesheet" href="resources/alleKunden.css" type="text/css" /> -->
+		<title>
+			<ui:insert name="title">Shelfs</ui:insert>
+		</title>
+	</h:head>
+	<h:body>
+		<div id="header">
+			<h:form>
+				<h:commandButton action="#{language.changeLanguage('de')}" value="Deutsch"/>
+				<h:outputText value=" " />
+				<h:commandButton action="#{language.changeLanguage('en')}" value="English" />
+			</h:form>
+		</div>
+		<div id="content">
+		
+    <ui:composition> 
+		<p:dataTable  var="shelf" value="#{userAndShelvesHandler.rememberUser.shelves}" rowClasses="odd,even" headerClass="header">
+	    					<p:column>
+								<f:facet name="header">#{msg['userAdministration_firstname']}</f:facet>
+								<h:outputText value="#{shelf.name}" />
+							</p:column>
+							<p:column>
+								<p:commandButton id="submitButton" value="center" action="#{uiHandler.outcome}">
+									<f:param name="country" value="showBooksInShelf" />
+									<f:param name="whichLayout" value="center" />
+								</p:commandButton>
+				        		<p:commandButton action="#{userAndShelvesHandler.editShelf()}" value="Anzeigen" />
+				        		<p:commandButton action="#{userAndShelvesHandler.editShelf()}" value="bearbeiten" />
+				        		<p:commandButton action="#{userAndShelvesHandler.deleteShelf()}" value="löschen" />
+				        	</p:column>
+    					</p:dataTable>
+    </ui:composition>
+		</div>
+	</h:body>
+</html>

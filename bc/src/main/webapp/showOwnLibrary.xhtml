@@ -17,90 +17,27 @@
 				<h:commandButton action="#{language.changeLanguage('de')}" value="Deutsch"/>
 				<h:outputText value=" " />
 				<h:commandButton action="#{language.changeLanguage('en')}" value="English" />
+				<h:commandButton action="#{userAndShelvesHandler.logout()}" value="Logout" />
+				<p:commandButton action="#{userAndShelvesHandler.newShelf()}" value="addShelf" />
+				<p:commandButton action="#{userAndShelvesHandler.newUser()}" value="UserAdministration" />
 			</h:form>
 		</div>
 		<div id="content">
 			<ui:insert name="content"> 
-				<p:layout style="min-width:1024px;min-height:768px;">
-				    <p:layoutUnit position="north" resizable="true" size="100" minSize="40" maxSize="200">
-				        
-				    </p:layoutUnit>
-				    <p:layoutUnit position="west" resizable="true" size="500" minSize="40" maxSize="200">
-				        <p:panelGrid>
-				        	<p:row>
-				        		<p:column>
-				        			<h:outputText value="Angemeldeter Nutzer: #{userAndShelvesHandler.rememberUser.firstname}" />
-				        		</p:column>
-				        	</p:row>
-				        	<p:row>
-				        		<p:column>
-				        			<p:separator/>
-				        		</p:column>
-				        	</p:row>
-				        
+				<h:form>
+					<p:layout style="min-width:400px;min-height:400px;">
+					    <p:layoutUnit position="west" resizable="true" size="100" minSize="100" maxSize="200">
 
-				        	<p:row>
-				        		<p:column>
-				        			<p:commandButton action="#{userAndShelvesHandler.showUser()}" value="user" />
-				        		</p:column>
-				        	</p:row>
-				        	<p:row>
-				        		<p:column>
-				        			<p:separator/>
-				        		</p:column>
-				        	</p:row>
-				        	<p:row>
-				        		<p:column>
-				        			<p:commandButton value="Buch hinzufügen" />
-				        		</p:column>
-				        	</p:row>
-				        	<p:row>
-				        		<p:column>
-				        		
-				        		</p:column>
-				        	</p:row>
-				        	<p:row>
-
-				        		<p:column>
-				        			<p:commandButton action="#{userAndShelvesHandler.logout()}" value="Logout" />
-				        		</p:column>
-				        	</p:row>
-				        </p:panelGrid>
-				        <p:separator></p:separator>
-				        
+					    </p:layoutUnit>
+					    <p:layoutUnit position="center">
+					    	<ui:include src="#{uiHandler.uiCenter}.xhtml"/>
+					    </p:layoutUnit>
+					</p:layout>
 				
-				    </p:layoutUnit>
-					<p:layoutUnit position="south" resizable="true" size="100" minSize="40" maxSize="200">
-    					<p:dataTable  var="shelf" value="#{userAndShelvesHandler.rememberUser.shelves}" rowClasses="odd,even" headerClass="header">
-	    					<p:column>
-								<f:facet name="header">#{msg['userAdministration_firstname']}</f:facet>
-								<h:outputText value="#{shelf.name}" />
-							</p:column>
-							<p:column>
-				        			<p:commandButton action="#{userAndShelvesHandler.logout()}" value="Anzeigen" />
-				        			<p:commandButton action="#{userAndShelvesHandler.logout()}" value="löschen" />
-				        			<p:commandButton action="#{userAndShelvesHandler.logout()}" value="bearbeiten" />
-				        	</p:column>
-    					</p:dataTable>
-				    </p:layoutUnit>				 
-				    <p:layoutUnit position="center">
-						<div id="content">
-							<ui:insert name="content">
-								<p:dataTable  var="books" value="#{userAndShelvesHandler.rememberUser.shelves.get(0).books}" rowClasses="odd,even" >
-			    					<p:column>
-										<f:facet name="header">#{msg['userAdministration_firstname']}</f:facet>
-										<h:outputText value="#{books.title}" />
-									</p:column>
-									<p:column>
-						        			<p:commandButton action="#{userAndShelvesHandler.logout()}" value="Anzeigen" />
-						        			<p:commandButton action="#{userAndShelvesHandler.logout()}" value="löschen" />
-						        			<p:commandButton action="#{userAndShelvesHandler.logout()}" value="bearbeiten" />
-						        	</p:column>
-		    					</p:dataTable>
-							</ui:insert>
-						</div>				
-				    </p:layoutUnit>
-				</p:layout>
+				</h:form>
+				
+				
+				<ui:include src="#{uiHandler.uiSouth}.xhtml"/>
 			</ui:insert>
 		</div>
 	</h:body>

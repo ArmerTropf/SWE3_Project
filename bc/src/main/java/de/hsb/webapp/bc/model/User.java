@@ -2,9 +2,7 @@ package de.hsb.webapp.bc.model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.GregorianCalendar;
 import java.util.List;
-
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -90,8 +88,7 @@ public class User implements Serializable {
 	/**
 	 * A user may have many shelves. They will be stored in a collection.
 	 */
-
-	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "user")
+	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	private List<Shelf> shelves;
 
 	// End ---Declaration of variables---
@@ -101,13 +98,12 @@ public class User implements Serializable {
 	 * "Mein Hauptregal".
 	 */
 	public User() {
-
 		super();
 		this.shelves = new ArrayList<Shelf>();
-		
-		//this.shelves.get(0).getBooks().add(new Book("HOMO", "123456", GenreType.FANTASY, new GregorianCalendar().getTime()));
-		
-
+		System.out.println("Constructer: User()");
+//		this.shelves.add(new Shelf("shelf0"));
+//		this.shelves.add(new Shelf("shelf1"));
+//		this.shelves.add(new Shelf("shelf2"));
 	}
 
 	/**
@@ -127,17 +123,17 @@ public class User implements Serializable {
 	 */
 	public User(String lastname, String firstname, String password, String login, boolean isActivated) {
 		super();
-		
 		this.lastname = lastname;
 		this.firstname = firstname;
 		this.password = password;
 		this.login = login;
 		this.isActivated = isActivated;
-
 		this.shelves = new ArrayList<Shelf>();
-		this.shelves.add(new Shelf("Mein l"));
-		this.shelves.add(new Shelf("Hallo"));
-
+		System.out.println("Constructer: User(String lastname, String firstname, String password, String login, boolean isActivated)");
+//
+//		this.shelves.add(new Shelf("shelf0"));
+//		this.shelves.add(new Shelf("shelf1"));
+//		this.shelves.add(new Shelf("shelf2"));
 	}
 
 	/**
@@ -167,7 +163,7 @@ public class User implements Serializable {
 		this.isAdmin = isAdmin;
 		this.isActivated = isActivated;
 		this.shelves = new ArrayList<Shelf>();
-		this.shelves.add(new Shelf("Mein Hauptregal"));
+		System.out.println("Constructer: User(String lastname, String firstname, String password, String login, boolean isAdmin,boolean isActivated)");
 
 	}
 
@@ -254,7 +250,7 @@ public class User implements Serializable {
 	 * 
 	 * @return True if user is an administrator.
 	 */
-	public boolean isAdmin() {
+	public boolean getAdmin() {
 		return isAdmin;
 	}
 

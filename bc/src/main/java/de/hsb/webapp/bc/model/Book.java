@@ -1,9 +1,7 @@
 package de.hsb.webapp.bc.model;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -11,8 +9,6 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQuery;
 import javax.persistence.Temporal;
@@ -63,12 +59,8 @@ public class Book implements Serializable {
 	/**
 	 * Author of the book. Different books may have the same author.
 	 */
-	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "author_aid")
+	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	private Author author;
-
-	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "books")
-	private List<Shelf> shelves;
 
 	/**
 	 * Genre of the book.
@@ -208,14 +200,6 @@ public class Book implements Serializable {
 	 */
 	public void setRelease(Date release) {
 		this.release = release;
-	}
-
-	public List<Shelf> getShelves() {
-		return shelves;
-	}
-
-	public void setShelves(List<Shelf> shelves) {
-		this.shelves = shelves;
 	}
 
 	// End ---Getter & Setter---

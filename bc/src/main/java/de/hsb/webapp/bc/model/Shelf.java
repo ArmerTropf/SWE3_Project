@@ -1,18 +1,15 @@
 package de.hsb.webapp.bc.model;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
-
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
 import javax.persistence.NamedQuery;
 import javax.validation.constraints.Size;
 
@@ -56,15 +53,8 @@ public class Shelf implements Serializable {
 	 * A shelf may have many books and a book may appear in different shelves.
 	 * They will be stored in a collection.
 	 */
-
-	@ManyToMany(fetch = FetchType.EAGER)
-	@JoinColumn(name = "books_bid")
-	private List<Book> books = new ArrayList<Book>();
-
-	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "user_uid")
-	private User user;
-
+	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	private List<Book> books;
 
 	// End ---Declaration of variables---
 
@@ -85,7 +75,6 @@ public class Shelf implements Serializable {
 	public Shelf(String name) {
 		super();
 		this.name = name;
-
 	}
 
 	// Start ---Getter & Setter---
@@ -128,12 +117,23 @@ public class Shelf implements Serializable {
 		this.books = books;
 	}
 
-	public User getUser() {
-		return user;
+	/**
+	 * Gets the ID of the current shelf.
+	 * 
+	 * @return ID of the shelf.
+	 */
+	public Integer getSid() {
+		return sid;
 	}
 
-	public void setUser(User user) {
-		this.user = user;
+	/**
+	 * Sets the ID of the current shelf.
+	 * 
+	 * @param sid
+	 *            New ID for shelf.
+	 */
+	public void setSid(Integer sid) {
+		this.sid = sid;
 	}
 
 	// End ---Getter & Setter---

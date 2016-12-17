@@ -20,31 +20,30 @@
 				<h:commandButton action="#{language.changeLanguage('')}" value="Deutsch"/>
 				<h:outputText value=" " />
 				<h:commandButton action="#{language.changeLanguage('en')}" value="English" />
-				
 			</h:form>
 		</div>
 		<div id="content">
 			<ui:insert name="content">
 				<ui:composition>
 				<h:form>			
-					<p:dataTable var="books" value="#{booksHandler.books}" rowClasses="odd,even" headerClass="header">	
+					<p:dataTable var="BooksInShelf" value="#{userAndShelvesHandler.rememberUser.shelves.get(0).books}" rowClasses="odd,even" headerClass="header">	
 						    <f:facet name="header">#{msg['showBooksOverview_title']}</f:facet>
 				            <p:column>
 				            	<f:facet name="header">#{msg['showBooksOverview_bookTitle']}</f:facet>
-				            	<h:outputText value="#{books.title}" />
+				            	<h:outputText value="#{BooksInShelf.title}" />
 				            </p:column>
 				            <p:column>
 				            	<f:facet name="header">#{msg['showBooksOverview_author']}</f:facet>
-				            	<h:outputText value="#{books.author.firstname}" />
-				            	<h:outputText value=" #{books.author.lastname}" />
+				            	<h:outputText value="#{BooksInShelf.author.firstname}" />
+				            	<h:outputText value=" #{BooksInShelf.author.lastname}" />
 				            </p:column>
 				            <p:column>
 				            	<f:facet name="header">#{msg['showBooksOverview_ISBN']}</f:facet>
-				            	<h:outputText value="#{books.isbn}" />
+				            	<h:outputText value="#{BooksInShelf.isbn}" />
 				            </p:column>
 				            <p:column>
 				            	<f:facet name="header">Genre</f:facet>
-				            	<h:outputText value="#{books.genre.genre}" />
+				            	<h:outputText value="#{BooksInShelf.genre.genre}" />
 				            </p:column>
 					        <p:column style="font-weight: bold;">
 					        	<f:facet name="header">#{msg['showBooksOverview_button_edit']}</f:facet>

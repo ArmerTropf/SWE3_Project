@@ -2,8 +2,8 @@ package de.hsb.webapp.bc.controller;
 
 import java.io.Serializable;
 import java.util.GregorianCalendar;
-import javax.annotation.PostConstruct;
 
+import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
@@ -11,11 +11,6 @@ import javax.faces.model.DataModel;
 import javax.faces.model.ListDataModel;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.transaction.HeuristicMixedException;
-import javax.transaction.HeuristicRollbackException;
-import javax.transaction.NotSupportedException;
-import javax.transaction.RollbackException;
-import javax.transaction.SystemException;
 import javax.transaction.UserTransaction;
 
 import de.hsb.webapp.bc.model.Author;
@@ -60,8 +55,14 @@ public class BooksHandler implements Serializable {
 	 */
 	private DataModel<Book> books;
 
+	/**
+	 * Stores all shelves.
+	 */
 	private DataModel<Shelf> shelves;
 
+	/**
+	 * Stores all authors.
+	 */
 	private DataModel<Author> authors;
 
 	/**
@@ -81,6 +82,23 @@ public class BooksHandler implements Serializable {
 	public void init() {
 		try {
 			utx.begin();
+			Author a1 = new Author("Joanne K.", "Rowling"), a2 = new Author("Bram", "Stoker"),
+					a3 = new Author("Mary", "Shelley");
+			em.persist(a1);
+			em.persist(a2);
+			em.persist(a3);
+			Book b1 = new Book("Frankenstein", "978-3866473768", GenreType.SCIENCE_FICTION,
+					new GregorianCalendar(2009, 02, 27).getTime());
+			b1.setAuthor(a3);
+			Book b2 = new Book("Dracula", "978-3866472938", GenreType.HORROR,
+					new GregorianCalendar(2008, 10, 01).getTime());
+			b2.setAuthor(a2);
+			Book b3 = new Book("Harry Potter und der Stein der Weisen", "978-3551354013", GenreType.FANTASY,
+					new GregorianCalendar(2005, 01, 01).getTime());
+			b3.setAuthor(a1);
+			em.persist(b1);
+			em.persist(b2);
+			em.persist(b3);
 			books = new ListDataModel<Book>();
 			books.setWrappedData(em.createNamedQuery("SelectBook").getResultList());
 			shelves = new ListDataModel<Shelf>();
@@ -104,6 +122,16 @@ public class BooksHandler implements Serializable {
 	}
 
 	/**
+	 * Edit an existing book.
+	 * 
+	 * @return XHTML page for editing a book.
+	 */
+	public String editBook() {
+		rememberBook = books.getRowData();
+		return "addBook";
+	}
+
+	/**
 	 * Deletes a book from database.
 	 * 
 	 * @return XHTML page.
@@ -115,23 +143,12 @@ public class BooksHandler implements Serializable {
 			rememberBook = em.merge(rememberBook);
 			em.remove(rememberBook);
 			books.setWrappedData(em.createNamedQuery("SelectBook").getResultList());
-			authors.setWrappedData(em.createNamedQuery("SelectAuthor").getResultList());
 			shelves.setWrappedData(em.createNamedQuery("SelectShelf").getResultList());
 			utx.commit();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return "showBooksOverview";
-	}
-
-	/**
-	 * Edit an existing book.
-	 * 
-	 * @return XHTML page for editing a book.
-	 */
-	public String editBook() {
-		rememberBook = books.getRowData();
-		return "addBook";
 	}
 
 	/**
@@ -151,13 +168,50 @@ public class BooksHandler implements Serializable {
 		return "showBooksOverview";
 	}
 
-
 	/**
 	 * Cancel process for adding/editing a book.
 	 * 
 	 * @return XHTML page where all books are listed.
 	 */
 	public String cancelEditOrAddBook() {
+		return "showBooksOverview";
+	}
+
+	public String newAuthor() {
+		rememberAuthor = new Author();
+		return "XHTML";
+	}
+
+	public String editAuthor() {
+		rememberAuthor = authors.getRowData();
+		return "XHTML";
+	}
+
+	public String saveAuthor() {
+		try {
+			utx.begin();
+			rememberAuthor = em.merge(rememberAuthor);
+			authors.setWrappedData(em.createNamedQuery("SelectAuthor").getResultList());
+			books.setWrappedData(em.createNamedQuery("SelectBook").getResultList());
+			utx.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return "showBooksOverview";
+	}
+
+	public String deleteAuthor() {
+		rememberAuthor = authors.getRowData();
+		try {
+			utx.begin();
+			rememberAuthor = em.merge(rememberAuthor);
+			em.remove(rememberAuthor);
+			books.setWrappedData(em.createNamedQuery("SelectBook").getResultList());
+			authors.setWrappedData(em.createNamedQuery("SelectAuthor").getResultList());
+			utx.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		return "showBooksOverview";
 	}
 
@@ -242,5 +296,4 @@ public class BooksHandler implements Serializable {
 	public void setAuthors(DataModel<Author> authors) {
 		this.authors = authors;
 	}
-
 }

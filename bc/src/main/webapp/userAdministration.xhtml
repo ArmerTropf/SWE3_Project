@@ -64,7 +64,7 @@
 		<div id="footer">
 			<h:form>
 				<p:commandButton action="#{userAndShelvesHandler.newUser()}" value="#{msg['userAdministration_button_newUser']}"  icon="ui-icon-check"></p:commandButton>
-				<p:commandButton value="#{msg['userAdministration_button_cancel']}"  icon="ui-icon-check"></p:commandButton>
+				<p:commandButton action="#{userAndShelvesHandler.cancelUser()}" value="#{msg['userAdministration_button_cancel']}"  icon="ui-icon-check"></p:commandButton>
 			</h:form>
 		</div>
 	</h:body>
