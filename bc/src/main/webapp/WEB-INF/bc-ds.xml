@@ -26,7 +26,8 @@
     <datasource jndi-name="java:jboss/datasources/bcDS"
         pool-name="bc" enabled="true"
         use-java-context="true">
-        <connection-url>jdbc:h2:mem:bc;DB_CLOSE_ON_EXIT=FALSE;DB_CLOSE_DELAY=-1</connection-url>
+        <!-- <connection-url>jdbc:h2:mem:bc;DB_CLOSE_ON_EXIT=FALSE;DB_CLOSE_DELAY=-1</connection-url> -->
+        <connection-url>jdbc:h2:tcp://localhost/~/Desktop/bc</connection-url>
         <driver>h2</driver>
         <security>
             <user-name>sa</user-name>

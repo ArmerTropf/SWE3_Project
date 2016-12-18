@@ -80,7 +80,7 @@ public class UserAndShelvesHandler implements Serializable {
 	 */
 	private List<Book> myBooks;
 
-	User u = new User("Schrul", "Thomas", "12345", "tschrul", true); // just for
+//	User u = new User("Schrul", "Thomas", "12345", "tschrul", true); // just for
 																		// testing:
 																		// default
 																		// user
@@ -94,10 +94,10 @@ public class UserAndShelvesHandler implements Serializable {
 	@PostConstruct
 	public void init() {
 		try {
-			rememberUser = u; // just for testing
+//			rememberUser = u; // just for testing
 			utx.begin();
-			em.persist(new User("Guenster", "Michael", "12345", "mguenster", true));
-			em.persist(u);
+//			em.persist(new User("Guenster", "Michael", "12345", "mguenster", true));
+//			em.persist(u);
 			user = new ListDataModel<User>();
 			user.setWrappedData(em.createNamedQuery("SelectUser").getResultList());
 			shelves = new ListDataModel<Shelf>();
@@ -114,8 +114,8 @@ public class UserAndShelvesHandler implements Serializable {
 	 * @return
 	 */
 	public void newShelf() {
-		// rememberUser = user.getRowData();
-		rememberUser = u; //just for testing
+		 rememberUser = user.getRowData();
+//		rememberUser = u; //just for testing
 		rememberShelf = new Shelf();
 		if (rememberUser.getShelves() == null) {
 			rememberUser.setShelves(new ArrayList<Shelf>());
@@ -128,8 +128,8 @@ public class UserAndShelvesHandler implements Serializable {
 	 * @return
 	 */
 	public String editShelf(Shelf shelf) {
-		// rememberUser = user.getRowData();
-		rememberUser = u;
+		 rememberUser = user.getRowData();
+//		rememberUser = u;
 		// rememberShelf = shelves.getRowData();
 		rememberShelf = shelf;
 		return "shelfList?faces-redirect=true";
@@ -177,8 +177,8 @@ public class UserAndShelvesHandler implements Serializable {
 	 * @return
 	 */
 	public String deleteShelf(Shelf shelf) {
-		// rememberUser = user.getRowData();
-		rememberUser = u;
+		 rememberUser = user.getRowData();
+//		rememberUser = u;
 		// rememberShelf = shelves.getRowData();
 		rememberShelf = shelf;
 		rememberUser.getShelves().remove(rememberShelf);
@@ -275,6 +275,20 @@ public class UserAndShelvesHandler implements Serializable {
 	 * @return String "login" which is the redirect to login.xhtml.
 	 */
 	public String cancelUserRegistration() {
+		return "login";
+	}
+	
+	public String saveUserRegistration(){
+		try {
+			utx.begin();
+			rememberUser = em.merge(rememberUser);
+			em.persist(rememberUser);
+			user.setWrappedData(em.createNamedQuery("SelectUser").getResultList());
+			utx.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		newUser();
 		return "login";
 	}
 

@@ -9,6 +9,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.Size;
@@ -20,6 +21,10 @@ import javax.validation.constraints.Size;
  *
  */
 @NamedQuery(name = "SelectUser", query = "Select u from User u")
+@NamedQueries({
+    @NamedQuery(name="User.findByName",
+                query="SELECT c FROM User c WHERE c.login = :login AND c.password = :password"),
+}) 
 @Entity
 public class User implements Serializable {
 

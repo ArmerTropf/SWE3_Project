@@ -9,13 +9,14 @@
 	xmlns:p="http://primefaces.org/ui">
 
 <h:head>
-	<title><ui:insert name="title">#{msg['showBooksOverview_title']}</ui:insert></title>
+	<title><ui:insert name="title">#{userLoginHandler.loggedInUser.login} #{msg['showBooksOverview_title']}</ui:insert></title>
 </h:head>
 <h:body>
 	<div id="content">
+	
 		<ui:insert name="content">
 			<h:form id="form">
-
+				
 				<p:dataTable sortBy="#{books.title}" id="data" var="books"
 					value="#{booksHandler.books}" rowClasses="odd,even"
 					headerClass="header">
@@ -119,6 +120,10 @@
 				<f:facet name="footer">
 					<p:commandButton action="/shelfList.xhtml" label="Meine Regale"
 						value="Meine Regale" immediate="true"></p:commandButton>
+				</f:facet>
+				<f:facet name="footer">
+					<p:commandButton action="#{userLoginHandler.logout()}" label="Logout"
+						value="Logout" immediate="true"></p:commandButton>
 				</f:facet>
 
 			</p:panelGrid>
