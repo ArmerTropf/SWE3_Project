@@ -83,7 +83,7 @@ public class User implements Serializable {
 	 * isActivated says whether the user account is activated for login. Default
 	 * value is "false".
 	 */
-	private boolean isActivated = false;
+	private boolean isActivated = true;
 
 	/**
 	 * A user may have many shelves. They will be stored in a List.
@@ -233,7 +233,7 @@ public class User implements Serializable {
 	 * 
 	 * @return True if user is an administrator.
 	 */
-	public boolean getAdmin() {
+	public boolean isAdmin() {
 		return isAdmin;
 	}
 

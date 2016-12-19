@@ -89,8 +89,8 @@ public class UserLogin implements Serializable {
 	 *         credentials are correct, otherwise user will stay at the login
 	 *         page.
 	 */
-	public String login() {
-		FacesMessage message = null;
+	public String login(String titel, String message) {
+		FacesMessage msg = null;
 		try {
 			utx.begin();
 		} catch (Exception e) {
@@ -101,24 +101,25 @@ public class UserLogin implements Serializable {
 		query.setMaxResults(1); // allows a new login process for the same user
 								// after he logs out
 		if (query.getResultList().isEmpty()) {
-			message = new FacesMessage(FacesMessage.SEVERITY_WARN, "Login error", "Invalid credentials");
-			FacesContext.getCurrentInstance().addMessage(null, message);
+			msg = new FacesMessage(FacesMessage.SEVERITY_WARN, titel, message);
+			FacesContext.getCurrentInstance().addMessage(null, msg);
 			try {
 				utx.commit();
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 			return "login";
+		} else if (!(loggedInUser = (User) query.getSingleResult()).isActivated()) {
+			msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Your account is not activated!");
+			FacesContext.getCurrentInstance().addMessage(null, msg);
+			return "login";
 		} else {
-			loggedInUser = (User) query.getSingleResult();
-			message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Welcome", this.username);
-			FacesContext.getCurrentInstance().addMessage(null, message);
 			try {
 				utx.commit();
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			return "template";
+			return "mainSite";
 		}
 	}
 

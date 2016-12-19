@@ -9,58 +9,88 @@
 	xmlns:p="http://primefaces.org/ui">
 
 <h:head>
-	<title><ui:insert name="title">Authoren</ui:insert></title>
+	<title><ui:insert name="title">#{msg.applicationTitle}</ui:insert></title>
 </h:head>
 <h:body>
 	<div id="content">
 		<ui:insert name="content">
+			<p:graphicImage value="resources/bc_img.jpg" />
+			<p:growl id="messages" showDetail="true" autoUpdate="true" />
 			<h:form id="form">
+
+				<p:menubar>
+					<p:submenu label="#{msg.language_titel}" icon="fa fa-language">
+						<p:menuitem value="#{msg.language_de}"
+							action="#{language.changeLanguage('de')}" immediate="true"
+							update="form" />
+						<p:menuitem value="#{msg.language_en}"
+							action="#{language.changeLanguage('en')}" immediate="true"
+							update="form" />
+					</p:submenu>
+					<f:facet name="options">
+						<p:outputLabel style="margin-right:10px"
+							value="#{msg.menu_login}: #{userLoginHandler.loggedInUser.login}" />
+						<p:commandButton value="#{msg.menu_logout}"
+							action="#{userLoginHandler.logout()}" icon="fa fa-sign-out"
+							immediate="true" />
+					</f:facet>
+				</p:menubar>
+
+				<br />
 
 				<p:dataTable sortBy="#{authors.lastname}" id="data" var="authors"
 					value="#{booksHandler.authors}" rowClasses="odd,even"
 					headerClass="header">
-					<f:facet name="header">Author</f:facet>
+					<f:facet name="header">#{msg.manageAuthors_title}</f:facet>
 					<p:column>
-						<f:facet name="header">Nachname</f:facet>
-						<h:outputText value="#{authors.lastname}" />
+						<f:facet name="header">#{msg.manageAuthors_lastname}</f:facet>
+						<p:outputLabel value="#{authors.lastname}" />
 					</p:column>
 					<p:column>
-						<f:facet name="header">Vorname</f:facet>
-						<h:outputText value="#{authors.firstname}" />
+						<f:facet name="header">#{msg.manageAuthors_firstname}</f:facet>
+						<p:outputLabel value="#{authors.firstname}" />
 					</p:column>
 					<p:column style="font-weight: bold;">
-						<f:facet name="header">Bearbeiten</f:facet>
+						<f:facet name="header">#{msg.manageAuthors_button_edit}</f:facet>
 						<p:commandButton action="#{booksHandler.editAuthor()}"
-							value="Bearbeiten" update=":form:grid" immediate="true" />
+							value="#{msg.manageAuthors_button_edit}" update=":form:grid"
+							immediate="true" icon="fa fa-edit" />
+					</p:column>
+					<p:column>
+						<f:facet name="header">#{msg.manageAuthors_button_delete}</f:facet>
+						<p:commandButton action="#{booksHandler.deleteAuthor()}"
+							value="#{msg.manageAuthors_button_delete}" icon="fa fa-close"
+							update="data" immediate="true" />
 					</p:column>
 				</p:dataTable>
-
+				<br />
 				<p:separator />
-
+				<br />
 				<p:panelGrid id="grid" headerClass="header" footerClass="footer"
 					style="margin-top:0px;margin-left:0px" columns="2">
 					<f:facet name="header">
 						<p:row>
-							<p:column colspan="2">Author hinzufügen</p:column>
+							<p:column colspan="2">#{msg.manageAuthors_addtitle}</p:column>
 						</p:row>
 					</f:facet>
 
-					<p:outputLabel value="Vorname" for="firstname" />
-					<p:inputText id="firstname" required="
-						true"
+					<p:outputLabel value="#{msg.manageAuthors_firstname}"
+						for="firstname" />
+					<p:inputText id="firstname" required="true"
 						value="#{booksHandler.rememberAuthor.firstname}" />
-					<p:outputLabel value="Nachname" for="lastname" />
-					<p:inputText id="lastname" required="
-						true"
+					<p:outputLabel value="#{msg.manageAuthors_lastname}" for="lastname" />
+					<p:inputText id="lastname" required="true"
 						value="#{booksHandler.rememberAuthor.lastname}" />
 
 					<f:facet name="footer">
 						<p:commandButton action="#{booksHandler.saveAuthor()}"
-							value="Speichern" update=":form:data grid" icon="ui-icon-check"></p:commandButton>
+							value="#{msg.manageAuthors_button_save}" update=":form:data grid"
+							icon="fa fa-save" />
 					</f:facet>
 					<f:facet name="footer">
 						<p:commandButton action="#{booksHandler.cancelAuthor()}"
-							value="Abbrechen" update=":form:data grid" immediate="true" ></p:commandButton>
+							value="#{msg.manageAuthors_button_cancel}"
+							update=":form:data grid" immediate="true" icon="fa fa-close" />
 					</f:facet>
 				</p:panelGrid>
 

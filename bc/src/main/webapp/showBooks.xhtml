@@ -1,0 +1,146 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+	<title><ui:insert name="title">#{msg.applicationTitle}</ui:insert></title>
+</h:head>
+<h:body>
+	<div id="content">
+		<ui:insert name="content">
+			<p:graphicImage value="resources/bc_img.jpg" />
+			<p:growl id="messages" showDetail="true" autoUpdate="true" />
+			<h:form id="form">
+				<p:menubar>
+					<p:menuitem value="#{msg.menu_home}" action="mainSite"
+						icon="fa fa-home" immediate="true" />
+					<p:menuitem value="#{msg.menu_usermanagement}" action="showUser"
+						icon="fa fa-users" immediate="true" rendered="#{userLoginHandler.loggedInUser.admin}"/>
+					<p:menuitem value="#{msg.menu_myShelves}" action="#" icon="fa fa-book"
+						immediate="true" />
+					<p:submenu label="#{msg.language_titel}" icon="fa fa-language">
+						<p:menuitem value="#{msg.language_de}"
+							action="#{language.changeLanguage('de')}" immediate="true"
+							update="form" />
+						<p:menuitem value="#{msg.language_en}"
+							action="#{language.changeLanguage('en')}" immediate="true"
+							update="form" />
+					</p:submenu>
+					<f:facet name="options">
+						<p:outputLabel style="margin-right:10px"
+							value="#{msg.menu_login}: #{userLoginHandler.loggedInUser.login}" />
+						<p:commandButton value="#{msg.menu_logout}"
+							action="#{userLoginHandler.logout()}" icon="fa fa-sign-out"
+							immediate="true" />
+					</f:facet>
+				</p:menubar>
+				
+				<br/>
+				
+				<p:dataTable sortBy="#{books.title}" id="data" var="books"
+					value="#{booksHandler.books}" rowClasses="odd,even"
+					headerClass="header">
+					<f:facet name="header">#{msg.showBooksOverview_title}</f:facet>
+					<p:column>
+						<f:facet name="header">#{msg.showBooksOverview_bookTitle}</f:facet>
+						<p:outputLabel value="#{books.title}" />
+					</p:column>
+					<p:column>
+						<f:facet name="header">#{msg.showBooksOverview_author}</f:facet>
+						<p:outputLabel value="#{books.author.firstname}" />
+						<p:outputLabel value=" #{books.author.lastname}" />
+					</p:column>
+					<p:column>
+						<f:facet name="header">#{msg.showBooksOverview_ISBN}</f:facet>
+						<p:outputLabel value="#{books.isbn}" />
+					</p:column>
+					<p:column>
+						<f:facet name="header">#{msg.showBooksOverview_genre}</f:facet>
+						<p:outputLabel value="#{books.genre.genre}" />
+					</p:column>
+					<p:column>
+						<f:facet name="header">#{msg.showBooksOverview_release}</f:facet>
+						<p:outputLabel value="#{books.release}">
+							<f:convertDateTime pattern="MM.yyyy" />
+						</p:outputLabel>
+					</p:column>
+					<p:column>
+						<f:facet name="header">#{msg.showBooksOverview_button_edit}</f:facet>
+						<p:commandButton action="#{booksHandler.editBook()}"
+							value="#{msg.showBooksOverview_button_edit}" icon="fa fa-edit"
+							update=":form:grid" immediate="true" />
+					</p:column>
+					<p:column>
+						<f:facet name="header">#{msg.showBooksOverview_button_delete}</f:facet>
+						<p:commandButton action="#{booksHandler.deleteBook()}"
+							value="#{msg.showBooksOverview_button_delete}" icon="fa fa-close"
+							update="data" immediate="true" />
+					</p:column>
+				</p:dataTable>
+				<br/>
+				<p:separator />
+				<br/>
+				<p:panelGrid id="grid" headerClass="header" footerClass="footer"
+					style="margin-top:0px;margin-left:0px" columns="2">
+					<f:facet name="header">
+						<p:row>
+							<p:column colspan="2">#{msg.showBooksOverview_addbook}</p:column>
+						</p:row>
+					</f:facet>
+
+					<p:outputLabel value="#{msg.showBooksOverview_bookTitle}"
+						for="addBook_title" />
+					<p:inputText id="addBook_title" required="true"
+						value="#{booksHandler.rememberBook.title}" />
+					<p:outputLabel value="#{msg.showBooksOverview_ISBN}"
+						for="addBook_isbn" />
+					<p:inputText id="addBook_isbn"
+						value="#{booksHandler.rememberBook.isbn}" />
+					<p:outputLabel value="#{msg.showBooksOverview_genre}" for="genre" />
+					<h:selectOneMenu required="true" id="genre"
+						value="#{booksHandler.rememberBook.genre}">
+						<f:selectItems var="form" value="#{booksHandler.genreValues}"
+							itemValue="#{genreType}" itemLabel="#{genreType.genre}" />
+					</h:selectOneMenu>
+					<p:outputLabel value="#{msg.showBooksOverview_release}" for="date" />
+					<h:panelGroup>
+						<p:calendar id="date" value="#{booksHandler.rememberBook.release}"
+							mode="popup" navigator="true" showOn="button" pattern="MM.yyyy" />
+					</h:panelGroup>
+					<p:outputLabel value="#{msg.showBooksOverview_author}" for="author" />
+					<h:selectOneMenu converter="objectConverter" required="true"
+						id="author" value="#{booksHandler.rememberBook.author}">
+						<f:selectItems var="authoren" value="#{booksHandler.authors}"
+							itemValue="#{authoren}"
+							itemLabel="#{authoren.firstname} #{authoren.lastname}" />
+					</h:selectOneMenu>
+
+					<f:facet name="footer">
+						<p:commandButton action="#{booksHandler.saveBook()}"
+							value="#{msg.showBooksOverview_button_save}"
+							update=":form:data grid" icon="fa fa-save"></p:commandButton>
+					</f:facet>
+					<f:facet name="footer">
+						<p:commandButton action="#{booksHandler.cancelEditOrAddBook()}"
+							value="#{msg.showBooksOverview_button_cancel}"
+							update="grid" immediate="true" icon="fa fa-close"></p:commandButton>
+					</f:facet>
+					<f:facet name="footer">
+						<p:commandButton action="manageAuthors"
+							label="#{msg.showBooksOverview_button_author}"
+							value="#{msg.showBooksOverview_button_author}" immediate="true" icon="fa fa-user"/>
+					</f:facet>
+
+				</p:panelGrid>
+
+			</h:form>
+		</ui:insert>
+	</div>
+</h:body>
+</html>

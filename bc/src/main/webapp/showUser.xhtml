@@ -1,0 +1,143 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+	<title><ui:insert name="title">#{msg.applicationTitle}</ui:insert></title>
+</h:head>
+<h:body>
+	<div id="header" />
+	<div id="content">
+		<ui:insert name="content">
+			<p:graphicImage value="resources/bc_img.jpg" />
+			<p:growl id="messages" showDetail="true" autoUpdate="true" />
+			<h:form id="form">
+				<p:menubar>
+					<p:menuitem value="#{msg.menu_home}" action="mainSite"
+						icon="fa fa-home" immediate="true" />
+					<p:menuitem value="#{msg.menu_globalLibrary}" action="showBooks"
+						icon="fa fa-folder-open" immediate="true" />
+					<p:menuitem value="#{msg.menu_myShelves}" url="#" icon="fa fa-book" />
+					<p:submenu label="#{msg.language_titel}" icon="fa fa-language">
+						<p:menuitem value="#{msg.language_de}"
+							action="#{language.changeLanguage('de')}" immediate="true"
+							update="form" />
+						<p:menuitem value="#{msg.language_en}"
+							action="#{language.changeLanguage('en')}" immediate="true"
+							update="form" />
+					</p:submenu>
+					<f:facet name="options">
+						<p:outputLabel style="margin-right:10px"
+							value="#{msg.menu_login}: #{userLoginHandler.loggedInUser.login}" />
+						<p:commandButton value="#{msg.menu_logout}"
+							action="#{userLoginHandler.logout()}" icon="fa fa-sign-out" immediate="true"/>
+					</f:facet>
+				</p:menubar>
+
+				<br />
+
+				<p:dataTable var="user" value="#{userAndShelvesHandler.user}"
+					rowClasses="odd,even" headerClass="header">
+					<f:facet name="header">#{msg.addUser}</f:facet>
+					<p:column>
+						<f:facet name="header">#{msg['userAdministration_firstname']}</f:facet>
+						<p:outputLabel value="#{user.firstname}" />
+					</p:column>
+					<p:column>
+						<f:facet name="header">#{msg['userAdministration_lastname']}</f:facet>
+						<p:outputLabel value="#{user.lastname}" />
+					</p:column>
+					<p:column>
+						<f:facet name="header">#{msg['userAdministration_loginname']}</f:facet>
+						<p:outputLabel value="#{user.login}" />
+					</p:column>
+					<p:column>
+						<f:facet name="header">#{msg['userAdministration_admin']} </f:facet>
+						<p:outputLabel layout="inline" styleClass="fa fa-check"
+							rendered="#{user.admin}" />
+						<p:outputLabel layout="inline" styleClass="fa fa-close"
+							rendered="#{!user.admin}" />
+					</p:column>
+					<p:column>
+						<f:facet name="header">#{msg['userAdministration_activated']}</f:facet>
+						<p:outputLabel layout="inline" styleClass="fa fa-check"
+							rendered="#{user.activated}" />
+						<p:outputLabel layout="inline" styleClass="fa fa-close"
+							rendered="#{!user.activated}" />
+					</p:column>
+					<p:column>
+						<f:facet name="header">#{msg['userAdministration_button_edit']}</f:facet>
+						<p:commandButton action="#{userAndShelvesHandler.editUser()}"
+							immediate="true" value="#{msg['userAdministration_button_edit']}"
+							icon="fa fa-edit" />
+					</p:column>
+					<p:column>
+						<f:facet name="header">#{msg['userAdministration_button_delete']}</f:facet>
+						<p:commandButton update="@form"
+							action="#{userAndShelvesHandler.deleteUser()}"
+							value="#{msg['userAdministration_button_delete']}"
+							icon="fa fa-close" immediate="true" />
+					</p:column>
+				</p:dataTable>
+
+				<br />
+
+				<p:separator />
+
+				<br />
+
+				<p:panelGrid headerClass="header" footerClass="footer" columns="2">
+					<f:facet name="header">
+						<p:row>
+							<p:column colspan="2">#{msg.addUser_title}</p:column>
+						</p:row>
+					</f:facet>
+					<p:outputLabel value="#{msg.addUser_firstname}" for="firstname" />
+					<p:inputText id="firstname" required="false"
+						value="#{userAndShelvesHandler.rememberUser.firstname}" />
+					<p:outputLabel value="#{msg.addUser_lastname}" for="lastname" />
+					<p:inputText id="lastname" required="true"
+						value="#{userAndShelvesHandler.rememberUser.lastname}" />
+					<p:outputLabel value="#{msg.addUser_loginname}" for="login" />
+					<p:inputText id="login" required="true"
+						value="#{userAndShelvesHandler.rememberUser.login}" />
+					<p:outputLabel value="#{msg.addUser_activated}" for="activated" />
+					<p:selectBooleanCheckbox id="activated"
+						value="#{userAndShelvesHandler.rememberUser.activated}" />
+					<p:outputLabel value="#{msg.addUser_admin}" for="admin" />
+					<p:selectBooleanCheckbox id="admin"
+						value="#{userAndShelvesHandler.rememberUser.admin}" />
+					<p:outputLabel value="#{msg.addUser_password}" for="password" />
+					<p:password id="password" match="repeatpassword"
+						promptLabel="#{msg.addUser_msg_passwordPrompt}"
+						weakLabel="#{msg.addUser_msg_passwordWeak}"
+						goodLabel="#{msg.addUser_msg_passwordGood}"
+						strongLabel="#{msg.addUser_msg_passwordStrong}" required="true"
+						feedback="true" inline="true"
+						value="#{userAndShelvesHandler.rememberUser.password}" />
+					<p:outputLabel value="#{msg.addUser_repeatPassword}"
+						for="repeatpassword" />
+					<p:password id="repeatpassword" required="true"
+						value="#{userAndShelvesHandler.rememberUser.password}" />
+					<f:facet name="footer">
+						<p:commandButton
+							action="#{userAndShelvesHandler.saveUser(Error, msg.addUser_msg_loginExists)}"
+							value="#{msg.addUser_button_save}" icon="fa fa-save"
+							update="@form" />
+						<p:commandButton action="#{userAndShelvesHandler.cancelUser()}"
+							immediate="true" value="#{msg.addUser_button_cancel}"
+							icon="fa fa-close" />
+					</f:facet>
+				</p:panelGrid>
+				<h:inputHidden id="userEdit" value="false" />
+			</h:form>
+		</ui:insert>
+	</div>
+</h:body>
+</html>
