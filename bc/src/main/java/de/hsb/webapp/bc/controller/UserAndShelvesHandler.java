@@ -21,7 +21,6 @@ import de.hsb.webapp.bc.model.Book;
 import de.hsb.webapp.bc.model.Shelf;
 import de.hsb.webapp.bc.model.User;
 
-
 /**
  * With this class you will handle the user and shelves actions.
  * 
@@ -83,15 +82,6 @@ public class UserAndShelvesHandler implements Serializable {
 	 * Stores the books of the current shelf.
 	 */
 	private List<Book> myBooks;
-
-	// User u = new User("Schrul", "Thomas", "12345", "tschrul", true); // just
-	// for
-	// testing:
-	// default
-	// user
-	// (because
-	// of no
-	// login)
 
 	/**
 	 * Initializes the data model with some user for the first use.
@@ -225,6 +215,7 @@ public class UserAndShelvesHandler implements Serializable {
 	 * Creates a new user object for rememberUSer.
 	 */
 	public void newUser() {
+		System.out.println("");
 		rememberUser = new User();
 	}
 
@@ -236,26 +227,74 @@ public class UserAndShelvesHandler implements Serializable {
 	 */
 	public String editUser() {
 		rememberUser = user.getRowData();
-		return "userList?faces-redirect=true";
+		return "showUser?faces-redirect=true";
 	}
 
-	/**
-	 * Saves rememberUser from entity manager an set it into user (datamodel).
-	 * 
-	 * @return String "userAdministration" which is the redirect to
-	 *         userAdministration.xhtml.
-	 */
-	public String saveUser() {
-		try {
-			utx.begin();
-			rememberUser = em.merge(rememberUser);
-			user.setWrappedData(em.createNamedQuery("SelectUser").getResultList());
-			utx.commit();
-		} catch (Exception e) {
-			e.printStackTrace();
+	// /**
+	// * Saves rememberUser from entity manager an set it into user (datamodel).
+	// *
+	// * @return String "userAdministration" which is the redirect to
+	// * userAdministration.xhtml.
+	// */
+	// public String saveUser() {
+	// try {
+	// utx.begin();
+	// rememberUser = em.merge(rememberUser);
+	// user.setWrappedData(em.createNamedQuery("SelectUser").getResultList());
+	// utx.commit();
+	// } catch (Exception e) {
+	// e.printStackTrace();
+	// }
+	// newUser();
+	// return "showUser?faces-redirect=true";
+	// }
+
+	public String saveUser(String title, String message) {
+		if (rememberUser.getUid() == null) {
+			try {
+				utx.begin();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			Query query = em.createNamedQuery("SelectUserLogins").setParameter("login", rememberUser.getLogin());
+			if (!query.getResultList().isEmpty()) {
+				FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, title, message);
+				FacesContext.getCurrentInstance().addMessage(null, msg);
+				try {
+					utx.commit();
+
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				newUser();
+				return "showUser";
+			} else {
+				rememberUser = em.merge(rememberUser);
+				em.persist(rememberUser);
+				user.setWrappedData(em.createNamedQuery("SelectUser").getResultList());
+				try {
+					utx.commit();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				newUser();
+				System.out.println("USER wurde neu erstellt");
+				return "showUser";
+			}
+		} else {
+			try {
+				utx.begin();
+				rememberUser = em.merge(rememberUser);
+				user.setWrappedData(em.createNamedQuery("SelectUser").getResultList());
+				utx.commit();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			newUser();
+			return "showUser?faces-redirect=true";
+
 		}
-		newUser();
-		return "userList?faces-redirect=true";
+
 	}
 
 	/**
@@ -277,13 +316,12 @@ public class UserAndShelvesHandler implements Serializable {
 			e.printStackTrace();
 		}
 		newUser();
-		return "userList?faces-redirect=true";
+		return "showUser?faces-redirect=true";
 	}
 
 	/**
-
-=======
-	 * Cancels the user registration process.
+	 * 
+	 * ======= Cancels the user registration process.
 	 * 
 	 * @return String "login" which is the redirect to login.xhtml.
 	 */
@@ -352,7 +390,7 @@ public class UserAndShelvesHandler implements Serializable {
 
 	/**
 	 * Deletes a book from the current shelf.
-
+	 * 
 	 * 
 	 * @param book
 	 *            Book to delete
@@ -376,24 +414,25 @@ public class UserAndShelvesHandler implements Serializable {
 		return "shelfList?faces-redirect=true";
 	}
 
-	// /**
-	// * Cancels adding or editing process of a user account.
-	// *
-	// * @return String "userAdministration" which is the redirect to
-	// * userAdministration.xhtml
-	// */
-	// public String cancelUser() {
-	// return "userAdministration";
-	// }
+	/**
+	 * Cancels adding or editing process of a user account.
+	 *
+	 * @return String "userAdministration" which is the redirect to
+	 *         userAdministration.xhtml
+	 */
+	public String cancelUser() {
+		newUser();
+		return "showUser?faces-redirect=true";
+	}
 
-	// /**
-	// * Cancels shelf editing mode.
-	// *
-	// * @return
-	// */
-	// public String cancelShelf() {
-	// return "XHTML";
-	// }
+	/**
+	 * Cancels shelf editing mode.
+	 *
+	 * @return
+	 */
+	public String cancelShelf() {
+		return "XHTML";
+	}
 
 	/**
 	 * Gets user list (datamodel)
@@ -508,9 +547,8 @@ public class UserAndShelvesHandler implements Serializable {
 	public void setMyBooks(List<Book> myBooks) {
 		this.myBooks = myBooks;
 	}
-	
-	public void toMainPage(User newUser)
-	{
+
+	public void toMainPage(User newUser) {
 		this.rememberUser = newUser;
 	}
 }

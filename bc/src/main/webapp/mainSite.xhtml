@@ -18,12 +18,12 @@
 			<p:graphicImage value="resources/bc_img.jpg" />
 			<h:form id="form">
 				<p:menubar>
-					<p:menuitem value="#{msg.menu_home}" action="mainSite" icon="fa fa-home" />
+					<p:menuitem value="#{msg.menu_home}" url="#" icon="fa fa-home" />
 					<p:menuitem value="#{msg.menu_usermanagement}" action="showUser" immediate="true"
 						icon="fa fa-users" rendered="#{userLoginHandler.loggedInUser.admin}"/>
 					<p:menuitem value="#{msg.menu_globalLibrary}" action="showBooks"
 						icon="fa fa-folder-open" rendered="true" />
-					<p:menuitem value="#{msg.menu_myShelves}" url="#" icon="fa fa-book" />
+					<p:menuitem value="#{msg.menu_myShelves}" action="#" icon="fa fa-book" />
 					<p:submenu label="#{msg.language_titel}" icon="fa fa-language">
 						<p:menuitem value="#{msg.language_de}"
 							action="#{language.changeLanguage('de')}" immediate="true"

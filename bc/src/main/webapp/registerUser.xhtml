@@ -19,10 +19,10 @@
 		<ui:insert name="content">
 			<h:form id="form">
 				<p:growl id="messages" showDetail="true" autoUpdate="true" />
-				
+
 				<p:graphicImage value="resources/bc_img.jpg" />
-				<br/>
-				
+				<br />
+
 				<p:commandButton id="language_btn" value="#{msg.language_titel}"
 					icon="fa fa-language" immediate="true" />
 				<p:menu overlay="true" trigger="language_btn" my="left bottom"
@@ -34,7 +34,8 @@
 						action="#{language.changeLanguage('en')}" immediate="true"
 						update="form" />
 				</p:menu>
-
+				<br />
+				<br />
 				<p:panelGrid headerClass="header" footerClass="footer" columns="2">
 					<f:facet name="header">
 						<p:row>
