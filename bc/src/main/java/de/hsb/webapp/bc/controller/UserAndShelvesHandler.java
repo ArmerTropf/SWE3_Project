@@ -491,4 +491,9 @@ public class UserAndShelvesHandler implements Serializable {
 	public void setMyBooks(List<Book> myBooks) {
 		this.myBooks = myBooks;
 	}
+	
+	public void toMainPage(User newUser)
+	{
+		this.rememberUser = newUser;
+	}
 }

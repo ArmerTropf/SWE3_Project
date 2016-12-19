@@ -8,6 +8,7 @@ import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.faces.bean.ViewScoped;
 import javax.faces.model.DataModel;
 import javax.faces.model.ListDataModel;
 import javax.persistence.EntityManager;
@@ -87,6 +88,7 @@ public class BooksHandler implements Serializable {
 	@PostConstruct
 	public void init() {
 		try {
+			System.out.println("BOOKSHANDLER_INIT");
 			utx.begin();
 			Author a1 = new Author("Joanne K.", "Rowling"), a2 = new Author("Bram", "Stoker"),
 					a3 = new Author("Mary", "Shelley");

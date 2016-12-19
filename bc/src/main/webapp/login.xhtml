@@ -24,7 +24,7 @@ xmlns:fn="http://java.sun.com/jsp/jstl/functions"
 			</h:form>
 			
 		</div>
-		<div id="content">
+		<div id="content" align="center" >
 
 			<ui:insert name="content" >
 			<p:growl id="growl" sticky="true" showDetail="true" life="3000" />
@@ -34,21 +34,10 @@ xmlns:fn="http://java.sun.com/jsp/jstl/functions"
 	 				<h:outputLabel value="#{msg.login_password}"/>
 	 				<p:password required="false" requiredMessage="Eingabe fehlt" id="loginPassword" value="#{userLoginHandler.password}"/>
 	 				
-	 				<p:commandButton action="#{userLoginHandler.login()}"  value="login" update="growl" 
-                                 oncomplete="handleLoginRequest(xhr, status, args)"/>
+	 				<p:commandButton action="#{userLoginHandler.login()}"  value="login" update="growl"  />
                     <p:commandButton action="/registerUser.xhtml" value="register User" update="growl" />
 				</h:form>
-				<script type="text/javascript">
-				    function handleLoginRequest(xhr, status, args) {
-				        if(args.validationFailed || !args.loggedIn) {
-				            PF('dlg').jq.effect("shake", {times:5}, 100);
-				        }
-				        else {
-				            PF('dlg').hide();
-				            $('#loginLink').fadeOut();
-				        }
-				    }
-				</script>
+
 			</ui:insert>
 		</div>
 	</h:body>

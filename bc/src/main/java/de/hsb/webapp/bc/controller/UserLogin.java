@@ -104,7 +104,7 @@ public class UserLogin implements Serializable{
 		if (query.getResultList().isEmpty()) {
 			System.out.println("Name oder passord falsch nutte");
 
-			message = new FacesMessage(FacesMessage.SEVERITY_WARN, "Loggin Error", "Invalid credentials");
+			message = new FacesMessage(FacesMessage.SEVERITY_WARN, "Loggin Error", "hoomooo");
 			FacesContext.getCurrentInstance().addMessage(null, message);
 
 			try {
@@ -123,7 +123,7 @@ public class UserLogin implements Serializable{
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			return "showOwnLibrary";
+			return "template";
 		}
 
 	}
@@ -137,7 +137,8 @@ public class UserLogin implements Serializable{
 	}
 
 	public String logout() {
-		//FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
-		return "login.jsf?faces-redirect=true";
+//		FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
+		System.out.println("Logout!");
+		return "login?faces-redirect=true";
 	}
 }

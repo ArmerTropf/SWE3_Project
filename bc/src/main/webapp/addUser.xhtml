@@ -1,84 +1,69 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-xmlns:ui="http://java.sun.com/jsf/facelets"
-xmlns:f="http://java.sun.com/jsf/core"
-xmlns:c="http://java.sun.com/jstl/core"
-xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
 
-      xmlns:h="http://java.sun.com/jsf/html"
-      xmlns:p="http://primefaces.org/ui">
-
-	<h:head>
-		<link rel="stylesheet" href="resources/alleKunden.css" type="text/css" />
-		<title>
-			<ui:insert name="title">#{msg['addUser_title']}</ui:insert>
-		</title>
-	</h:head>
-	<h:body>
-		<div id="header">
-			<ui:insert name="header">
-				<h:form id="headerform">
-					<h:commandButton action="#{language.changeLanguage('')}" value="Deutsch"/>
-					<h:outputText value=" " />
-					<h:commandButton action="#{language.changeLanguage('en')}" value="English" />
-				</h:form>
-			</ui:insert>
-		</div>
-		<div id="content">
-			<ui:insert name="content">
-				<h:form>
-					<p:panelGrid  headerClass="header" footerClass="footer" style="margin-top:0px;margin-left:0px" >
-	    				<f:facet name="header">
-	        				<p:row>
-	       						<p:column colspan="2">#{msg['addUser_title']}</p:column>
-	       					</p:row>
-	       				</f:facet>
-	    					<p:row>
-	        					<p:column>#{msg['addUser_firstname']}</p:column>
-	        					<p:column>
-	       								<p:inputText id="addUser_firstname" required="false" value="#{userAndShelvesHandler.rememberUser.firstname}"/>
-	       						</p:column>
-	    					</p:row>
-	    					<p:row>
-	        					<p:column>#{msg['addUser_lastname']}</p:column>
-	        					<p:column>
-	       								<p:inputText id="addUser_lastname" required="false" value="#{userAndShelvesHandler.rememberUser.lastname}"/>
-	       						</p:column>
-	    					</p:row>
-	    					<p:row>
-	        					<p:column>#{msg['addUser_loginname']}</p:column>
-		        					<p:column>
-	       									<p:inputText id="addUser_loginname" required="false" value="#{userAndShelvesHandler.rememberUser.login}"/>
-		       						</p:column>
-	    					</p:row>
-	    					<p:row>
-	    						<p:column>#{msg['addUser_admin']}</p:column>
-			    					<p:column>
-										 	<p:selectBooleanCheckbox  itemValue="#{userAndShelvesHandler.rememberUser.admin}" value="#{userAndShelvesHandler.rememberUser.admin}"/>
-								    </p:column>    
-						    </p:row>
-						    <p:row>
-		    					<p:column>#{msg['addUser_activated']}</p:column>
-		    					<p:column>
-									        <p:selectBooleanCheckbox itemValue="#{userAndShelvesHandler.rememberUser.activated}" value="#{userAndShelvesHandler.rememberUser.activated}" />   
-							    </p:column>
-						    </p:row>
-	    					<p:row>
-	        					<p:column>
-		        						<p:commandButton action="#{userAndShelvesHandler.saveUser()}" value="#{msg['addUser_button_save']}"  icon="ui-icon-check" />
-	        					</p:column>
-								<p:column>								
-										<p:commandButton action="#{userAndShelvesHandler.cancelUser()}" immediate="true" value="#{msg['addUser_button_cancel']}"  icon="ui-icon-check"></p:commandButton>
-								</p:column>
-								
-	       					</p:row>		
-	     			</p:panelGrid>
-				</h:form>
-			</ui:insert>
-		</div>
-		<div id="footer">
-			<ui:insert name="footer"></ui:insert>
-		</div>
-	</h:body>
+<h:head>
+	<title><ui:insert name="title">#{msg.applicationTitle}</ui:insert>
+	</title>
+</h:head>
+<h:body>
+	<div id="header">
+		<ui:insert name="header">
+		</ui:insert>
+	</div>
+	<div id="content">
+		<ui:insert name="content">	
+			<h:form>
+				<p:growl id="messages" showDetail="true" autoUpdate="true"/>
+				<p:panelGrid headerClass="header" footerClass="footer"
+					 columns="2">
+					<f:facet name="header">
+						<p:row>
+							<p:column colspan="2">#{msg.addUser_title}</p:column>
+						</p:row>
+					</f:facet>
+					<p:outputLabel value="#{msg.addUser_firstname}" for="firstname" />
+					<p:inputText id="firstname" required="false"
+						value="#{userAndShelvesHandler.rememberUser.firstname}" />
+					<p:outputLabel value="#{msg.addUser_lastname}" for="lastname" />
+					<p:inputText id="lastname" required="true"
+						value="#{userAndShelvesHandler.rememberUser.lastname}" />
+					<p:outputLabel value="#{msg.addUser_loginname}" for="login" />
+					<p:inputText id="login" required="true"
+						value="#{userAndShelvesHandler.rememberUser.login}" />
+					<p:outputLabel value="#{msg.addUser_password}" for="password" />
+					<p:password id="password" match="repeatpassword"
+						promptLabel="#{msg.addUser_msg_passwordPrompt}"
+						weakLabel="#{msg.addUser_msg_passwordWeak}"
+						goodLabel="#{msg.addUser_msg_passwordGood}"
+						strongLabel="#{msg.addUser_msg_passwordStrong}"
+						required="true" feedback="true" inline="true"
+						value="#{userAndShelvesHandler.rememberUser.password}" />
+					<p:outputLabel value="#{msg.addUser_repeatPassword}"
+						for="repeatpassword" />
+					<p:password id="repeatpassword" required="true"
+						value="#{userAndShelvesHandler.rememberUser.password}" />
+					<f:facet name="footer">
+						<p:commandButton
+							action="#{userAndShelvesHandler.saveUser()}"
+							value="#{msg.addUser_button_save}" icon="ui-icon-check" />
+						<p:commandButton
+							action="#{userAndShelvesHandler.cancelUserRegistration()}"
+							immediate="true" value="#{msg.addUser_button_cancel}"
+							icon="ui-icon-check" />
+					</f:facet>
+				</p:panelGrid>
+			</h:form>
+		</ui:insert>
+	</div>
+	<div id="footer">
+		<ui:insert name="footer"></ui:insert>
+	</div>
+</h:body>
 </html>
