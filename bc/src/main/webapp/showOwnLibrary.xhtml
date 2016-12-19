@@ -86,13 +86,13 @@
 
 					<f:facet name="footer">
 						<p:commandButton action="#{booksHandler.saveBook()}"
-							value="#{msg['addBook_button_save']}" update=":form:data grid"
-							icon="ui-icon-check"></p:commandButton>
+							value="#{msg.showBooksOverview_button_save}" update=":form:data grid"
+							icon="fa fa-save"></p:commandButton>
 					</f:facet>
 					<f:facet name="footer">
-						<p:commandButton action="/manageAuthors.xhtml"
-							label="Authoren verwalten" value="Authoren verwalten"
-							immediate="true"></p:commandButton>
+						<p:commandButton action="/manageAuthors.jsf"
+							label="#{msg.showBooksOverview_button_author}" value="#{msg.showBooksOverview_button_author}"
+							immediate="true" icon="fa fa-user"></p:commandButton>
 					</f:facet>
 
 				</p:panelGrid>

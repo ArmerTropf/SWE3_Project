@@ -8,7 +8,6 @@ import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
-import javax.faces.bean.ViewScoped;
 import javax.faces.model.DataModel;
 import javax.faces.model.ListDataModel;
 import javax.persistence.EntityManager;
@@ -133,7 +132,7 @@ public class BooksHandler implements Serializable {
 	 */
 	public String editBook() {
 		rememberBook = books.getRowData();
-		return "addBook";
+		return "showBooks?faces-redirect=true";
 	}
 
 	/**
@@ -147,16 +146,14 @@ public class BooksHandler implements Serializable {
 			utx.begin();
 			rememberBook = em.merge(rememberBook);
 			em.remove(rememberBook);
-
 			shelves.setWrappedData(em.createNamedQuery("SelectShelf").getResultList());
 			books.setWrappedData(em.createNamedQuery("SelectBook").getResultList());
 			utx.commit();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
 		newBook();
-		return "showOwnLibrary?faces-redirect=true";
+		return "showBooks?faces-redirect=true";
 
 	}
 
@@ -166,7 +163,6 @@ public class BooksHandler implements Serializable {
 	 * @return XHTML page where all books are listed.
 	 */
 	public String saveBook() {
-
 		try {
 			utx.begin();
 			rememberBook = em.merge(rememberBook);
@@ -177,17 +173,18 @@ public class BooksHandler implements Serializable {
 			e.printStackTrace();
 		}
 		newBook();
-		return "showOwnLibrary?faces-redirect=true";
+		return "showBooks?faces-redirect=true";
 	}
 
-	// /**
-	// * Cancel process for adding/editing a book.
-	// *
-	// * @return XHTML page where all books are listed.
-	// */
-	// public String cancelEditOrAddBook() {
-	// return "showBooksOverview";
-	// }
+	/**
+	 * Cancel process for adding/editing a book.
+	 *
+	 * @return XHTML page where all books are listed.
+	 */
+	public String cancelEditOrAddBook() {
+		newBook();
+		return "showBooks?faces-redirect=true";
+	}
 
 	/**
 	 * Creates a new author.
@@ -225,7 +222,6 @@ public class BooksHandler implements Serializable {
 		return "manageAuthors?faces-redirect=true";
 	}
 
-
 	/**
 	 * Deletes the current author.
 	 * 
@@ -248,14 +244,13 @@ public class BooksHandler implements Serializable {
 		return "manageAuthors?faces-redirect=true";
 	}
 
-
 	/**
 	 * Cancels the manging author mode.
 	 * 
 	 * @return
 	 */
 	public String cancelAuthor() {
-		return "showOwnLibrary";
+		return "showBooks";
 	}
 
 	/**
