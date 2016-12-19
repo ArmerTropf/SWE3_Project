@@ -23,7 +23,7 @@
 						icon="fa fa-home" immediate="true" />
 					<p:menuitem value="#{msg.menu_globalLibrary}" action="showBooks"
 						icon="fa fa-folder-open" immediate="true" />
-					<p:menuitem value="#{msg.menu_myShelves}" url="#" icon="fa fa-book" />
+					<p:menuitem value="#{msg.menu_myShelves}" action="showShelves" icon="fa fa-book" immediate="true"/>
 					<p:submenu label="#{msg.language_titel}" icon="fa fa-language">
 						<p:menuitem value="#{msg.language_de}"
 							action="#{language.changeLanguage('de')}" immediate="true"

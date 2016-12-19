@@ -22,7 +22,7 @@
 						icon="fa fa-home" immediate="true" />
 					<p:menuitem value="#{msg.menu_usermanagement}" action="showUser"
 						icon="fa fa-users" immediate="true" rendered="#{userLoginHandler.loggedInUser.admin}"/>
-					<p:menuitem value="#{msg.menu_myShelves}" action="#" icon="fa fa-book"
+					<p:menuitem value="#{msg.menu_myShelves}" action="showShelves" icon="fa fa-book"
 						immediate="true" />
 					<p:submenu label="#{msg.language_titel}" icon="fa fa-language">
 						<p:menuitem value="#{msg.language_de}"
