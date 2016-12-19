@@ -10,13 +10,13 @@
 
 <h:head>
 	<!-- 	<link rel="stylesheet" href="resources/alleKunden.css" type="text/css" /> -->
-	<title><ui:insert name="title">DUMMY</ui:insert></title>
+	<title><ui:insert name="title">#{msg.applicationTitle}</ui:insert></title>
 </h:head>
 <h:body>
 	<div id="header"/>
 	<div id="content">
 		<ui:insert name="content">
-			<img src="./gogo.png" width="1900px" height="200px" />
+			<p:graphicImage value="resources/bc_img.jpg" />
 			<h:form id="form">
 				<p:menubar>
 					<p:menuitem value="#{msg.menu_home}" url="#" icon="fa fa-home" />
@@ -25,18 +25,17 @@
 					<p:menuitem value="#{msg.menu_globalLibrary}" url="#"
 						icon="fa fa-folder-open" rendered="true" />
 					<p:menuitem value="#{msg.menu_myShelves}" url="#" icon="fa fa-book" />
-					<p:submenu label="Sprache" icon="fa fa-language">
-						<p:menuitem value="#{msg.menu_language_german}"
+					<p:submenu label="#{msg.language_titel}" icon="fa fa-language">
+						<p:menuitem value="#{msg.language_de}"
 							action="#{language.changeLanguage('de')}" immediate="true"
 							update="form" />
-						<p:menuitem value="#{msg.menu_language_english}"
+						<p:menuitem value="#{msg.language_en}"
 							action="#{language.changeLanguage('en')}" immediate="true"
 							update="form" />
-
 					</p:submenu>
 					<f:facet name="options">
 						<p:outputLabel style="margin-right:10px"
-							value="User: #{userLoginHandler.loggedInUser.login}" />
+							value="#{msg.menu_login}: #{userLoginHandler.loggedInUser.login}" />
 						<p:commandButton value="#{msg.menu_logout}"
 							action="#{userLoginHandler.logout()}" icon="fa fa-sign-out" />
 					</f:facet>

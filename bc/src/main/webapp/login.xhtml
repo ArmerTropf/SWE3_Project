@@ -54,7 +54,7 @@
 						requiredMessage="#{msg.login_msg_entry}" id="loginPassword"
 						value="#{userLoginHandler.password}" />
 					<f:facet name="footer">
-						<p:commandButton action="#{userLoginHandler.login()}"
+						<p:commandButton action="#{userLoginHandler.login()}" 
 							value="#{msg.login_button_login}" update="growl" />
 						<p:commandButton action="/registerUser.xhtml"
 							value="#{msg.login_button_register}" update="messages" />
