@@ -14,59 +14,76 @@
 <h:body>
 	<div id="content">
 		<ui:insert name="content">
-			<h:form id="form">
+			<div id="content">
+				<ui:insert name="content">
+					<p:dataTable sortBy="#{user.lastname}" id="data" var="user"
+						value="#{userAndShelvesHandler.user}" rowClasses="odd,even"
+						headerClass="header">
+						<f:facet name="header">Benutzer</f:facet>
+						<p:column>
+							<f:facet name="header">Nachname</f:facet>
+							<h:outputText value="#{user.lastname}" />
+						</p:column>
+						<p:column>
+							<f:facet name="header">Vorname</f:facet>
+							<h:outputText value="#{user.firstname}" />
+						</p:column>
+						<p:column style="font-weight: bold;">
+							<f:facet name="header">Bearbeiten</f:facet>
+							<p:commandButton action="#{userAndShelvesHandler.editUser()}"
+								value="Bearbeiten" icon="ui-icon-check" update="@this"
+								immediate="true" />
+						</p:column>
+						<p:column style="font-weight: bold;">
+							<f:facet name="header">Löschen</f:facet>
+							<p:commandButton action="#{userAndShelvesHandler.deleteUser()}"
+								value="Löschen" icon="ui-icon-check" update="@this"
+								immediate="true" />
+						</p:column>
+					</p:dataTable>
 
-				<p:dataTable sortBy="#{user.lastname}" id="data" var="user"
-					value="#{userAndShelvesHandler.user}" rowClasses="odd,even"
-					headerClass="header">
-					<f:facet name="header">Benutzer</f:facet>
-					<p:column>
-						<f:facet name="header">Nachname</f:facet>
-						<h:outputText value="#{user.lastname}" />
-					</p:column>
-					<p:column>
-						<f:facet name="header">Vorname</f:facet>
-						<h:outputText value="#{user.firstname}" />
-					</p:column>
-					<p:column style="font-weight: bold;">
-						<f:facet name="header">Bearbeiten</f:facet>
-						<p:commandButton action="#{userAndShelvesHandler.editUser()}"
-							value="Bearbeiten" icon="ui-icon-check" update=":form:grid"
-							immediate="true" />
-					</p:column>
-					<p:column style="font-weight: bold;">
-						<f:facet name="header">Löschen</f:facet>
-						<p:commandButton action="#{userAndShelvesHandler.deleteUser()}"
-							value="Löschen" icon="ui-icon-check" update="data"
-							immediate="true" />
-					</p:column>
-				</p:dataTable>
-
-				<p:separator />
-
-				<p:panelGrid id="grid" headerClass="header" footerClass="footer"
-					style="margin-top:0px;margin-left:0px" columns="2">
-					<f:facet name="header">
-						<p:row>
-							<p:column colspan="2">Benutzer hinzufügen</p:column>
-						</p:row>
-					</f:facet>
-
-					<p:outputLabel value="Vorname" for="firstname" />
-					<p:inputText id="firstname" required="true"
-						value="#{userAndShelvesHandler.rememberUser.firstname}" />
-					<p:outputLabel value="Nachname" for="lastname" />
-					<p:inputText id="lastname" required="true"
-						value="#{userAndShelvesHandler.rememberUser.lastname}" />
-
-
-					<f:facet name="footer">
-						<p:commandButton action="#{userAndShelvesHandler.saveUser()}"
-							value="Speichern" update=":form:data grid" icon="ui-icon-check"></p:commandButton>
-					</f:facet>
-
-				</p:panelGrid>
-			</h:form>
+					<p:separator />
+					<h:form>
+						<p:growl id="messages" showDetail="true" autoUpdate="true" />
+						<p:panelGrid headerClass="header" footerClass="footer" columns="2">
+							<f:facet name="header">
+								<p:row>
+									<p:column colspan="2">#{msg.addUser_title}</p:column>
+								</p:row>
+							</f:facet>
+							<p:outputLabel value="#{msg.addUser_firstname}" for="firstname" />
+							<p:inputText id="firstname" required="false"
+								value="#{userAndShelvesHandler.rememberUser.firstname}" />
+							<p:outputLabel value="#{msg.addUser_lastname}" for="lastname" />
+							<p:inputText id="lastname" required="true"
+								value="#{userAndShelvesHandler.rememberUser.lastname}" />
+							<p:outputLabel value="#{msg.addUser_loginname}" for="login" />
+							<p:inputText id="login" required="true"
+								value="#{userAndShelvesHandler.rememberUser.login}" />
+							<p:outputLabel value="#{msg.addUser_password}" for="password" />
+							<p:password id="password" match="repeatpassword"
+								promptLabel="#{msg.addUser_msg_passwordPrompt}"
+								weakLabel="#{msg.addUser_msg_passwordWeak}"
+								goodLabel="#{msg.addUser_msg_passwordGood}"
+								strongLabel="#{msg.addUser_msg_passwordStrong}" required="true"
+								feedback="true" inline="true"
+								value="#{userAndShelvesHandler.rememberUser.password}" />
+							<p:outputLabel value="#{msg.addUser_repeatPassword}"
+								for="repeatpassword" />
+							<p:password id="repeatpassword" required="true"
+								value="#{userAndShelvesHandler.rememberUser.password}" />
+							<f:facet name="footer">
+								<p:commandButton action="#{userAndShelvesHandler.saveUser()}"
+									value="#{msg.addUser_button_save}" icon="ui-icon-check" />
+								<p:commandButton
+									action="#{userAndShelvesHandler.cancelUserRegistration()}"
+									immediate="true" value="#{msg.addUser_button_cancel}"
+									icon="ui-icon-check" />
+							</f:facet>
+						</p:panelGrid>
+					</h:form>
+				</ui:insert>
+			</div>
 		</ui:insert>
 	</div>
 

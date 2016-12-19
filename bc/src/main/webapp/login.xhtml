@@ -1,55 +1,75 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-xmlns:ui="http://java.sun.com/jsf/facelets"
-xmlns:f="http://java.sun.com/jsf/core"
-xmlns:c="http://java.sun.com/jstl/core"
-xmlns:fn="http://java.sun.com/jsp/jstl/functions"
-
-      xmlns:h="http://java.sun.com/jsf/html"
-      xmlns:p="http://primefaces.org/ui">
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
 
 <h:head>
-<!-- 	<link rel="stylesheet" href="resources/alleKunden.css" type="text/css" /> -->
-	<title>
-		<ui:insert name="title">#{msg['login_title']}</ui:insert>
+	<!-- 	<link rel="stylesheet" href="resources/alleKunden.css" type="text/css" /> -->
+	<title><ui:insert name="title">#{msg.applicationTitle}</ui:insert>
 	</title>
 </h:head>
-	<h:body>
-		<div id="header">
-			<h:form>
-				<h:commandButton action="#{language.changeLanguage('')}" value="Deutsch"/>
-				<h:outputText value=" " /> 
-				<h:commandButton action="#{language.changeLanguage('en')}" value="English" />
-			</h:form>
-			
-		</div>
-		<div id="content">
-
-			<ui:insert name="content" >
+<h:body>
+	<div id="content">
+		<ui:insert name="content">
 			<p:growl id="growl" sticky="true" showDetail="true" life="3000" />
-				<h:form>
-					<h:outputLabel value="#{msg.login_username}"/>            
-	 				<h:inputText required="false" requiredMessage="Eingabe fehlt" id="loginName" value="#{userLoginHandler.username}"/>
-	 				<h:outputLabel value="#{msg.login_password}"/>
-	 				<p:password required="false" requiredMessage="Eingabe fehlt" id="loginPassword" value="#{userLoginHandler.password}"/>
-	 				
-	 				<p:commandButton action="#{userLoginHandler.login()}"  value="login" update="growl" 
-                                 oncomplete="handleLoginRequest(xhr, status, args)"/>
-                    <p:commandButton action="/registerUser.xhtml" value="register User" update="growl" />
-				</h:form>
-				<script type="text/javascript">
-				    function handleLoginRequest(xhr, status, args) {
-				        if(args.validationFailed || !args.loggedIn) {
-				            PF('dlg').jq.effect("shake", {times:5}, 100);
-				        }
-				        else {
-				            PF('dlg').hide();
-				            $('#loginLink').fadeOut();
-				        }
-				    }
-				</script>
-			</ui:insert>
-		</div>
-	</h:body>
+			<h:form id="form">
+
+				<p:growl id="messages" showDetail="true" autoUpdate="true" />
+
+				<p:graphicImage value="resources/bc_img.jpg" />
+				<br />
+
+				<p:commandButton id="language_btn" value="#{msg.language_titel}"
+					icon="fa fa-language" immediate="true" />
+				<p:menu overlay="true" trigger="language_btn" my="left bottom"
+					at="left top">
+					<p:menuitem value="#{msg.language_de}"
+						action="#{language.changeLanguage('')}" immediate="true"
+						update="form" />
+					<p:menuitem value="#{msg.language_en}"
+						action="#{language.changeLanguage('en')}" immediate="true"
+						update="form" />
+				</p:menu>
+
+				<br />
+				<br />
+
+				<p:panelGrid headerClass="header" footerClass="footer" columns="2">
+					<f:facet name="header">
+						<p:row>
+							<p:column colspan="2">#{msg.login_title}</p:column>
+						</p:row>
+					</f:facet>
+					<h:outputLabel value="#{msg.login_username}" />
+					<h:inputText required="false"
+						requiredMessage="{msg.login_msg_entry}" id="loginName"
+						value="#{userLoginHandler.username}" />
+					<h:outputLabel value="#{msg.login_password}" />
+					<p:password required="false"
+						requiredMessage="#{msg.login_msg_entry}" id="loginPassword"
+						value="#{userLoginHandler.password}" />
+					<f:facet name="footer">
+						<p:commandButton action="#{userLoginHandler.login()}" 
+							value="#{msg.login_button_login}" update="growl" />
+						<p:commandButton action="/registerUser.xhtml"
+							value="#{msg.login_button_register}" update="messages" />
+					</f:facet>
+				</p:panelGrid>
+			</h:form>
+		</ui:insert>
+	</div>
+
+	<br />
+
+	<div id="footer">
+		<ui:insert name="footer">
+		A webapp project created by M.Günster, A.Schriever, T.Schrul
+		</ui:insert>
+	</div>
+</h:body>
 </html>

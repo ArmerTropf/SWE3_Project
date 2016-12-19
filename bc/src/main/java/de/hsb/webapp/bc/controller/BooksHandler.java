@@ -8,6 +8,7 @@ import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.faces.bean.ViewScoped;
 import javax.faces.model.DataModel;
 import javax.faces.model.ListDataModel;
 import javax.persistence.EntityManager;
@@ -87,6 +88,7 @@ public class BooksHandler implements Serializable {
 	@PostConstruct
 	public void init() {
 		try {
+			System.out.println("BOOKSHANDLER_INIT");
 			utx.begin();
 			Author a1 = new Author("Joanne K.", "Rowling"), a2 = new Author("Bram", "Stoker"),
 					a3 = new Author("Mary", "Shelley");
@@ -131,7 +133,7 @@ public class BooksHandler implements Serializable {
 	 */
 	public String editBook() {
 		rememberBook = books.getRowData();
-		return "showOwnLibrary?faces-redirect=true";
+		return "addBook";
 	}
 
 	/**
@@ -145,14 +147,17 @@ public class BooksHandler implements Serializable {
 			utx.begin();
 			rememberBook = em.merge(rememberBook);
 			em.remove(rememberBook);
+
 			shelves.setWrappedData(em.createNamedQuery("SelectShelf").getResultList());
 			books.setWrappedData(em.createNamedQuery("SelectBook").getResultList());
 			utx.commit();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+
 		newBook();
 		return "showOwnLibrary?faces-redirect=true";
+
 	}
 
 	/**
@@ -220,6 +225,7 @@ public class BooksHandler implements Serializable {
 		return "manageAuthors?faces-redirect=true";
 	}
 
+
 	/**
 	 * Deletes the current author.
 	 * 
@@ -241,6 +247,7 @@ public class BooksHandler implements Serializable {
 		newAuthor();
 		return "manageAuthors?faces-redirect=true";
 	}
+
 
 	/**
 	 * Cancels the manging author mode.

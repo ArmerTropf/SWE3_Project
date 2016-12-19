@@ -1,34 +1,36 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-		xmlns:ui="http://java.sun.com/jsf/facelets"
-		xmlns:f="http://java.sun.com/jsf/core"
-		xmlns:c="http://java.sun.com/jstl/core"
-		xmlns:fn="http://java.sun.com/jsp/jstl/functions"
-		xmlns:h="http://java.sun.com/jsf/html"
-      	xmlns:p="http://primefaces.org/ui">
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
 
-	<h:head>
+<h:head>
 	<!-- 	<link rel="stylesheet" href="resources/alleKunden.css" type="text/css" /> -->
-		<title>
-			<ui:insert name="title">#{msg['userAdministration_title']}</ui:insert>
-		</title>
-	</h:head>
-	<h:body>
-		<div id="header">
-			<ui:insert name="header">
+	<title><ui:insert name="title">#{msg['userAdministration_title']}</ui:insert>
+	</title>
+</h:head>
+<h:body>
+	<div id="header">
+		<ui:insert name="header">
+			<h:form>
+				<h:commandButton action="#{language.changeLanguage('')}"
+					value="Deutsch" />
+				<h:outputText value=" " />
+				<h:commandButton action="#{language.changeLanguage('en')}"
+					value="English" />
+			</h:form>
+		</ui:insert>
+	</div>
+	<div id="content">
+		<ui:insert name="content">
 				<h:form>
-					<h:commandButton action="#{language.changeLanguage('')}" value="Deutsch"/>
-					<h:outputText value=" " />
-					<h:commandButton action="#{language.changeLanguage('en')}" value="English" />
-				</h:form>
-			</ui:insert>
-		</div>
-		<div id="content">
-			<ui:insert name="content">
-				<h:form>			
-					<p:dataTable var="user" value="#{userAndShelvesHandler.user}" rowClasses="odd,even" headerClass="header">	
-					<f:facet name="header">User</f:facet>
+					<p:dataTable var="user" value="#{userAndShelvesHandler.user}"
+						rowClasses="odd,even" headerClass="header">
+						<f:facet name="header">User</f:facet>
 						<p:column>
 							<f:facet name="header">#{msg['userAdministration_firstname']}</f:facet>
 							<h:outputText value="#{user.firstname}" />
@@ -49,23 +51,32 @@
 							<f:facet name="header">#{msg['userAdministration_activated']}</f:facet>
 							<h:outputText value="#{user.activated}" />
 						</p:column>
-							<p:column>
-								<f:facet name="header">#{msg['userAdministration_button_delete']}</f:facet>
-									<p:commandButton update="@form" action="#{userAndShelvesHandler.deleteUser()}" value="#{msg['userAdministration_button_delete']}" icon="ui-icon-check" />		
-							</p:column>
-							<p:column>	
-								<f:facet name="header">#{msg['userAdministration_button_edit']}</f:facet>	
-								<p:commandButton action="#{userAndShelvesHandler.editUser()}" value="#{msg['userAdministration_button_edit']}" icon="ui-icon-check" />
-							</p:column>
+						<p:column>
+							<f:facet name="header">#{msg['userAdministration_button_delete']}</f:facet>
+							<p:commandButton update="@form"
+								action="#{userAndShelvesHandler.deleteUser()}"
+								value="#{msg['userAdministration_button_delete']}"
+								icon="ui-icon-check" />
+						</p:column>
+						<p:column>
+							<f:facet name="header">#{msg['userAdministration_button_edit']}</f:facet>
+							<p:commandButton action="#{userAndShelvesHandler.editUser()}"
+								value="#{msg['userAdministration_button_edit']}"
+								icon="ui-icon-check" />
+						</p:column>
 					</p:dataTable>
 				</h:form>
-			</ui:insert>
-		</div>
-		<div id="footer">
-			<h:form>
-				<p:commandButton action="#{userAndShelvesHandler.newUser()}" value="#{msg['userAdministration_button_newUser']}"  icon="ui-icon-check"></p:commandButton>
-				<p:commandButton value="#{msg['userAdministration_button_cancel']}"  icon="ui-icon-check"></p:commandButton>
-			</h:form>
-		</div>
-	</h:body>
+		</ui:insert>
+	</div>
+	<div id="footer">
+		<h:form>
+			<p:commandButton action="#{userAndShelvesHandler.newUser()}"
+				value="#{msg['userAdministration_button_newUser']}"
+				icon="ui-icon-check"></p:commandButton>
+			<p:commandButton action="#{userAndShelvesHandler.cancelUser()}"
+				value="#{msg['userAdministration_button_cancel']}"
+				icon="ui-icon-check"></p:commandButton>
+		</h:form>
+	</div>
+</h:body>
 </html>

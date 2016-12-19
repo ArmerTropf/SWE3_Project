@@ -9,14 +9,15 @@
 	xmlns:p="http://primefaces.org/ui">
 
 <h:head>
-	<title><ui:insert name="title">#{userLoginHandler.loggedInUser.login} #{msg['showBooksOverview_title']}</ui:insert></title>
+	<title><ui:insert name="title"> #{msg['showBooksOverview_title']}</ui:insert></title>
 </h:head>
 <h:body>
 	<div id="content">
+	<h:outputText value="#{userLoginHandler.loggedInUser.login}" />
 	
 		<ui:insert name="content">
 			<h:form id="form">
-				
+<!-- 			<ui:include src="/showBooksOverview.xhtml" /> -->
 				<p:dataTable sortBy="#{books.title}" id="data" var="books"
 					value="#{booksHandler.books}" rowClasses="odd,even"
 					headerClass="header">
