@@ -20,8 +20,9 @@ import javax.validation.constraints.Size;
  * @author Thomas Schrul, Michael Günster, Andre Schriever
  *
  */
-@NamedQuery(name = "SelectUser", query = "Select u from User u")
 @NamedQueries({
+	@NamedQuery(name = "SelectUser", query = "Select u from User u"),
+	@NamedQuery(name = "SelectUserLogins", query = "Select l from User l where l.login = :login"),
     @NamedQuery(name="User.findByName",
                 query="SELECT c FROM User c WHERE c.login = :login AND c.password = :password"),
 }) 
@@ -63,11 +64,13 @@ public class User implements Serializable {
 	/**
 	 * User's password.
 	 */
+	@Size(min = 5, max = 10)
 	private String password;
 
 	/**
 	 * User's login name.
 	 */
+	@Size(min = 2, max = 10)
 	private String login;
 
 	/**

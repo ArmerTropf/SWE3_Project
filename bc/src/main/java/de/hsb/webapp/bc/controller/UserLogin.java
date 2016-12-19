@@ -16,102 +16,97 @@ import javax.transaction.UserTransaction;
 import de.hsb.webapp.bc.model.User;
 
 /**
- * Function to Check the Password and Username are not implementet yet
+ * With this class you will handle the user login.
  * 
- *
- */
-/**
- * With this class you will handle the login
- * 
- * ****Function to Check the Password and Username are not implementet yet****
  * 
  * @author Thomas Schrul, Michael Günster, Andre Schriever
  *
  */
 @SessionScoped
 @ManagedBean(name = "userLoginHandler")
-public class UserLogin implements Serializable{
+public class UserLogin implements Serializable {
+
+	// Start ---Declaration of variables---
 
 	/**
-	 * 
+	 * "The serialization runtime associates with each serializable class a
+	 * version number, called a serialVersionUID, which is used during
+	 * deserialization to verify that the sender and receiver of a serialized
+	 * object have loaded classes for that object that are compatible with
+	 * respect to serialization" -
+	 * https://docs.oracle.com/javase/7/docs/api/java/io/Serializable.html
 	 */
 	private static final long serialVersionUID = -7189330607628509074L;
 
 	/**
-	 * Entity Manger for the user and shelves.
+	 * Entity Manger for the user.
 	 */
 	@PersistenceContext
 	private EntityManager em;
 
 	/**
-	 * User transactions for the user and shelves.
+	 * User transactions for the user.
 	 */
 	@Resource
 	private UserTransaction utx;
 
+	/**
+	 * The user name from the login window.
+	 */
 	private String username;
 
+	/**
+	 * The user password from the login window.
+	 */
 	private String password;
 
-	User loggedInUser = new User();
+	/**
+	 * The current user logged in.
+	 */
+	private User loggedInUser = new User();
 
-	public String getUsername() {
-		return username;
-	}
+	// End ---Declaration of variables---
 
-	public void setUsername(String username) {
-		this.username = username;
-	}
-
-	public String getPassword() {
-		return password;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
-	}
-
+	/**
+	 * Initializise the database with an administrator user.
+	 */
 	@PostConstruct
 	private void init() {
 		try {
 			utx.begin();
-			em.persist(new User("Guenster", "Michael", "12345", "mguenster", true, true));
+			em.persist(new User("User", "Super", "12345", "root", true, true));
 			utx.commit();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
+	/**
+	 * Logs in the user.
+	 * 
+	 * @return String "" which is the main page of the webapp, if the
+	 *         credentials are correct, otherwise user will stay at the login
+	 *         page.
+	 */
 	public String login() {
 		FacesMessage message = null;
-
-		System.out.println(this.username);
-		System.out.println(this.password);
-
 		try {
 			utx.begin();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
 		Query query = em.createNamedQuery("User.findByName").setParameter("login", this.username)
 				.setParameter("password", this.password);
-
-		// Laesst beim abmelden eine erneute anmeldung zu
-		query.setMaxResults(1);
-
+		query.setMaxResults(1); // allows a new login process for the same user
+								// after he logs out
 		if (query.getResultList().isEmpty()) {
-			System.out.println("Name oder passord falsch nutte");
-
-			message = new FacesMessage(FacesMessage.SEVERITY_WARN, "Loggin Error", "Invalid credentials");
+			message = new FacesMessage(FacesMessage.SEVERITY_WARN, "Login error", "Invalid credentials");
 			FacesContext.getCurrentInstance().addMessage(null, message);
-
 			try {
 				utx.commit();
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-
 			return "login";
 		} else {
 			loggedInUser = (User) query.getSingleResult();
@@ -124,20 +119,76 @@ public class UserLogin implements Serializable{
 			}
 			return "showOwnLibrary";
 		}
-
 	}
 
+	/**
+	 * Logs out the user.
+	 * 
+	 * @return String "login" which is the login page.
+	 */
+	public String logout() {
+		// FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
+		return "login";
+	}
+
+	// Start ---Getter & Setter---
+
+	/**
+	 * Gets the current user logged in.
+	 * 
+	 * @return Current user.
+	 */
 	public User getLoggedInUser() {
 		return loggedInUser;
 	}
 
+	/**
+	 * Sets the current user.
+	 * 
+	 * @param loggedInUser
+	 *            New user.
+	 */
 	public void setLoggedInUser(User loggedInUser) {
 		this.loggedInUser = loggedInUser;
 	}
 
-	public String logout() {
-		//FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
-		return "login.jsf?faces-redirect=true";
+	/**
+	 * Gets the user name from the login window.
+	 * 
+	 * @return User name.
+	 */
+	public String getUsername() {
+		return username;
 	}
 
+	/**
+	 * Sets the user name in the login window.
+	 * 
+	 * @param username
+	 *            New user name.
+	 */
+	public void setUsername(String username) {
+		this.username = username;
+	}
+
+	/**
+	 * Gets the user password from the login window.
+	 * 
+	 * @return User password.
+	 */
+	public String getPassword() {
+		return password;
+	}
+
+	/**
+	 * Sets the user password from the login window.
+	 * 
+	 * @param password
+	 *            New user password.
+	 */
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	// End ---Getter & Setter---
 }
