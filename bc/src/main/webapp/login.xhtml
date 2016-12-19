@@ -18,12 +18,8 @@
 		<ui:insert name="content">
 			<p:growl id="growl" sticky="true" showDetail="true" life="3000" />
 			<h:form id="form">
-
 				<p:growl id="messages" showDetail="true" autoUpdate="true" />
-
 				<p:graphicImage value="resources/bc_img.jpg" />
-				<br />
-
 				<p:commandButton id="language_btn" value="#{msg.language_titel}"
 					icon="fa fa-language" immediate="true" />
 				<p:menu overlay="true" trigger="language_btn" my="left bottom"
@@ -35,7 +31,6 @@
 						action="#{language.changeLanguage('en')}" immediate="true"
 						update="form" />
 				</p:menu>
-
 				<br />
 				<br />
 
@@ -45,8 +40,8 @@
 							<p:column colspan="2">#{msg.login_title}</p:column>
 						</p:row>
 					</f:facet>
-					<h:outputLabel value="#{msg.login_username}" />
-					<h:inputText required="false"
+					<p:outputLabel value="#{msg.login_username}" />
+					<p:inputText required="false"
 						requiredMessage="{msg.login_msg_entry}" id="loginName"
 						value="#{userLoginHandler.username}" />
 					<h:outputLabel value="#{msg.login_password}" />

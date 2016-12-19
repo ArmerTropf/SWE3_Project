@@ -21,7 +21,6 @@ import de.hsb.webapp.bc.model.Book;
 import de.hsb.webapp.bc.model.Shelf;
 import de.hsb.webapp.bc.model.User;
 
-
 /**
  * With this class you will handle the user and shelves actions.
  * 
@@ -92,6 +91,7 @@ public class UserAndShelvesHandler implements Serializable {
 	// (because
 	// of no
 	// login)
+
 
 	/**
 	 * Initializes the data model with some user for the first use.
@@ -225,6 +225,7 @@ public class UserAndShelvesHandler implements Serializable {
 	 * Creates a new user object for rememberUSer.
 	 */
 	public void newUser() {
+		System.out.println("");
 		rememberUser = new User();
 	}
 
@@ -236,7 +237,7 @@ public class UserAndShelvesHandler implements Serializable {
 	 */
 	public String editUser() {
 		rememberUser = user.getRowData();
-		return "userList?faces-redirect=true";
+		return "showUser?faces-redirect=true";
 	}
 
 	/**
@@ -255,7 +256,62 @@ public class UserAndShelvesHandler implements Serializable {
 			e.printStackTrace();
 		}
 		newUser();
-		return "userList?faces-redirect=true";
+		return "showUser?faces-redirect=true";
+	}
+
+	public String saveUser(String title, String message) {
+		
+		if (rememberUser.getUid() == null) {
+
+			try {
+				utx.begin();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			rememberUser = em.merge(rememberUser);
+			user.setWrappedData(em.createNamedQuery("SelectUser").getResultList());
+			Query query = em.createNamedQuery("SelectUserLogins").setParameter("login", rememberUser.getLogin());
+			
+			if (!query.getResultList().isEmpty()) {
+				FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, title, message);
+				FacesContext.getCurrentInstance().addMessage(null, msg);
+				try {
+					utx.commit();
+
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				return "showUser";
+			} else {
+				rememberUser = em.merge(rememberUser);
+				em.persist(rememberUser);
+				user.setWrappedData(em.createNamedQuery("SelectUser").getResultList());
+				try {
+					utx.commit();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				newUser();
+				System.out.println("USER wurde neu erstellt");
+				return "showUser";
+			}
+		}
+		else
+		{
+			try {
+				utx.begin();
+				rememberUser = em.merge(rememberUser);
+				user.setWrappedData(em.createNamedQuery("SelectUser").getResultList());
+				utx.commit();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			newUser();
+			return "showUser?faces-redirect=true";
+		
+			
+		}
+		
 	}
 
 	/**
@@ -281,9 +337,8 @@ public class UserAndShelvesHandler implements Serializable {
 	}
 
 	/**
-
-=======
-	 * Cancels the user registration process.
+	 * 
+	 * ======= Cancels the user registration process.
 	 * 
 	 * @return String "login" which is the redirect to login.xhtml.
 	 */
@@ -352,7 +407,7 @@ public class UserAndShelvesHandler implements Serializable {
 
 	/**
 	 * Deletes a book from the current shelf.
-
+	 * 
 	 * 
 	 * @param book
 	 *            Book to delete
@@ -508,9 +563,8 @@ public class UserAndShelvesHandler implements Serializable {
 	public void setMyBooks(List<Book> myBooks) {
 		this.myBooks = myBooks;
 	}
-	
-	public void toMainPage(User newUser)
-	{
+
+	public void toMainPage(User newUser) {
 		this.rememberUser = newUser;
 	}
 }
