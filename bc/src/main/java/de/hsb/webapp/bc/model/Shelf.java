@@ -53,7 +53,7 @@ public class Shelf implements Serializable {
 	 * A shelf may have many books and a book may appear in different shelves.
 	 * They will be stored in a collection.
 	 */
-	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@ManyToMany(fetch = FetchType.EAGER)
 	private List<Book> books;
 
 	// End ---Declaration of variables---
@@ -111,7 +111,7 @@ public class Shelf implements Serializable {
 	 * Sets the books into the shelf.
 	 * 
 	 * @param books
-	 *            Collection with books.
+	 *            List with books.
 	 */
 	public void setBooks(List<Book> books) {
 		this.books = books;

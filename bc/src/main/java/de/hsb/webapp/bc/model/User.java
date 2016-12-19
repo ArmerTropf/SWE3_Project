@@ -1,7 +1,6 @@
 package de.hsb.webapp.bc.model;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -23,8 +22,6 @@ import javax.validation.constraints.Size;
  */
 @NamedQuery(name = "SelectUser", query = "Select u from User u")
 @NamedQueries({
-    @NamedQuery(name="User.findAll",
-                query="Select u from User u"),
     @NamedQuery(name="User.findByName",
                 query="SELECT c FROM User c WHERE c.login = :login AND c.password = :password"),
 }) 
@@ -86,7 +83,7 @@ public class User implements Serializable {
 	private boolean isActivated = false;
 
 	/**
-	 * A user may have many shelves. They will be stored in a collection.
+	 * A user may have many shelves. They will be stored in a List.
 	 */
 	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	private List<Shelf> shelves;
@@ -94,21 +91,14 @@ public class User implements Serializable {
 	// End ---Declaration of variables---
 
 	/**
-	 * Empty constructor. Every user will get a default shelf called
-	 * "Mein Hauptregal".
+	 * Empty constructor.
 	 */
 	public User() {
 		super();
-		this.shelves = new ArrayList<Shelf>();
-		System.out.println("Constructer: User()");
-//		this.shelves.add(new Shelf("shelf0"));
-//		this.shelves.add(new Shelf("shelf1"));
-//		this.shelves.add(new Shelf("shelf2"));
 	}
 
 	/**
-	 * Constructor using fields to create a user with a default shelf called
-	 * "Mein Hauptregal".
+	 * Constructor using fields to create a user.
 	 * 
 	 * @param lastname
 	 *            Last name of user.
@@ -128,17 +118,10 @@ public class User implements Serializable {
 		this.password = password;
 		this.login = login;
 		this.isActivated = isActivated;
-		this.shelves = new ArrayList<Shelf>();
-		System.out.println("Constructer: User(String lastname, String firstname, String password, String login, boolean isActivated)");
-//
-//		this.shelves.add(new Shelf("shelf0"));
-//		this.shelves.add(new Shelf("shelf1"));
-//		this.shelves.add(new Shelf("shelf2"));
 	}
 
 	/**
-	 * Constructor using fields to create an administrator with a default shelf
-	 * called "Mein Hauptregal"
+	 * Constructor using fields to create an administrator.
 	 * 
 	 * @param lastname
 	 *            Last name of user.
@@ -162,9 +145,6 @@ public class User implements Serializable {
 		this.login = login;
 		this.isAdmin = isAdmin;
 		this.isActivated = isActivated;
-		this.shelves = new ArrayList<Shelf>();
-		System.out.println("Constructer: User(String lastname, String firstname, String password, String login, boolean isAdmin,boolean isActivated)");
-
 	}
 
 	// Start ---Getter & Setter---
@@ -284,7 +264,7 @@ public class User implements Serializable {
 	}
 
 	/**
-	 * Gets the isActivated of the user.
+	 * Gets the information if the user is activated for login.
 	 * 
 	 * @return Current state of activation of the user account.
 	 */
@@ -300,6 +280,22 @@ public class User implements Serializable {
 	 */
 	public void setActivated(boolean isActivated) {
 		this.isActivated = isActivated;
+	}
+
+	/**
+	 * Gets the ID of the user.
+	 * @return User's ID.
+	 */
+	public Integer getUid() {
+		return uid;
+	}
+
+	/**
+	 * Sets the ID of the user.
+	 * @param uid New ID for the user.
+	 */
+	public void setUid(Integer uid) {
+		this.uid = uid;
 	}
 
 	// End ---Getter & Setter---

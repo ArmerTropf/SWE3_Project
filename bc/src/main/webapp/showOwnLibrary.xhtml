@@ -1,44 +1,133 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-    xmlns:h="http://java.sun.com/jsf/html"
-    xmlns:f="http://java.sun.com/jsf/core"
-    xmlns:ui="http://java.sun.com/jsf/facelets"
-    xmlns:p="http://primefaces.org/ui">
-<h:head>
-	<!-- 	<link rel="stylesheet" href="resources/alleKunden.css" type="text/css" /> -->
-		<title>
-			<ui:insert name="title">general Overview</ui:insert>
-		</title>
-	</h:head>
-	<h:body>
-		<div id="header">
-			<h:form>
-				<h:commandButton action="#{language.changeLanguage('de')}" value="Deutsch"/>
-				<h:outputText value=" " />
-				<h:commandButton action="#{language.changeLanguage('en')}" value="English" />
-				<h:commandButton action="#{userAndShelvesHandler.logout()}" value="Logout" />
-				<p:commandButton action="#{userAndShelvesHandler.newShelf()}" value="addShelf" />
-				<p:commandButton action="#{userAndShelvesHandler.newUser()}" value="UserAdministration" />
-			</h:form>
-		</div>
-		<div id="content">
-			<ui:insert name="content"> 
-				<h:form>
-					<p:layout style="min-width:400px;min-height:400px;">
-					    <p:layoutUnit position="west" resizable="true" size="100" minSize="100" maxSize="200">
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
 
-					    </p:layoutUnit>
-					    <p:layoutUnit position="center">
-					    	<ui:include src="#{uiHandler.uiCenter}.xhtml"/>
-					    </p:layoutUnit>
-					</p:layout>
+<h:head>
+	<title><ui:insert name="title">#{userLoginHandler.loggedInUser.login} #{msg['showBooksOverview_title']}</ui:insert></title>
+</h:head>
+<h:body>
+	<div id="content">
+	
+		<ui:insert name="content">
+			<h:form id="form">
 				
-				</h:form>
-				
-				
-				<ui:include src="#{uiHandler.uiSouth}.xhtml"/>
-			</ui:insert>
-		</div>
-	</h:body>
+				<p:dataTable sortBy="#{books.title}" id="data" var="books"
+					value="#{booksHandler.books}" rowClasses="odd,even"
+					headerClass="header">
+					<f:facet name="header">#{msg['showBooksOverview_title']}</f:facet>
+					<p:column>
+						<f:facet name="header">#{msg['showBooksOverview_bookTitle']}</f:facet>
+						<h:outputText value="#{books.title}" />
+					</p:column>
+					<p:column>
+						<f:facet name="header">#{msg['showBooksOverview_author']}</f:facet>
+						<h:outputText value="#{books.author.firstname}" />
+						<h:outputText value=" #{books.author.lastname}" />
+					</p:column>
+					<p:column>
+						<f:facet name="header">#{msg['showBooksOverview_ISBN']}</f:facet>
+						<h:outputText value="#{books.isbn}" />
+					</p:column>
+					<p:column>
+						<f:facet name="header">Genre</f:facet>
+						<h:outputText value="#{books.genre.genre}" />
+					</p:column>
+					<p:column style="font-weight: bold;">
+						<f:facet name="header">#{msg['showBooksOverview_button_edit']}</f:facet>
+						<p:commandButton action="#{booksHandler.editBook()}"
+							value="#{msg['showBooksOverview_button_edit']}"
+							icon="ui-icon-check" update=":form:grid" immediate="true" />
+					</p:column>
+					<p:column style="font-weight: bold;">
+						<f:facet name="header">#{msg['showBooksOverview_button_delete']}</f:facet>
+						<p:commandButton action="#{booksHandler.deleteBook()}"
+							value="#{msg['showBooksOverview_button_delete']}"
+							icon="ui-icon-check" update="data" immediate="true" />
+					</p:column>
+				</p:dataTable>
+
+				<p:separator />
+
+				<p:panelGrid id="grid" headerClass="header" footerClass="footer"
+					style="margin-top:0px;margin-left:0px" columns="2">
+					<f:facet name="header">
+						<p:row>
+							<p:column colspan="2">#{msg['addBook_title']}</p:column>
+						</p:row>
+					</f:facet>
+
+					<p:outputLabel value="#{msg['addBook_bookTitle']}"
+						for="addBook_title" />
+					<p:inputText id="addBook_title" required="true"
+						value="#{booksHandler.rememberBook.title}" />
+					<p:outputLabel value="#{msg['addBook_ISBN']}" for="addBook_isbn" />
+					<p:inputText id="addBook_isbn" required="true"
+						value="#{booksHandler.rememberBook.isbn}" />
+					<p:outputLabel value="Genre:" for="genre" />
+					<h:selectOneMenu required="true" id="genre"
+						value="#{booksHandler.rememberBook.genre}">
+						<f:selectItems var="form" value="#{booksHandler.genreValues}"
+							itemValue="#{genreType}" itemLabel="#{genreType.genre}" />
+					</h:selectOneMenu>
+					<p:outputLabel value="Author:" for="author" />
+					<h:selectOneMenu converter="objectConverter" required="true"
+						id="author" value="#{booksHandler.rememberBook.author}">
+						<f:selectItems var="authoren" value="#{booksHandler.authors}"
+							itemValue="#{authoren}"
+							itemLabel="#{authoren.firstname} #{authoren.lastname}" />
+					</h:selectOneMenu>
+
+					<f:facet name="footer">
+						<p:commandButton action="#{booksHandler.saveBook()}"
+							value="#{msg['addBook_button_save']}" update=":form:data grid"
+							icon="ui-icon-check"></p:commandButton>
+					</f:facet>
+					<f:facet name="footer">
+						<p:commandButton action="/manageAuthors.xhtml"
+							label="Authoren verwalten" value="Authoren verwalten"
+							immediate="true"></p:commandButton>
+					</f:facet>
+
+				</p:panelGrid>
+			</h:form>
+		</ui:insert>
+	</div>
+
+	<p:separator />
+
+	<div>
+		<h:form>
+			<p:panelGrid id="grid" headerClass="header" footerClass="footer"
+				style="margin-top:0px;margin-left:0px" columns="1">
+
+				<f:facet name="footer">
+					<p:commandButton action="/showOwnLibrary.xhtml"
+						label="Globale Bücherliste" value="Globale Bücherliste"
+						immediate="true"></p:commandButton>
+				</f:facet>
+
+				<f:facet name="footer">
+					<p:commandButton action="/userList.xhtml" label="Benutzer"
+						value="Benutzer" immediate="true"></p:commandButton>
+				</f:facet>
+
+				<f:facet name="footer">
+					<p:commandButton action="/shelfList.xhtml" label="Meine Regale"
+						value="Meine Regale" immediate="true"></p:commandButton>
+				</f:facet>
+				<f:facet name="footer">
+					<p:commandButton action="#{userLoginHandler.logout()}" label="Logout"
+						value="Logout" immediate="true"></p:commandButton>
+				</f:facet>
+
+			</p:panelGrid>
+		</h:form>
+	</div>
+</h:body>
 </html>

@@ -3,7 +3,6 @@ package de.hsb.webapp.bc.model;
 import java.io.Serializable;
 import java.util.Date;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -14,6 +13,7 @@ import javax.persistence.NamedQuery;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.Past;
+import javax.validation.constraints.Size;
 
 /**
  * With this class you can create books.
@@ -48,7 +48,7 @@ public class Book implements Serializable {
 	/**
 	 * Title of the book.
 	 */
-	// @Size(min = 2, max = 50)
+	@Size(min = 2, max = 50)
 	private String title;
 
 	/**
@@ -59,7 +59,7 @@ public class Book implements Serializable {
 	/**
 	 * Author of the book. Different books may have the same author.
 	 */
-	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@ManyToOne(fetch = FetchType.EAGER)
 	private Author author;
 
 	/**
@@ -108,7 +108,7 @@ public class Book implements Serializable {
 	// Start ---Getter & Setter---
 
 	/**
-	 * Gets title of the book.
+	 * Gets the title of the book.
 	 * 
 	 * @return Book title.
 	 */
@@ -200,6 +200,25 @@ public class Book implements Serializable {
 	 */
 	public void setRelease(Date release) {
 		this.release = release;
+	}
+
+	/**
+	 * Gets the ID of the book.
+	 * 
+	 * @return Book's ID.
+	 */
+	public Integer getBid() {
+		return bid;
+	}
+
+	/**
+	 * Sets the ID of the book.
+	 * 
+	 * @param bid
+	 *            New ID for the book.
+	 */
+	public void setBid(Integer bid) {
+		this.bid = bid;
 	}
 
 	// End ---Getter & Setter---

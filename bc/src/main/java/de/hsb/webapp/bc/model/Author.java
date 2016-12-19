@@ -114,5 +114,24 @@ public class Author implements Serializable {
 		this.lastname = lastname;
 	}
 
+	/**
+	 * Gets the ID of the author.
+	 * 
+	 * @return Author's ID.
+	 */
+	public Integer getAid() {
+		return aid;
+	}
+
+	/**
+	 * Sets the ID of the author.
+	 * 
+	 * @param aid
+	 *            New ID for the author.
+	 */
+	public void setAid(Integer aid) {
+		this.aid = aid;
+	}
+
 	// End ---Getter & Setter---
 }
