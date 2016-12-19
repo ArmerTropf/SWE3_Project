@@ -283,7 +283,7 @@ public class BooksHandler implements Serializable {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return "shelfList?faces-redirect=true";
+		return "showShelves?faces-redirect=true";
 	}
 
 	/**

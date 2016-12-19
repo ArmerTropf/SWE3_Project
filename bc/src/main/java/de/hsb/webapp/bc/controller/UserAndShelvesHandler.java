@@ -130,7 +130,7 @@ public class UserAndShelvesHandler implements Serializable {
 		// rememberUser = u;
 		// rememberShelf = shelves.getRowData();
 		rememberShelf = shelf;
-		return "shelfList?faces-redirect=true";
+		return "showShelves?faces-redirect=true";
 	}
 
 	/**
@@ -140,13 +140,22 @@ public class UserAndShelvesHandler implements Serializable {
 	 * @return
 	 */
 	public String saveShelf() {
+		
+		System.out.println("in SaveShelf()");
+		
 		if (rememberUser.getShelves() == null) {
 			rememberUser.setShelves(new ArrayList<Shelf>());
 		}
 		if (rememberShelf.getSid() == null) {
 			try {
+				System.out.println("in SaveShelf (rememberShelf.getSid() == null) ");
+				System.out.println("in SaveShelf  rememberUser.firstname = " + rememberUser.getFirstname());
+				
 				rememberUser.getShelves().add(rememberShelf);
+				System.out.println(rememberUser.getShelves().get(0).getName());
 				utx.begin();
+//				rememberShelf = em.merge(rememberShelf);
+				rememberUser = em.merge(rememberUser);
 				em.persist(rememberShelf);
 				user.setWrappedData(em.createNamedQuery("SelectUser").getResultList());
 				shelves.setWrappedData(em.createNamedQuery("SelectShelf").getResultList());
@@ -156,6 +165,8 @@ public class UserAndShelvesHandler implements Serializable {
 			}
 		} else {
 			try {
+				
+				System.out.println("in SaveShelf (rememberShelf.getSid() != null) ");
 				utx.begin();
 				rememberShelf = em.merge(rememberShelf);
 				shelves.setWrappedData(em.createNamedQuery("SelectShelf").getResultList());
@@ -166,7 +177,7 @@ public class UserAndShelvesHandler implements Serializable {
 			}
 		}
 		newShelf();
-		return "shelfList?faces-redirect=true";
+		return "showShelves?faces-redirect=true";
 	}
 
 	/**
@@ -175,18 +186,19 @@ public class UserAndShelvesHandler implements Serializable {
 	 * @return
 	 */
 	public String deleteShelf(Shelf shelf) {
-		rememberUser = user.getRowData();
+		
+		System.out.println("in deleteShelf(Shelf) parameter Shelf =  " + shelf.getName());
+//		rememberUser = user.getRowData();
 		// rememberUser = u;
-		// rememberShelf = shelves.getRowData();
-		rememberShelf = shelf;
-		rememberUser.getShelves().remove(rememberShelf);
+//		rememberShelf = shelves.getRowData();
+//		rememberShelf = shelf;
+//		rememberUser.getShelves().remove(rememberShelf);
 
 		try {
 			utx.begin();
-			rememberShelf = em.merge(rememberShelf);
+			rememberShelf = em.merge(shelf);
 			em.remove(rememberShelf);
 
-			// rememberUser = em.merge(rememberUser);
 			shelves.setWrappedData(em.createNamedQuery("SelectShelf").getResultList());
 			user.setWrappedData(em.createNamedQuery("SelectUser").getResultList());
 			utx.commit();
@@ -195,7 +207,7 @@ public class UserAndShelvesHandler implements Serializable {
 		}
 
 		newShelf();
-		return "shelfList?faces-redirect=true";
+		return "showShelves?faces-redirect=true";
 
 	}
 
@@ -385,7 +397,7 @@ public class UserAndShelvesHandler implements Serializable {
 			e.printStackTrace();
 		}
 
-		return "shelfList?faces-redirect=true";
+		return "showShelves?faces-redirect=true";
 	}
 
 	/**
@@ -411,7 +423,7 @@ public class UserAndShelvesHandler implements Serializable {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return "shelfList?faces-redirect=true";
+		return "showShelves?faces-redirect=true";
 	}
 
 	/**
@@ -551,4 +563,6 @@ public class UserAndShelvesHandler implements Serializable {
 	public void toMainPage(User newUser) {
 		this.rememberUser = newUser;
 	}
+	
+
 }
