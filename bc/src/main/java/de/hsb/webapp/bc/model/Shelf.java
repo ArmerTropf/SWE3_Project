@@ -1,11 +1,10 @@
 package de.hsb.webapp.bc.model;
 
 import java.io.Serializable;
-import java.util.Collection;
-import java.util.Vector;
+import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -19,12 +18,21 @@ import javax.validation.constraints.Size;
  * @author Thomas Schrul, Michael Günster, Andre Schriever
  *
  */
-@SuppressWarnings("serial")
 @NamedQuery(name = "SelectShelf", query = "Select s from Shelf s")
 @Entity
 public class Shelf implements Serializable {
 
 	// Start ---Declaration of variables---
+
+	/**
+	 * "The serialization runtime associates with each serializable class a
+	 * version number, called a serialVersionUID, which is used during
+	 * deserialization to verify that the sender and receiver of a serialized
+	 * object have loaded classes for that object that are compatible with
+	 * respect to serialization" -
+	 * https://docs.oracle.com/javase/7/docs/api/java/io/Serializable.html
+	 */
+	private static final long serialVersionUID = 6948098563899039003L;
 
 	/**
 	 * Shelf ID is the primary key for a shelf. A UUID will be generated
@@ -44,8 +52,8 @@ public class Shelf implements Serializable {
 	 * A shelf may have many books and a book may appear in different shelves.
 	 * They will be stored in a collection.
 	 */
-	@ManyToMany(cascade = CascadeType.ALL)
-	private Collection<Book> books;
+	@ManyToMany(fetch = FetchType.EAGER)
+	private List<Book> books;
 
 	// End ---Declaration of variables---
 
@@ -54,7 +62,6 @@ public class Shelf implements Serializable {
 	 */
 	public Shelf() {
 		super();
-		this.books = new Vector<Book>();
 	}
 
 	/**
@@ -67,22 +74,6 @@ public class Shelf implements Serializable {
 	public Shelf(String name) {
 		super();
 		this.name = name;
-		this.books = new Vector<Book>();
-	}
-
-	/**
-	 * Constructor using fields to create a shelf. Use this constructor for
-	 * adding a list of books to the shelf directly.
-	 * 
-	 * @param name
-	 *            Name of the shelf.
-	 * @param books
-	 *            Collection of books.
-	 */
-	public Shelf(String name, Collection<Book> books) {
-		super();
-		this.name = name;
-		this.books = books;
 	}
 
 	// Start ---Getter & Setter---
@@ -111,7 +102,7 @@ public class Shelf implements Serializable {
 	 * 
 	 * @return All books of the current shelf.
 	 */
-	public Collection<Book> getBooks() {
+	public List<Book> getBooks() {
 		return books;
 	}
 
@@ -119,10 +110,29 @@ public class Shelf implements Serializable {
 	 * Sets the books into the shelf.
 	 * 
 	 * @param books
-	 *            Collection with books.
+	 *            List with books.
 	 */
-	public void setBooks(Collection<Book> books) {
+	public void setBooks(List<Book> books) {
 		this.books = books;
+	}
+
+	/**
+	 * Gets the ID of the current shelf.
+	 * 
+	 * @return ID of the shelf.
+	 */
+	public Integer getSid() {
+		return sid;
+	}
+
+	/**
+	 * Sets the ID of the current shelf.
+	 * 
+	 * @param sid
+	 *            New ID for shelf.
+	 */
+	public void setSid(Integer sid) {
+		this.sid = sid;
 	}
 
 	// End ---Getter & Setter---

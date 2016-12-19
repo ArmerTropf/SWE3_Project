@@ -1,14 +1,15 @@
 package de.hsb.webapp.bc.model;
 
 import java.io.Serializable;
-import java.util.Collection;
-import java.util.Vector;
+import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.Size;
@@ -19,12 +20,25 @@ import javax.validation.constraints.Size;
  * @author Thomas Schrul, Michael Günster, Andre Schriever
  *
  */
-@SuppressWarnings("serial")
 @NamedQuery(name = "SelectUser", query = "Select u from User u")
+@NamedQueries({
+    @NamedQuery(name="User.findByName",
+                query="SELECT c FROM User c WHERE c.login = :login AND c.password = :password"),
+}) 
 @Entity
 public class User implements Serializable {
 
 	// Start ---Declaration of variables---
+
+	/**
+	 * "The serialization runtime associates with each serializable class a
+	 * version number, called a serialVersionUID, which is used during
+	 * deserialization to verify that the sender and receiver of a serialized
+	 * object have loaded classes for that object that are compatible with
+	 * respect to serialization" -
+	 * https://docs.oracle.com/javase/7/docs/api/java/io/Serializable.html
+	 */
+	private static final long serialVersionUID = -3499625914266174872L;
 
 	/**
 	 * User ID is the primary key for a user. A UUID will be generated
@@ -61,34 +75,30 @@ public class User implements Serializable {
 	 * "false".
 	 */
 	private boolean isAdmin = false;
-	
+
 	/**
-	 * isActivated says whether the user account is activated for login.
-	 * Default value is "false".
+	 * isActivated says whether the user account is activated for login. Default
+	 * value is "false".
 	 */
 	private boolean isActivated = false;
 
 	/**
-	 * A user may have many shelves. They will be stored in a collection.
+	 * A user may have many shelves. They will be stored in a List.
 	 */
-	@OneToMany(cascade = CascadeType.ALL)
-	private Collection<Shelf> shelves;
+	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	private List<Shelf> shelves;
 
 	// End ---Declaration of variables---
 
 	/**
-	 * Empty constructor. Every user will get a default shelf called
-	 * "Mein Hauptregal".
+	 * Empty constructor.
 	 */
 	public User() {
 		super();
-		this.shelves = new Vector<Shelf>();
-		this.shelves.add(new Shelf("Mein Hauptregal"));
 	}
 
 	/**
-	 * Constructor using fields to create a user with a default shelf called
-	 * "Mein Hauptregal".
+	 * Constructor using fields to create a user.
 	 * 
 	 * @param lastname
 	 *            Last name of user.
@@ -98,7 +108,8 @@ public class User implements Serializable {
 	 *            password of user.
 	 * @param login
 	 *            Login name of user.
-	 * @param isActivated Says if the user account is activated.           
+	 * @param isActivated
+	 *            Says if the user account is activated.
 	 */
 	public User(String lastname, String firstname, String password, String login, boolean isActivated) {
 		super();
@@ -110,33 +121,7 @@ public class User implements Serializable {
 	}
 
 	/**
-	 * Constructor using fields to create a user with a collection of shelves.
-	 * 
-	 * @param lastname
-	 *            Last name of user.
-	 * @param firstname
-	 *            First name of user.
-	 * @param password
-	 *            Password of user.
-	 * @param login
-	 *            Login name of user.
-	 * @param shelves
-	 *            Shelves of user.
-	 * @param isActivated Says if the user account is activated.  
-	 */
-	public User(String lastname, String firstname, String password, String login, Collection<Shelf> shelves, boolean isActivated) {
-		super();
-		this.lastname = lastname;
-		this.firstname = firstname;
-		this.password = password;
-		this.login = login;
-		this.shelves = shelves;
-		this.isActivated = isActivated;
-	}
-
-	/**
-	 * Constructor using fields to create an administrator with a default shelf
-	 * called "Mein Hauptregal"
+	 * Constructor using fields to create an administrator.
 	 * 
 	 * @param lastname
 	 *            Last name of user.
@@ -148,47 +133,18 @@ public class User implements Serializable {
 	 *            Login name of user.
 	 * @param isAdmin
 	 *            Says if user is an administrator.
-	 * @param isActivated Says if the user account is activated.
-	 */
-	public User(String lastname, String firstname, String password, String login, Boolean isAdmin, boolean isActivated) {
-		super();
-		this.lastname = lastname;
-		this.firstname = firstname;
-		this.password = password;
-		this.login = login;
-		this.isAdmin = isAdmin;
-		this.isActivated = isActivated;
-		this.shelves = new Vector<Shelf>();
-		this.shelves.add(new Shelf("Mein Hauptregal"));
-	}
-
-	/**
-	 * Constructor using fields to create an administrator with a collection of
-	 * shelves.
-	 * 
-	 * @param lastname
-	 *            Last name of user.
-	 * @param firstname
-	 *            First name of user.
-	 * @param password
-	 *            Password of user.
-	 * @param login
-	 *            Login name of user.
-	 * @param isAdmin
-	 *            Says if user is an administrator.
-	 * @param shelves
-	 *            Shelves of user.
-	 * @param isActivated Says if the user account is activated.           
+	 * @param isActivated
+	 *            Says if the user account is activated.
 	 */
 	public User(String lastname, String firstname, String password, String login, boolean isAdmin,
-			Collection<Shelf> shelves, boolean isActivated) {
+			boolean isActivated) {
 		super();
 		this.lastname = lastname;
 		this.firstname = firstname;
 		this.password = password;
 		this.login = login;
 		this.isAdmin = isAdmin;
-		this.shelves = shelves;
+		this.isActivated = isActivated;
 	}
 
 	// Start ---Getter & Setter---
@@ -293,7 +249,7 @@ public class User implements Serializable {
 	 * 
 	 * @return Current shelves.
 	 */
-	public Collection<Shelf> getShelves() {
+	public List<Shelf> getShelves() {
 		return shelves;
 	}
 
@@ -303,28 +259,43 @@ public class User implements Serializable {
 	 * @param shelves
 	 *            Define new shelves.
 	 */
-	public void setShelves(Collection<Shelf> shelves) {
+	public void setShelves(List<Shelf> shelves) {
 		this.shelves = shelves;
 	}
-	
+
 	/**
-	 * Gets the isActivated of the user.
+	 * Gets the information if the user is activated for login.
 	 * 
 	 * @return Current state of activation of the user account.
 	 */
-	public boolean isActivated()	{
+	public boolean isActivated() {
 		return this.isActivated;
 	}
-	
-	
+
 	/**
 	 * Sets the isActive of the user.
 	 * 
 	 * @param shelves
 	 *            True for activating the user account.
 	 */
-	public void setActivated(boolean isActivated)	{
+	public void setActivated(boolean isActivated) {
 		this.isActivated = isActivated;
+	}
+
+	/**
+	 * Gets the ID of the user.
+	 * @return User's ID.
+	 */
+	public Integer getUid() {
+		return uid;
+	}
+
+	/**
+	 * Sets the ID of the user.
+	 * @param uid New ID for the user.
+	 */
+	public void setUid(Integer uid) {
+		this.uid = uid;
 	}
 
 	// End ---Getter & Setter---

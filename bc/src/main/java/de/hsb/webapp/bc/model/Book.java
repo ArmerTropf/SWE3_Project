@@ -3,8 +3,8 @@ package de.hsb.webapp.bc.model;
 import java.io.Serializable;
 import java.util.Date;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -21,12 +21,21 @@ import javax.validation.constraints.Size;
  * @author Thomas Schrul, Michael Günster, Andre Schriever
  *
  */
-@SuppressWarnings("serial")
 @NamedQuery(name = "SelectBook", query = "Select b from Book b")
 @Entity
 public class Book implements Serializable {
 
 	// Start ---Declaration of variables---
+
+	/**
+	 * "The serialization runtime associates with each serializable class a
+	 * version number, called a serialVersionUID, which is used during
+	 * deserialization to verify that the sender and receiver of a serialized
+	 * object have loaded classes for that object that are compatible with
+	 * respect to serialization" -
+	 * https://docs.oracle.com/javase/7/docs/api/java/io/Serializable.html
+	 */
+	private static final long serialVersionUID = 1561167190666127500L;
 
 	/**
 	 * Book ID is the primary key for a book. A UUID will be generated
@@ -39,7 +48,7 @@ public class Book implements Serializable {
 	/**
 	 * Title of the book.
 	 */
-	// @Size(min = 2, max = 50)
+	@Size(min = 2, max = 50)
 	private String title;
 
 	/**
@@ -50,7 +59,7 @@ public class Book implements Serializable {
 	/**
 	 * Author of the book. Different books may have the same author.
 	 */
-	@ManyToOne(cascade = CascadeType.ALL)
+	@ManyToOne(fetch = FetchType.EAGER)
 	private Author author;
 
 	/**
@@ -72,7 +81,6 @@ public class Book implements Serializable {
 	 */
 	public Book() {
 		super();
-		this.author = new Author();
 	}
 
 	/**
@@ -89,11 +97,10 @@ public class Book implements Serializable {
 	 * @param release
 	 *            Release date of the book.
 	 */
-	public Book(String title, String isbn, Author author, GenreType genre, Date release) {
+	public Book(String title, String isbn, GenreType genre, Date release) {
 		super();
 		this.title = title;
 		this.isbn = isbn;
-		this.author = author;
 		this.genre = genre;
 		this.release = release;
 	}
@@ -101,7 +108,7 @@ public class Book implements Serializable {
 	// Start ---Getter & Setter---
 
 	/**
-	 * Gets title of the book.
+	 * Gets the title of the book.
 	 * 
 	 * @return Book title.
 	 */
@@ -193,6 +200,25 @@ public class Book implements Serializable {
 	 */
 	public void setRelease(Date release) {
 		this.release = release;
+	}
+
+	/**
+	 * Gets the ID of the book.
+	 * 
+	 * @return Book's ID.
+	 */
+	public Integer getBid() {
+		return bid;
+	}
+
+	/**
+	 * Sets the ID of the book.
+	 * 
+	 * @param bid
+	 *            New ID for the book.
+	 */
+	public void setBid(Integer bid) {
+		this.bid = bid;
 	}
 
 	// End ---Getter & Setter---

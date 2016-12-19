@@ -1,0 +1,164 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+	<title><ui:insert name="title">Benutzer</ui:insert></title>
+</h:head>
+<h:body>
+	<div id="content">
+		<ui:insert name="content">
+			<h:form id="form">
+				<p:dataTable id="data3" var="books" value="#{booksHandler.books}"
+					rowClasses="odd,even" headerClass="header">
+					<f:facet name="header">#{msg['showBooksOverview_title']}</f:facet>
+					<p:column>
+						<f:facet name="header">#{msg['showBooksOverview_bookTitle']}</f:facet>
+						<h:outputText value="#{books.title}" />
+					</p:column>
+					<p:column>
+						<f:facet name="header">#{msg['showBooksOverview_author']}</f:facet>
+						<h:outputText value="#{books.author.firstname}" />
+						<h:outputText value=" #{books.author.lastname}" />
+					</p:column>
+					<p:column>
+						<f:facet name="header">#{msg['showBooksOverview_ISBN']}</f:facet>
+						<h:outputText value="#{books.isbn}" />
+					</p:column>
+					<p:column>
+						<f:facet name="header">Genre</f:facet>
+						<h:outputText value="#{books.genre.genre}" />
+					</p:column>
+					<p:column style="font-weight: bold;">
+						<f:facet name="header">Buch meinem Regal hinzufügen</f:facet>
+						<p:commandButton
+							action="#{booksHandler.addBookToShelf(books)}"
+							value="Buch meinem Regal hinzufügen" icon="ui-icon-check" update="data3 :form:data2"
+							immediate="true" />
+					</p:column>
+				</p:dataTable>
+
+				<p:separator />
+
+				<p:dataTable id="data2" var="book"
+					value="#{userAndShelvesHandler.myBooks}" rowClasses="odd,even"
+					headerClass="header">
+					<f:facet name="header">Bücher in meinem Regal</f:facet>
+					<p:column>
+						<f:facet name="header">Name</f:facet>
+						<h:outputText value="#{book.title}" />
+					</p:column>
+					<p:column>
+						<f:facet name="header">Genre</f:facet>
+						<h:outputText value="#{book.genre}" />
+					</p:column>
+					<p:column>
+						<f:facet name="header">Autor</f:facet>
+						<h:outputText
+							value="#{book.author.firstname} #{book.author.lastname}" />
+					</p:column>
+					<p:column style="font-weight: bold;">
+						<f:facet name="header">Buch aus Regal nehmen</f:facet>
+						<p:commandButton
+							action="#{userAndShelvesHandler.deleteBookFromShelf(book)}"
+							value="Buch aus Regal entfernen" icon="ui-icon-check" update="data2"
+							immediate="true" />
+					</p:column>
+				</p:dataTable>
+
+				<p:separator />
+
+				<p:dataTable sortBy="#{shelf.name}" id="data" var="shelf"
+					value="#{userAndShelvesHandler.rememberUser.shelves}" rowClasses="odd,even"
+					headerClass="header">
+					<f:facet name="header">Regale</f:facet>
+					<p:column>
+						<f:facet name="header">Name</f:facet>
+						<h:outputText value="#{shelf.name}" />
+					</p:column>
+					<p:column style="font-weight: bold;">
+						<f:facet name="header">Bearbeiten</f:facet>
+						<p:commandButton action="#{userAndShelvesHandler.editShelf(shelf)}"
+							value="Bearbeiten" icon="ui-icon-check" update=":form:grid"
+							immediate="true" />
+					</p:column>
+					<p:column style="font-weight: bold;">
+						<f:facet name="header">Löschen</f:facet>
+						<p:commandButton action="#{userAndShelvesHandler.deleteShelf(shelf)}"
+							value="Löschen" icon="ui-icon-check" update="data"
+							immediate="true" />
+					</p:column>
+					<p:column style="font-weight: bold;">
+						<f:facet name="header">Bücher anzeigen</f:facet>
+						<p:commandButton
+							action="#{userAndShelvesHandler.showMyBooks(shelf)}"
+							value="Bücher anzeigen" icon="ui-icon-check"
+							update=":form:data2" immediate="true" />
+					</p:column>
+					<p:column style="font-weight: bold;">
+						<f:facet name="header">Bücher hinzufügen</f:facet>
+						<p:commandButton action="#{booksHandler.showAllBooks(shelf)}"
+							value="Buch hinzufügen" icon="ui-icon-check" immediate="true" />
+					</p:column>
+				</p:dataTable>
+
+				<p:separator />
+
+				<p:panelGrid id="grid" headerClass="header" footerClass="footer"
+					style="margin-top:0px;margin-left:0px" columns="2">
+					<f:facet name="header">
+						<p:row>
+							<p:column colspan="2">Regal hinzufügen</p:column>
+						</p:row>
+					</f:facet>
+
+					<p:outputLabel value="Name" for="name" />
+					<p:inputText id="name" required="true"
+						value="#{userAndShelvesHandler.rememberShelf.name}" />
+
+					<f:facet name="footer">
+						<p:commandButton action="#{userAndShelvesHandler.saveShelf()}"
+							value="Speichern" update=":form:data grid" icon="ui-icon-check"></p:commandButton>
+					</f:facet>
+
+				</p:panelGrid>
+			</h:form>
+		</ui:insert>
+	</div>
+
+	<p:separator />
+
+	<p:separator />
+
+	<div>
+		<h:form>
+			<p:panelGrid id="grid" headerClass="header" footerClass="footer"
+				style="margin-top:0px;margin-left:0px" columns="1">
+
+				<f:facet name="header">
+					<p:commandButton action="/showOwnLibrary.xhtml"
+						label="Globale Bücherliste" value="Globale Bücherliste"
+						immediate="true"></p:commandButton>
+				</f:facet>
+
+				<f:facet name="header">
+					<p:commandButton action="/userList.xhtml" label="Benutzer"
+						value="Benutzer" immediate="true"></p:commandButton>
+				</f:facet>
+
+				<f:facet name="header">
+					<p:commandButton action="/shelfList.xhtml" label="Meine Regale"
+						value="Meine Regale" immediate="true"></p:commandButton>
+				</f:facet>
+
+			</p:panelGrid>
+		</h:form>
+	</div>
+</h:body>
+</html>

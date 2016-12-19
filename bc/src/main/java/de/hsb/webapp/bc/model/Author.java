@@ -15,12 +15,21 @@ import javax.validation.constraints.Size;
  * @author Thomas Schrul, Michael Günster, Andre Schriever
  *
  */
-@SuppressWarnings("serial")
 @NamedQuery(name = "SelectAuthor", query = "Select a from Author a")
 @Entity
 public class Author implements Serializable {
 
 	// Start ---Declaration of variables---
+
+	/**
+	 * "The serialization runtime associates with each serializable class a
+	 * version number, called a serialVersionUID, which is used during
+	 * deserialization to verify that the sender and receiver of a serialized
+	 * object have loaded classes for that object that are compatible with
+	 * respect to serialization" -
+	 * https://docs.oracle.com/javase/7/docs/api/java/io/Serializable.html
+	 */
+	private static final long serialVersionUID = 3979776198682570305L;
 
 	/**
 	 * Author ID is the primary key for a author. A UUID will be generated
@@ -103,6 +112,25 @@ public class Author implements Serializable {
 	 */
 	public void setLastname(String lastname) {
 		this.lastname = lastname;
+	}
+
+	/**
+	 * Gets the ID of the author.
+	 * 
+	 * @return Author's ID.
+	 */
+	public Integer getAid() {
+		return aid;
+	}
+
+	/**
+	 * Sets the ID of the author.
+	 * 
+	 * @param aid
+	 *            New ID for the author.
+	 */
+	public void setAid(Integer aid) {
+		this.aid = aid;
 	}
 
 	// End ---Getter & Setter---

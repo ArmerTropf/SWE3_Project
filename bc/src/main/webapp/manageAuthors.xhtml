@@ -1,0 +1,71 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+	<title><ui:insert name="title">Authoren</ui:insert></title>
+</h:head>
+<h:body>
+	<div id="content">
+		<ui:insert name="content">
+			<h:form id="form">
+
+				<p:dataTable sortBy="#{authors.lastname}" id="data" var="authors"
+					value="#{booksHandler.authors}" rowClasses="odd,even"
+					headerClass="header">
+					<f:facet name="header">Author</f:facet>
+					<p:column>
+						<f:facet name="header">Nachname</f:facet>
+						<h:outputText value="#{authors.lastname}" />
+					</p:column>
+					<p:column>
+						<f:facet name="header">Vorname</f:facet>
+						<h:outputText value="#{authors.firstname}" />
+					</p:column>
+					<p:column style="font-weight: bold;">
+						<f:facet name="header">Bearbeiten</f:facet>
+						<p:commandButton action="#{booksHandler.editAuthor()}"
+							value="Bearbeiten" update=":form:grid" immediate="true" />
+					</p:column>
+				</p:dataTable>
+
+				<p:separator />
+
+				<p:panelGrid id="grid" headerClass="header" footerClass="footer"
+					style="margin-top:0px;margin-left:0px" columns="2">
+					<f:facet name="header">
+						<p:row>
+							<p:column colspan="2">Author hinzufügen</p:column>
+						</p:row>
+					</f:facet>
+
+					<p:outputLabel value="Vorname" for="firstname" />
+					<p:inputText id="firstname" required="
+						true"
+						value="#{booksHandler.rememberAuthor.firstname}" />
+					<p:outputLabel value="Nachname" for="lastname" />
+					<p:inputText id="lastname" required="
+						true"
+						value="#{booksHandler.rememberAuthor.lastname}" />
+
+					<f:facet name="footer">
+						<p:commandButton action="#{booksHandler.saveAuthor()}"
+							value="Speichern" update=":form:data grid" icon="ui-icon-check"></p:commandButton>
+					</f:facet>
+					<f:facet name="footer">
+						<p:commandButton action="#{booksHandler.cancelAuthor()}"
+							value="Abbrechen" update=":form:data grid" immediate="true" ></p:commandButton>
+					</f:facet>
+				</p:panelGrid>
+
+			</h:form>
+		</ui:insert>
+	</div>
+</h:body>
+</html>
