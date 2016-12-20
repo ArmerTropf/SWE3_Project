@@ -69,13 +69,14 @@ public class UserLogin implements Serializable {
 	// End ---Declaration of variables---
 
 	/**
-	 * Initializise the database with an administrator user.
+	 * Initializise the database with an administrator an guest user.
 	 */
 	@PostConstruct
 	private void init() {
 		try {
 			utx.begin();
 			em.persist(new User("User", "Super", "12345", "root", true, true));
+			em.persist(new User("User", "Guest", "67890", "guest", true));
 			utx.commit();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -85,7 +86,7 @@ public class UserLogin implements Serializable {
 	/**
 	 * Logs in the user.
 	 * 
-	 * @return String "" which is the main page of the webapp, if the
+	 * @return String "mainSite" which is the main page of the webapp, if the
 	 *         credentials are correct, otherwise user will stay at the login
 	 *         page.
 	 */
@@ -129,7 +130,6 @@ public class UserLogin implements Serializable {
 	 * @return String "login" which is the login page.
 	 */
 	public String logout() {
-		// FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
 		return "login";
 	}
 

@@ -15,8 +15,9 @@
 	<div id="header" />
 	<div id="content">
 		<ui:insert name="content">
-		  <f:event listener="#{userAndShelvesHandler.setRememberUser(userLoginHandler.loggedInUser)}" type="preRenderView"></f:event>
-		  <p:outputLabel value="#{userLoginHandler.loggedInUser.login}"/> 
+			<f:event
+				listener="#{userAndShelvesHandler.setRememberUser(userLoginHandler.loggedInUser)}"
+				type="preRenderView"></f:event>
 			<p:graphicImage value="resources/bc_img.jpg" />
 			<p:growl id="messages" showDetail="true" autoUpdate="true" />
 			<h:form id="form">
@@ -48,121 +49,128 @@
 				<br />
 
 				<p:dataTable id="data3" var="books" value="#{booksHandler.books}"
-					rowClasses="odd,even" headerClass="header">
+					rowClasses="odd,even" headerClass="header"
+					rendered="#{userAndShelvesHandler.shelfLib}">
 					<f:facet name="header">#{msg['showBooksOverview_title']}</f:facet>
 					<p:column>
 						<f:facet name="header">#{msg['showBooksOverview_bookTitle']}</f:facet>
-						<h:outputText value="#{books.title}" />
+						<p:outputLabel value="#{books.title}" />
 					</p:column>
 					<p:column>
 						<f:facet name="header">#{msg['showBooksOverview_author']}</f:facet>
-						<h:outputText value="#{books.author.firstname}" />
-						<h:outputText value=" #{books.author.lastname}" />
+						<p:outputLabel value="#{books.author.firstname}" />
+						<p:outputLabel value=" #{books.author.lastname}" />
 					</p:column>
 					<p:column>
 						<f:facet name="header">#{msg['showBooksOverview_ISBN']}</f:facet>
-						<h:outputText value="#{books.isbn}" />
+						<p:outputLabel value="#{books.isbn}" />
 					</p:column>
 					<p:column>
-						<f:facet name="header">Genre</f:facet>
-						<h:outputText value="#{books.genre.genre}" />
+						<f:facet name="header">#{msg.showBooksOverview_genre}</f:facet>
+						<p:outputLabel value="#{books.genre.genre}" />
 					</p:column>
 					<p:column style="font-weight: bold;">
-						<f:facet name="header">Buch meinem Regal hinzufügen</f:facet>
+						<f:facet name="header">#{msg.showShelves_addbook}</f:facet>
 						<p:commandButton
-							action="#{booksHandler.addBookToShelf(books)}"
-							value="Buch meinem Regal hinzufügen" icon="ui-icon-check" update="data3 :form:data2"
-							immediate="true" />
+							action="#{userAndShelvesHandler.addBookToShelf(books)}"
+							value="#{msg.showShelves_addbook}" icon="fa fa-plus"
+							update=":form:data2" immediate="true" />
 					</p:column>
 				</p:dataTable>
-				
-				<p:separator />
 
 				<p:dataTable id="data2" var="book"
-					value="#{userAndShelvesHandler.myBooks}" rowClasses="odd,even"
-					headerClass="header">
-					<f:facet name="header">Bücher in meinem Regal</f:facet>
+					value="#{userAndShelvesHandler.rememberShelf.books}"
+					rowClasses="odd,even" headerClass="header"
+					rendered="#{userAndShelvesHandler.shelfBooks}">
+					<f:facet name="header">#{msg.showShelves_mybooks}</f:facet>
 					<p:column>
-						<f:facet name="header">Name</f:facet>
-						<h:outputText value="#{book.title}" />
+						<f:facet name="header">#{msg.showBooksOverview_bookTitle}</f:facet>
+						<p:outputLabel value="#{book.title}" />
 					</p:column>
 					<p:column>
-						<f:facet name="header">Genre</f:facet>
-						<h:outputText value="#{book.genre}" />
+						<f:facet name="header">#{msg.showBooksOverview_genre}</f:facet>
+						<p:outputLabel value="#{book.genre}" />
 					</p:column>
 					<p:column>
-						<f:facet name="header">Autor</f:facet>
-						<h:outputText
+						<f:facet name="header">#{msg.showBooksOverview_author}</f:facet>
+						<p:outputLabel
 							value="#{book.author.firstname} #{book.author.lastname}" />
 					</p:column>
 					<p:column style="font-weight: bold;">
-						<f:facet name="header">Buch aus Regal nehmen</f:facet>
+						<f:facet name="header">#{msg.showShelves_deletebook}</f:facet>
 						<p:commandButton
 							action="#{userAndShelvesHandler.deleteBookFromShelf(book)}"
-							value="Buch aus Regal entfernen" icon="ui-icon-check" update="data2"
-							immediate="true" />
+							value="#{msg.showShelves_deletebook}" icon="fa fa-minus"
+							update="data2" immediate="true" />
 					</p:column>
 				</p:dataTable>
 
-				<p:separator />
-
-				
-				<p:dataTable sortBy="#{shelf.name}" id="data" var="shelf"
-					value="#{userAndShelvesHandler.rememberUser.shelves}" rowClasses="odd,even"
-					headerClass="header">
-					<f:facet name="header">Regale</f:facet>
-					<p:column>
-						<f:facet name="header">Name</f:facet>
-						<h:outputText value="#{shelf.name}" />
-					</p:column>
-					<p:column style="font-weight: bold;">
-						<f:facet name="header">Bearbeiten</f:facet>
-						<p:commandButton action="#{userAndShelvesHandler.editShelf(shelf)}"
-							value="Bearbeiten" icon="ui-icon-check" update=":form:grid"
-							immediate="true" />
-					</p:column>
-					<p:column style="font-weight: bold;">
-						<f:facet name="header">Löschen</f:facet>
-						<p:commandButton action="#{userAndShelvesHandler.deleteShelf(shelf)}"
-							value="Löschen" icon="ui-icon-check" update="data"
-							immediate="true" />
-					</p:column>
-					<p:column style="font-weight: bold;">
-						<f:facet name="header">Bücher anzeigen</f:facet>
-						<p:commandButton
-							action="#{userAndShelvesHandler.showMyBooks(shelf)}"
-							value="Bücher anzeigen" icon="ui-icon-check"
-							update=":form:data2" immediate="true" />
-					</p:column>
-					<p:column style="font-weight: bold;">
-						<f:facet name="header">Bücher hinzufügen</f:facet>
-						<p:commandButton action="#{booksHandler.showAllBooks(shelf)}"
-							value="Buch hinzufügen" icon="ui-icon-check" immediate="true" />
-					</p:column>
-				</p:dataTable>
-
-				<p:separator />
-				
-				<!-- Shelves  -->
 				<p:panelGrid id="grid" headerClass="header" footerClass="footer"
-					style="margin-top:0px;margin-left:0px" columns="2">
+					columns="2" rendered="#{userAndShelvesHandler.shelfEdit}">
 					<f:facet name="header">
 						<p:row>
-							<p:column colspan="2">Regal hinzufügen</p:column>
+							<p:column colspan="2">#{msg.showShelves_addshelv}</p:column>
 						</p:row>
 					</f:facet>
 
-					<p:outputLabel value="Name" for="name" />
+					<p:outputLabel value="#{msg.showShelves_name}" for="name" />
 					<p:inputText id="name" required="true"
 						value="#{userAndShelvesHandler.rememberShelf.name}" />
 
 					<f:facet name="footer">
 						<p:commandButton action="#{userAndShelvesHandler.saveShelf()}"
-							value="Speichern" update=":form:data grid" icon="ui-icon-check"></p:commandButton>
+							value="#{msg.showShelves_save}" update=":form:data grid"
+							icon="fa fa-save" />
+						<p:commandButton action="#{userAndShelvesHandler.cancelShelf()}"
+							value="#{msg.showShelves_cancel}" update="grid"
+							icon="fa fa-close" immediate="true" />
 					</f:facet>
-
 				</p:panelGrid>
-				
+
+				<br />
+				<p:separator />
+				<br />
+
+				<p:dataTable sortBy="#{shelf.name}" id="data" var="shelf"
+					value="#{userAndShelvesHandler.rememberUser.shelves}"
+					rowClasses="odd,even" headerClass="header">
+					<f:facet name="header">#{msg.showShelves_title}</f:facet>
+					<p:column>
+						<f:facet name="header">#{msg.showShelves_name}</f:facet>
+						<p:outputLabel value="#{shelf.name}" />
+					</p:column>
+					<p:column>
+						<f:facet name="header">#{msg.showShelves_edit}</f:facet>
+						<p:commandButton
+							action="#{userAndShelvesHandler.editShelf(shelf)}"
+							value="#{msg.showShelves_edit}" icon="fa fa-edit" update=":form"
+							immediate="true" />
+					</p:column>
+					<p:column>
+						<f:facet name="header">#{msg.showShelves_delete}</f:facet>
+						<p:commandButton
+							action="#{userAndShelvesHandler.deleteShelf(shelf)}"
+							value="#{msg.showShelves_delete}" icon="fa fa-close"
+							update=":form" immediate="true" />
+					</p:column>
+					<p:column>
+						<f:facet name="header">#{msg.showShelves_show}</f:facet>
+						<p:commandButton
+							action="#{userAndShelvesHandler.changeShelfSituation(false,true,false)}"
+							actionListener="#{userAndShelvesHandler.changeShelfTo(shelf)}"
+							value="#{msg.showShelves_show}" icon="fa fa-book" update=":form"
+							immediate="true" />
+					</p:column>
+					<p:column>
+						<f:facet name="header">#{msg.showShelves_addbook}</f:facet>
+						<p:commandButton
+							actionListener="#{userAndShelvesHandler.changeShelfTo(shelf)}"
+							action="#{userAndShelvesHandler.changeShelfSituation(false,false,true)}"
+							value="#{msg.showShelves_addbook}" icon="fa fa-plus"
+							immediate="true" update=":form" />
+					</p:column>
+				</p:dataTable>
+
 			</h:form>
 		</ui:insert>
 	</div>

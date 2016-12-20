@@ -1,8 +1,8 @@
 package de.hsb.webapp.bc.controller;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.GregorianCalendar;
+import java.util.List;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
@@ -12,12 +12,12 @@ import javax.faces.model.DataModel;
 import javax.faces.model.ListDataModel;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.transaction.UserTransaction;
 
 import de.hsb.webapp.bc.model.Author;
 import de.hsb.webapp.bc.model.Book;
 import de.hsb.webapp.bc.model.GenreType;
-import de.hsb.webapp.bc.model.Shelf;
 
 /**
  * With this class you will handle the books actions.
@@ -57,11 +57,6 @@ public class BooksHandler implements Serializable {
 	private DataModel<Book> books;
 
 	/**
-	 * Stores all shelves.
-	 */
-	private DataModel<Shelf> shelves;
-
-	/**
 	 * Stores all authors.
 	 */
 	private DataModel<Author> authors;
@@ -75,11 +70,6 @@ public class BooksHandler implements Serializable {
 	 * Remembers the current Author.
 	 */
 	private Author rememberAuthor = new Author();
-
-	/**
-	 * Selected shelf of the current user.
-	 */
-	private Shelf myShelf;
 
 	/**
 	 * Initializes the data model with some books.
@@ -107,8 +97,6 @@ public class BooksHandler implements Serializable {
 			em.persist(b3);
 			books = new ListDataModel<Book>();
 			books.setWrappedData(em.createNamedQuery("SelectBook").getResultList());
-			shelves = new ListDataModel<Shelf>();
-			shelves.setWrappedData(em.createNamedQuery("SelectShelf").getResultList());
 			authors = new ListDataModel<Author>();
 			authors.setWrappedData(em.createNamedQuery("SelectAuthor").getResultList());
 			utx.commit();
@@ -127,7 +115,7 @@ public class BooksHandler implements Serializable {
 	/**
 	 * Edit an existing book.
 	 * 
-	 * @return XHTML page for editing a book.
+	 * @return redirected "showBooks" page with the book list.
 	 */
 	public String editBook() {
 		rememberBook = books.getRowData();
@@ -137,7 +125,7 @@ public class BooksHandler implements Serializable {
 	/**
 	 * Deletes a book from database.
 	 * 
-	 * @return XHTML page.
+	 * @return redirected "showBooks" page with the book list.
 	 */
 	public String deleteBook() {
 		rememberBook = books.getRowData();
@@ -145,7 +133,6 @@ public class BooksHandler implements Serializable {
 			utx.begin();
 			rememberBook = em.merge(rememberBook);
 			em.remove(rememberBook);
-			shelves.setWrappedData(em.createNamedQuery("SelectShelf").getResultList());
 			books.setWrappedData(em.createNamedQuery("SelectBook").getResultList());
 			utx.commit();
 		} catch (Exception e) {
@@ -159,14 +146,13 @@ public class BooksHandler implements Serializable {
 	/**
 	 * Saves the new book or the changes of it.
 	 * 
-	 * @return XHTML page where all books are listed.
+	 * @return redirected "showBooks" page with the book list.
 	 */
 	public String saveBook() {
 		try {
 			utx.begin();
 			rememberBook = em.merge(rememberBook);
 			books.setWrappedData(em.createNamedQuery("SelectBook").getResultList());
-			shelves.setWrappedData(em.createNamedQuery("SelectShelf").getResultList());
 			utx.commit();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -178,7 +164,7 @@ public class BooksHandler implements Serializable {
 	/**
 	 * Cancel process for adding/editing a book.
 	 *
-	 * @return XHTML page where all books are listed.
+	 * @return redirected "showBooks" page with the book list.
 	 */
 	public String cancelEditOrAddBook() {
 		newBook();
@@ -195,7 +181,7 @@ public class BooksHandler implements Serializable {
 	/**
 	 * Gets the current author to edit.
 	 * 
-	 * @return
+	 * @return redirected "manageAuthors" page with the author list.
 	 */
 	public String editAuthor() {
 		rememberAuthor = authors.getRowData();
@@ -205,7 +191,7 @@ public class BooksHandler implements Serializable {
 	/**
 	 * Saves the current author.
 	 * 
-	 * @return
+	 * @return redirected "manageAuthors" page with the author list.
 	 */
 	public String saveAuthor() {
 		try {
@@ -222,19 +208,27 @@ public class BooksHandler implements Serializable {
 	}
 
 	/**
-	 * Deletes the current author.
+	 * Deletes the author and all references in the books, which are pointing to
+	 * this author.
 	 * 
-	 * @return
+	 * @return redirected "manageAuthors" page with the author list.
 	 */
 	public String deleteAuthor() {
 		rememberAuthor = authors.getRowData();
 		try {
 			utx.begin();
+			Query q = em.createQuery("Select b from Book b where b.author.firstname = :firstname")
+					.setParameter("firstname", rememberAuthor.getFirstname());
+			List<Book> b = q.getResultList();
+			for (Book x : b) {
+				rememberBook = x;
+				rememberBook.setAuthor(null);
+				rememberBook = em.merge(rememberBook);
+			}
 			rememberAuthor = em.merge(rememberAuthor);
 			em.remove(rememberAuthor);
 			books.setWrappedData(em.createNamedQuery("SelectBook").getResultList());
 			authors.setWrappedData(em.createNamedQuery("SelectAuthor").getResultList());
-			shelves.setWrappedData(em.createNamedQuery("SelectShelf").getResultList());
 			utx.commit();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -246,57 +240,10 @@ public class BooksHandler implements Serializable {
 	/**
 	 * Cancels the manging author mode.
 	 * 
-	 * @return
+	 * @return "showBooks" which is the page with the book list.
 	 */
 	public String cancelAuthor() {
 		return "showBooks";
-	}
-
-	/**
-	 * Gets the current selected shelf of the user.
-	 * 
-	 * @param shelf
-	 */
-	public void showAllBooks(Shelf shelf) {
-		myShelf = shelf;
-	}
-
-	/**
-	 * Adds a book to the current shelf. Will create a book list for the shelf
-	 * first, if the shelf does not have a book list.
-	 * 
-	 * @param book
-	 *            Book to add.
-	 * @return
-	 */
-	public String addBookToShelf(Book book) {
-		rememberBook = book;
-		if (myShelf.getBooks() == null) {
-			myShelf.setBooks(new ArrayList<Book>());
-		}
-		myShelf.getBooks().add(rememberBook);
-		try {
-			utx.begin();
-			myShelf = em.merge(myShelf);
-			shelves.setWrappedData(em.createNamedQuery("SelectShelf").getResultList());
-			utx.commit();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return "showShelves?faces-redirect=true";
-	}
-
-	/**
-	 * Gets
-	 * 
-	 * @return
-	 */
-	public Shelf getMyShelf() {
-		return myShelf;
-	}
-
-	public void setMyShelf(Shelf rememberShelf) {
-		this.myShelf = rememberShelf;
 	}
 
 	/**
@@ -363,25 +310,6 @@ public class BooksHandler implements Serializable {
 	 */
 	public void setRememberAuthor(Author rememberAuthor) {
 		this.rememberAuthor = rememberAuthor;
-	}
-
-	/**
-	 * Gets the shelves datamodel.
-	 * 
-	 * @return Datamodel of the shelves.
-	 */
-	public DataModel<Shelf> getShelves() {
-		return shelves;
-	}
-
-	/**
-	 * Sets the shelves datamodel.
-	 * 
-	 * @param shelves
-	 *            New datamodel for schelves.
-	 */
-	public void setShelves(DataModel<Shelf> shelves) {
-		this.shelves = shelves;
 	}
 
 	/**
