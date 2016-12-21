@@ -8,22 +8,31 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:p="http://primefaces.org/ui">
 
+<!-- author: Michael Günster, Andre Schriever, Thomas Schrul -->
+
+
 <h:head>
-	<!-- 	<link rel="stylesheet" href="resources/alleKunden.css" type="text/css" /> -->
 	<title><ui:insert name="title">#{msg.applicationTitle}</ui:insert></title>
 </h:head>
 <h:body>
 	<div id="content">
 		<ui:insert name="content">
+
 			<p:graphicImage value="resources/bc_img.jpg" />
+
 			<h:form id="form">
+
 				<p:menubar>
-					<p:menuitem value="#{msg.menu_home}" url="#" icon="fa fa-home" />
-					<p:menuitem value="#{msg.menu_usermanagement}" action="showUser" immediate="true"
-						icon="fa fa-users" rendered="#{userLoginHandler.loggedInUser.admin}"/>
+					<p:menuitem value="#{msg.menu_usermanagement}" action="showUser"
+						immediate="true" icon="fa fa-users"
+						rendered="#{userLoginHandler.loggedInUser.admin}" />
 					<p:menuitem value="#{msg.menu_globalLibrary}" action="showBooks"
-						icon="fa fa-folder-open" rendered="true" />
-					<p:menuitem value="#{msg.menu_myShelves}" action="showShelves" icon="fa fa-book" />
+						icon="fa fa-folder-open" />
+					<p:menuitem value="#{msg.menu_myShelves}" action="showShelves"
+						icon="fa fa-book" />
+					<p:menuitem value="#{msg.menu_userprofile}" action="userProfile"
+						icon="fa fa-user"
+						rendered="#{!userLoginHandler.loggedInUser.admin}" />
 					<p:submenu label="#{msg.language_titel}" icon="fa fa-language">
 						<p:menuitem value="#{msg.language_de}"
 							action="#{language.changeLanguage('de')}" immediate="true"
@@ -39,8 +48,19 @@
 							action="#{userLoginHandler.logout()}" icon="fa fa-sign-out" />
 					</f:facet>
 				</p:menubar>
-				<br/>
+
+				<br />
+
 			</h:form>
+
+		</ui:insert>
+	</div>
+
+	<br />
+
+	<div id="footer" align="center">
+		<ui:insert name="footer">
+		A webapp project created by M.Günster, A.Schriever, T.Schrul
 		</ui:insert>
 	</div>
 </h:body>

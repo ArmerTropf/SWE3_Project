@@ -8,6 +8,8 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:p="http://primefaces.org/ui">
 
+<!-- author: Michael Günster, Andre Schriever, Thomas Schrul -->
+
 <h:head>
 	<title><ui:insert name="title">#{msg.applicationTitle}</ui:insert></title>
 </h:head>
@@ -29,6 +31,10 @@
 						rendered="#{userLoginHandler.loggedInUser.admin}" />
 					<p:menuitem value="#{msg.menu_globalLibrary}" action="showBooks"
 						icon="fa fa-folder-open" immediate="true" />
+					<p:menuitem value="#{msg.menu_userprofile}" action="userProfile"
+						icon="fa fa-user"
+						rendered="#{!userLoginHandler.loggedInUser.admin}"
+						immediate="true" />
 					<p:submenu label="#{msg.language_titel}" icon="fa fa-language">
 						<p:menuitem value="#{msg.language_de}"
 							action="#{language.changeLanguage('de')}" immediate="true"
@@ -51,7 +57,7 @@
 				<p:dataTable id="data3" var="books" value="#{booksHandler.books}"
 					rowClasses="odd,even" headerClass="header"
 					rendered="#{userAndShelvesHandler.shelfLib}">
-					<f:facet name="header">#{msg['showBooksOverview_title']}</f:facet>
+					<f:facet name="header">#{msg.showShelves_addbooktoshelftitle} #{userAndShelvesHandler.rememberShelf.name}</f:facet>
 					<p:column>
 						<f:facet name="header">#{msg['showBooksOverview_bookTitle']}</f:facet>
 						<p:outputLabel value="#{books.title}" />
@@ -76,13 +82,20 @@
 							value="#{msg.showShelves_addbook}" icon="fa fa-plus"
 							update=":form:data2" immediate="true" />
 					</p:column>
+					<f:facet name="footer">
+						<p:commandButton
+							actionListener="#{userAndShelvesHandler.changeShelfSituation(true,false,false,true)}"
+							action="#{userAndShelvesHandler.cancelAddBookToShelf()}"
+							immediate="true" value="#{msg.showShelves_cancel}"
+							icon="fa fa-close" />
+					</f:facet>
 				</p:dataTable>
 
 				<p:dataTable id="data2" var="book"
 					value="#{userAndShelvesHandler.rememberShelf.books}"
 					rowClasses="odd,even" headerClass="header"
 					rendered="#{userAndShelvesHandler.shelfBooks}">
-					<f:facet name="header">#{msg.showShelves_mybooks}</f:facet>
+					<f:facet name="header">#{msg.showShelves_mybooks} "#{userAndShelvesHandler.rememberShelf.name}"</f:facet>
 					<p:column>
 						<f:facet name="header">#{msg.showBooksOverview_bookTitle}</f:facet>
 						<p:outputLabel value="#{book.title}" />
@@ -133,7 +146,7 @@
 
 				<p:dataTable sortBy="#{shelf.name}" id="data" var="shelf"
 					value="#{userAndShelvesHandler.rememberUser.shelves}"
-					rowClasses="odd,even" headerClass="header">
+					headerClass="header" rendered="#{userAndShelvesHandler.shelfTable}">
 					<f:facet name="header">#{msg.showShelves_title}</f:facet>
 					<p:column>
 						<f:facet name="header">#{msg.showShelves_name}</f:facet>
@@ -156,22 +169,30 @@
 					<p:column>
 						<f:facet name="header">#{msg.showShelves_show}</f:facet>
 						<p:commandButton
-							action="#{userAndShelvesHandler.changeShelfSituation(false,true,false)}"
-							actionListener="#{userAndShelvesHandler.changeShelfTo(shelf)}"
+							action="#{userAndShelvesHandler.changeShelfSituation(false,true,false,true)}"
+							actionListener="#{userAndShelvesHandler.setRememberShelf(shelf)}"
 							value="#{msg.showShelves_show}" icon="fa fa-book" update=":form"
 							immediate="true" />
 					</p:column>
 					<p:column>
 						<f:facet name="header">#{msg.showShelves_addbook}</f:facet>
 						<p:commandButton
-							actionListener="#{userAndShelvesHandler.changeShelfTo(shelf)}"
-							action="#{userAndShelvesHandler.changeShelfSituation(false,false,true)}"
+							actionListener="#{userAndShelvesHandler.setRememberShelf(shelf)}"
+							action="#{userAndShelvesHandler.changeShelfSituation(false,false,true,false)}"
 							value="#{msg.showShelves_addbook}" icon="fa fa-plus"
 							immediate="true" update=":form" />
 					</p:column>
 				</p:dataTable>
 
 			</h:form>
+		</ui:insert>
+	</div>
+
+	<br />
+
+	<div id="footer" align="center">
+		<ui:insert name="footer">
+		A webapp project created by M.Günster, A.Schriever, T.Schrul
 		</ui:insert>
 	</div>
 </h:body>

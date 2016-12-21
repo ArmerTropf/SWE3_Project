@@ -101,7 +101,8 @@ public class UserLogin implements Serializable {
 				.setParameter("password", this.password);
 		query.setMaxResults(1); // allows a new login process for the same user
 								// after he logs out
-		if (query.getResultList().isEmpty()) {
+		if (query.getResultList().isEmpty()) { // no credentials match with
+												// database
 			msg = new FacesMessage(FacesMessage.SEVERITY_WARN, titel, message);
 			FacesContext.getCurrentInstance().addMessage(null, msg);
 			try {
@@ -110,7 +111,10 @@ public class UserLogin implements Serializable {
 				e.printStackTrace();
 			}
 			return "login";
-		} else if (!(loggedInUser = (User) query.getSingleResult()).isActivated()) {
+		} else if (!(loggedInUser = (User) query.getSingleResult()).isActivated()) { // user
+																						// is
+																						// not
+																						// activated
 			msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Your account is not activated!");
 			FacesContext.getCurrentInstance().addMessage(null, msg);
 			return "login";

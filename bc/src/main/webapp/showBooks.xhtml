@@ -8,15 +8,21 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:p="http://primefaces.org/ui">
 
+<!-- author: Michael Günster, Andre Schriever, Thomas Schrul -->
+
 <h:head>
 	<title><ui:insert name="title">#{msg.applicationTitle}</ui:insert></title>
 </h:head>
 <h:body>
 	<div id="content">
 		<ui:insert name="content">
+
 			<p:graphicImage value="resources/bc_img.jpg" />
+
 			<p:growl id="messages" showDetail="true" autoUpdate="true" />
+
 			<h:form id="form">
+
 				<p:menubar>
 					<p:menuitem value="#{msg.menu_home}" action="mainSite"
 						icon="fa fa-home" immediate="true" />
@@ -25,6 +31,10 @@
 						rendered="#{userLoginHandler.loggedInUser.admin}" />
 					<p:menuitem value="#{msg.menu_myShelves}" action="showShelves"
 						icon="fa fa-book" immediate="true" />
+					<p:menuitem value="#{msg.menu_userprofile}" action="userProfile"
+						icon="fa fa-user"
+						rendered="#{!userLoginHandler.loggedInUser.admin}"
+						immediate="true" />
 					<p:submenu label="#{msg.language_titel}" icon="fa fa-language">
 						<p:menuitem value="#{msg.language_de}"
 							action="#{language.changeLanguage('de')}" immediate="true"
@@ -84,12 +94,13 @@
 							update="data" immediate="true" />
 					</p:column>
 				</p:dataTable>
+
 				<br />
 				<p:separator />
 				<br />
+
 				<p:panelGrid id="grid" headerClass="header" footerClass="footer"
-					style="margin-top:0px;margin-left:0px" columns="2"
-					rendered="#{userLoginHandler.loggedInUser.admin}">
+					columns="2" rendered="#{userLoginHandler.loggedInUser.admin}">
 					<f:facet name="header">
 						<p:row>
 							<p:column colspan="2">#{msg.showBooksOverview_addbook}</p:column>
@@ -103,7 +114,8 @@
 					<p:outputLabel value="#{msg.showBooksOverview_ISBN}"
 						for="addBook_isbn" />
 					<p:inputText id="addBook_isbn"
-						value="#{booksHandler.rememberBook.isbn}" />
+						value="#{booksHandler.rememberBook.isbn}"
+						validator="isbnValidator" converter="isbnConverter" />
 					<p:outputLabel value="#{msg.showBooksOverview_genre}" for="genre" />
 					<h:selectOneMenu required="true" id="genre"
 						value="#{booksHandler.rememberBook.genre}">
@@ -143,6 +155,14 @@
 				</p:panelGrid>
 
 			</h:form>
+		</ui:insert>
+	</div>
+
+	<br />
+
+	<div id="footer" align="center">
+		<ui:insert name="footer">
+		A webapp project created by M.Günster, A.Schriever, T.Schrul
 		</ui:insert>
 	</div>
 </h:body>

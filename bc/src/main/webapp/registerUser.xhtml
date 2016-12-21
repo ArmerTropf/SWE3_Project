@@ -21,6 +21,8 @@
 				<p:growl id="messages" showDetail="true" autoUpdate="true" />
 
 				<p:graphicImage value="resources/bc_img.jpg" />
+				
+				<p:separator/>
 				<br />
 
 				<p:commandButton id="language_btn" value="#{msg.language_titel}"
@@ -44,11 +46,13 @@
 					</f:facet>
 					<p:outputLabel value="#{msg.registerUser_firstname}"
 						for="firstname" />
-					<p:inputText id="firstname" required="false"
-						value="#{userAndShelvesHandler.rememberUser.firstname}" />
+					<p:inputText id="firstname" required="true"
+						value="#{userAndShelvesHandler.rememberUser.firstname}"
+						validator="nameValidator" />
 					<p:outputLabel value="#{msg.registerUser_lastname}" for="lastname" />
 					<p:inputText id="lastname" required="true"
-						value="#{userAndShelvesHandler.rememberUser.lastname}" />
+						value="#{userAndShelvesHandler.rememberUser.lastname}"
+						validator="nameValidator" />
 					<p:outputLabel value="#{msg.registerUser_loginname}" for="login" />
 					<p:inputText id="login" required="true"
 						value="#{userAndShelvesHandler.rememberUser.login}" />

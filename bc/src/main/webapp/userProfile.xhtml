@@ -10,23 +10,30 @@
 
 <!-- author: Michael Günster, Andre Schriever, Thomas Schrul -->
 
+
 <h:head>
 	<title><ui:insert name="title">#{msg.applicationTitle}</ui:insert></title>
 </h:head>
 <h:body>
-	<div id="header" />
-	<div id="content">
+	<p:graphicImage value="resources/bc_img.jpg" />
+	<div id="content" align="center">
 		<ui:insert name="content">
+			<f:event
+				listener="#{userAndShelvesHandler.setRememberUser(userLoginHandler.loggedInUser)}"
+				type="preRenderView"></f:event>
 
-			<p:graphicImage value="resources/bc_img.jpg" />
+
 
 			<p:growl id="messages" showDetail="true" autoUpdate="true" />
 
 			<h:form id="form">
 
 				<p:menubar>
-					<p:menuitem value="#{msg.menu_home}" action="mainSite"
+					<p:menuitem value="#{msg.menu_home}" url="mainSite"
 						icon="fa fa-home" immediate="true" />
+					<p:menuitem value="#{msg.menu_usermanagement}" action="showUser"
+						immediate="true" icon="fa fa-users"
+						rendered="#{userLoginHandler.loggedInUser.admin}" />
 					<p:menuitem value="#{msg.menu_globalLibrary}" action="showBooks"
 						icon="fa fa-folder-open" immediate="true" />
 					<p:menuitem value="#{msg.menu_myShelves}" action="showShelves"
@@ -50,60 +57,10 @@
 
 				<br />
 
-				<p:dataTable sortBy="#{user.firstname}" var="user"
-					value="#{userAndShelvesHandler.user}" headerClass="header">
-					<f:facet name="header">#{msg.addUser}</f:facet>
-					<p:column>
-						<f:facet name="header">#{msg['userAdministration_firstname']}</f:facet>
-						<p:outputLabel value="#{user.firstname}" />
-					</p:column>
-					<p:column>
-						<f:facet name="header">#{msg['userAdministration_lastname']}</f:facet>
-						<p:outputLabel value="#{user.lastname}" />
-					</p:column>
-					<p:column>
-						<f:facet name="header">#{msg['userAdministration_loginname']}</f:facet>
-						<p:outputLabel value="#{user.login}" />
-					</p:column>
-					<p:column>
-						<f:facet name="header">#{msg['userAdministration_admin']} </f:facet>
-						<p:outputLabel layout="inline" styleClass="fa fa-check"
-							rendered="#{user.admin}" />
-						<p:outputLabel layout="inline" styleClass="fa fa-close"
-							rendered="#{!user.admin}" />
-					</p:column>
-					<p:column>
-						<f:facet name="header">#{msg['userAdministration_activated']}</f:facet>
-						<p:outputLabel layout="inline" styleClass="fa fa-check"
-							rendered="#{user.activated}" />
-						<p:outputLabel layout="inline" styleClass="fa fa-close"
-							rendered="#{!user.activated}" />
-					</p:column>
-					<p:column>
-						<f:facet name="header">#{msg['userAdministration_button_edit']}</f:facet>
-						<p:commandButton action="#{userAndShelvesHandler.editUser()}"
-							immediate="true" value="#{msg['userAdministration_button_edit']}"
-							icon="fa fa-edit" />
-					</p:column>
-					<p:column>
-						<f:facet name="header">#{msg['userAdministration_button_delete']}</f:facet>
-						<p:commandButton update="@form"
-							action="#{userAndShelvesHandler.deleteUser(msg.userAdministration_msg_deleteUserTitle, msg.userAdministration_msg_deleteUseeText)}"
-							value="#{msg['userAdministration_button_delete']}"
-							icon="fa fa-close" immediate="true" />
-					</p:column>
-				</p:dataTable>
-
-				<br />
-
-				<p:separator />
-
-				<br />
-
 				<p:panelGrid headerClass="header" footerClass="footer" columns="2">
 					<f:facet name="header">
 						<p:row>
-							<p:column colspan="2">#{msg.addUser_title}</p:column>
+							<p:column colspan="2">#{msg.userProfile_title}</p:column>
 						</p:row>
 					</f:facet>
 					<p:outputLabel value="#{msg.addUser_firstname}" for="firstname" />
@@ -115,14 +72,11 @@
 						value="#{userAndShelvesHandler.rememberUser.lastname}"
 						validator="nameValidator" />
 					<p:outputLabel value="#{msg.addUser_loginname}" for="login" />
-					<p:inputText id="login" required="true"
+					<p:inputText disabled="true" id="login" required="true"
 						value="#{userAndShelvesHandler.rememberUser.login}" />
 					<p:outputLabel value="#{msg.addUser_activated}" for="activated" />
-					<p:selectBooleanCheckbox id="activated"
+					<p:selectBooleanCheckbox disabled="true" id="activated"
 						value="#{userAndShelvesHandler.rememberUser.activated}" />
-					<p:outputLabel value="#{msg.addUser_admin}" for="admin" />
-					<p:selectBooleanCheckbox id="admin"
-						value="#{userAndShelvesHandler.rememberUser.admin}" />
 					<p:outputLabel value="#{msg.addUser_password}" for="password" />
 					<p:password id="password" match="repeatpassword"
 						promptLabel="#{msg.addUser_msg_passwordPrompt}"
@@ -137,15 +91,18 @@
 						value="#{userAndShelvesHandler.rememberUser.password}" />
 					<f:facet name="footer">
 						<p:commandButton
-							action="#{userAndShelvesHandler.saveUser(Error, msg.addUser_msg_loginExists)}"
+							action="#{userAndShelvesHandler.saveUserProfile()}"
 							value="#{msg.addUser_button_save}" icon="fa fa-save"
 							update="@form" />
-						<p:commandButton action="#{userAndShelvesHandler.cancelUser()}"
+						<p:commandButton
+							action="#{userAndShelvesHandler.cancelUserProfile()}"
 							immediate="true" value="#{msg.addUser_button_cancel}"
 							icon="fa fa-close" />
 					</f:facet>
 				</p:panelGrid>
+
 			</h:form>
+
 		</ui:insert>
 	</div>
 

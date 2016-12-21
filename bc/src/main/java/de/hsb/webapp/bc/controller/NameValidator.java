@@ -21,8 +21,8 @@ public class NameValidator implements javax.faces.validator.Validator {
 		FacesMessage message;
 		for (int i = 0; i < name.length(); i++)
 			if (!name.matches("[A-Za-z]+")) {
-				message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Ungültiger Name",
-						"Es dürfen nur lateinische Buchstaben enthalten sein!");
+				message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Name not valid",
+						"Use only letters for the names!");
 				throw new ValidatorException(message);
 			}
 	}

@@ -59,7 +59,7 @@ public class Shelf implements Serializable {
 
 	/**
 	 * A shelf may have many books and a book may appear in different shelves.
-	 * They will be stored in a collection.
+	 * They will be stored in a list.
 	 */
 	@ManyToMany(fetch = FetchType.EAGER)
 	private List<Book> books;
@@ -74,8 +74,7 @@ public class Shelf implements Serializable {
 	}
 
 	/**
-	 * Constructor using fields to create a shelf. Use this constructor to
-	 * create a shelf without books at the beginning.
+	 * Constructor using fields to create a shelf.
 	 * 
 	 * @param name
 	 *            Name of the shelf.

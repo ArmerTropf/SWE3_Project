@@ -83,13 +83,13 @@ public class BooksHandler implements Serializable {
 			em.persist(a1);
 			em.persist(a2);
 			em.persist(a3);
-			Book b1 = new Book("Frankenstein", "978-3866473768", GenreType.SCIENCE_FICTION,
+			Book b1 = new Book("Frankenstein", "9783866473768", GenreType.SCIENCE_FICTION,
 					new GregorianCalendar(2009, 02, 27).getTime());
 			b1.setAuthor(a3);
-			Book b2 = new Book("Dracula", "978-3866472938", GenreType.HORROR,
+			Book b2 = new Book("Dracula", "9783866472938", GenreType.HORROR,
 					new GregorianCalendar(2008, 10, 01).getTime());
 			b2.setAuthor(a2);
-			Book b3 = new Book("Harry Potter und der Stein der Weisen", "978-3551354013", GenreType.FANTASY,
+			Book b3 = new Book("Harry Potter und der Stein der Weisen", "9783551354013", GenreType.FANTASY,
 					new GregorianCalendar(2005, 01, 01).getTime());
 			b3.setAuthor(a1);
 			em.persist(b1);
@@ -218,9 +218,16 @@ public class BooksHandler implements Serializable {
 		try {
 			utx.begin();
 			Query q = em.createQuery("Select b from Book b where b.author.firstname = :firstname")
-					.setParameter("firstname", rememberAuthor.getFirstname());
+					.setParameter("firstname", rememberAuthor.getFirstname()); // every
+																				// book
+																				// with
+																				// the
+																				// author
+																				// to
+																				// delete
 			List<Book> b = q.getResultList();
-			for (Book x : b) {
+			for (Book x : b) { // delete authors from the books and merge books
+								// with database
 				rememberBook = x;
 				rememberBook.setAuthor(null);
 				rememberBook = em.merge(rememberBook);
