@@ -20,12 +20,9 @@ import javax.validation.constraints.Size;
  * @author Thomas Schrul, Michael Günster, Andre Schriever
  *
  */
-@NamedQueries({
-	@NamedQuery(name = "SelectUser", query = "Select u from User u"),
-	@NamedQuery(name = "SelectUserLogins", query = "Select l from User l where l.login = :login"),
-    @NamedQuery(name="User.findByName",
-                query="SELECT c FROM User c WHERE c.login = :login AND c.password = :password"),
-}) 
+@NamedQueries({ @NamedQuery(name = "SelectUser", query = "Select u from User u"),
+		@NamedQuery(name = "SelectUserLogins", query = "Select l from User l where l.login = :login"),
+		@NamedQuery(name = "User.findByName", query = "SELECT c FROM User c WHERE c.login = :login AND c.password = :password"), })
 @Entity
 public class User implements Serializable {
 
@@ -88,7 +85,7 @@ public class User implements Serializable {
 	/**
 	 * A user may have many shelves. They will be stored in a List.
 	 */
-	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "user", orphanRemoval = true)
 	private List<Shelf> shelves;
 
 	// End ---Declaration of variables---
@@ -287,6 +284,7 @@ public class User implements Serializable {
 
 	/**
 	 * Gets the ID of the user.
+	 * 
 	 * @return User's ID.
 	 */
 	public Integer getUid() {
@@ -295,7 +293,9 @@ public class User implements Serializable {
 
 	/**
 	 * Sets the ID of the user.
-	 * @param uid New ID for the user.
+	 * 
+	 * @param uid
+	 *            New ID for the user.
 	 */
 	public void setUid(Integer uid) {
 		this.uid = uid;

@@ -69,13 +69,14 @@ public class UserLogin implements Serializable {
 	// End ---Declaration of variables---
 
 	/**
-	 * Initializise the database with an administrator user.
+	 * Initializise the database with an administrator an guest user.
 	 */
 	@PostConstruct
 	private void init() {
 		try {
 			utx.begin();
 			em.persist(new User("User", "Super", "12345", "root", true, true));
+			em.persist(new User("User", "Guest", "67890", "guest", true));
 			utx.commit();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -85,7 +86,7 @@ public class UserLogin implements Serializable {
 	/**
 	 * Logs in the user.
 	 * 
-	 * @return String "" which is the main page of the webapp, if the
+	 * @return String "mainSite" which is the main page of the webapp, if the
 	 *         credentials are correct, otherwise user will stay at the login
 	 *         page.
 	 */
@@ -100,7 +101,8 @@ public class UserLogin implements Serializable {
 				.setParameter("password", this.password);
 		query.setMaxResults(1); // allows a new login process for the same user
 								// after he logs out
-		if (query.getResultList().isEmpty()) {
+		if (query.getResultList().isEmpty()) { // no credentials match with
+												// database
 			msg = new FacesMessage(FacesMessage.SEVERITY_WARN, titel, message);
 			FacesContext.getCurrentInstance().addMessage(null, msg);
 			try {
@@ -109,7 +111,10 @@ public class UserLogin implements Serializable {
 				e.printStackTrace();
 			}
 			return "login";
-		} else if (!(loggedInUser = (User) query.getSingleResult()).isActivated()) {
+		} else if (!(loggedInUser = (User) query.getSingleResult()).isActivated()) { // user
+																						// is
+																						// not
+																						// activated
 			msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Your account is not activated!");
 			FacesContext.getCurrentInstance().addMessage(null, msg);
 			return "login";
@@ -129,7 +134,6 @@ public class UserLogin implements Serializable {
 	 * @return String "login" which is the login page.
 	 */
 	public String logout() {
-		// FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
 		return "login";
 	}
 

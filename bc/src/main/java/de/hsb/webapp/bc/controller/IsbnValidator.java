@@ -25,15 +25,15 @@ public class IsbnValidator implements javax.faces.validator.Validator {
 		for (int i = 0; i < isbn.length(); i++)
 			isbnintarray.add(isbn.charAt(i) - 48); // ASCII -> Integer
 		if (!isbn.matches("[0-9]+")) {
-			message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Ungültige ISBN",
-					"Es dürfen nur Ziffern enthalten sein!");
+			message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ISBN not valid",
+					"Use digits only!");
 			throw new ValidatorException(message);
 		} else if (isbn.length() < 10 || isbn.length() > 13) {
-			message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Ungültige ISBN",
-					"Nummer ist zu lang oder zu kurz!");
+			message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ISBN not valid",
+					"ISBN number to short or to long!");
 			throw new ValidatorException(message);
 		} else if (!isValid(isbnintarray)) {
-			message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Ungültige ISBN", "Die ISBN ist ungültig!");
+			message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ISBN not valid", "ISBN is not correct/valid!");
 			throw new ValidatorException(message);
 		}
 	}

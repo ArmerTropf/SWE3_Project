@@ -33,6 +33,17 @@ public class Language implements Serializable {
 	private Locale locale = FacesContext.getCurrentInstance().getViewRoot().getLocale();
 
 	/**
+	 * Changes the current language in the webapp interface.
+	 * 
+	 * @param language
+	 *            Language to change to.
+	 */
+	public void changeLanguage(String language) {
+		locale = new Locale(language);
+		FacesContext.getCurrentInstance().getViewRoot().setLocale(new Locale(language));
+	}
+
+	/**
 	 * Gets the locale.
 	 * 
 	 * @return Current locale.
@@ -48,18 +59,5 @@ public class Language implements Serializable {
 	 */
 	public String getLanguage() {
 		return locale.getLanguage();
-	}
-
-	/**
-	 * Changes the current language in the webapp interface.
-	 * 
-	 * @param language
-	 *            Language to change to.
-	 */
-	public void changeLanguage(String language) {
-		
-		System.out.println("CHANGE LANGUAGE to " + language);
-		locale = new Locale(language);
-		FacesContext.getCurrentInstance().getViewRoot().setLocale(new Locale(language));
 	}
 }

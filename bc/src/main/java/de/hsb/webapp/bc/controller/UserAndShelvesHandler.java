@@ -2,7 +2,6 @@ package de.hsb.webapp.bc.controller;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.List;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
@@ -79,26 +78,29 @@ public class UserAndShelvesHandler implements Serializable {
 	private Book rememberBook = new Book();
 
 	/**
-	 * Stores the books of the current shelf.
+	 * Mode for showing the users shelf table.
 	 */
-	private List<Book> myBooks;
+	private boolean isShelfTable = true;
 
 	/**
-	 * Initializes the data model with some user for the first use.
+	 * Different modes for rendering dependent data: isShelfBooks renders view
+	 * for showing books in current shelf. isShelfEdit renders view for showing
+	 * edit mode of the shelf. isShelfLib renders view for showing library for
+	 * adding books to shelf.
+	 */
+	private boolean isShelfBooks = false, isShelfEdit = true, isShelfLib = false;
+
+	/**
+	 * Initializes the data models.
 	 */
 	@PostConstruct
 	public void init() {
 		try {
-			// rememberUser = u; // just for testing
 			utx.begin();
-			// em.persist(new User("Guenster", "Michael", "12345", "mguenster",
-			// true));
-			// em.persist(u);
 			user = new ListDataModel<User>();
 			user.setWrappedData(em.createNamedQuery("SelectUser").getResultList());
 			shelves = new ListDataModel<Shelf>();
 			shelves.setWrappedData(em.createNamedQuery("SelectShelf").getResultList());
-			System.out.println("Init USER erstellt");
 			utx.commit();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -107,45 +109,56 @@ public class UserAndShelvesHandler implements Serializable {
 
 	/**
 	 * Creates a new shelf.
-	 * 
-	 * @return
 	 */
 	public void newShelf() {
-		rememberUser = user.getRowData();
-		// rememberUser = u; //just for testing
 		rememberShelf = new Shelf();
-
-		if (rememberUser.getShelves() == null) {
-			rememberUser.setShelves(new ArrayList<Shelf>());
-		}
 	}
 
 	/**
-	 * Edits an existing shelf.
+	 * Changes the mode of the "showShelves.xhtml" for rendering different
+	 * views.
 	 * 
-	 * @return
+	 * @param editmode
+	 *            True for shelf edit mode.
+	 * @param bookmode
+	 *            True for showing books in selected shelf.
+	 * @param libmode
+	 *            True for showing library to add books to shelf.
+	 */
+	public void changeShelfSituation(boolean editmode, boolean bookmode, boolean libmode, boolean shelftable) {
+		this.isShelfBooks = bookmode;
+		this.isShelfEdit = editmode;
+		this.isShelfLib = libmode;
+		this.isShelfTable = shelftable;
+	}
+
+	/**
+	 * Edits a existing shelf.
+	 * 
+	 * @param shelf
+	 *            Shelf to edit.
+	 * @return String redirecting to the "showShelves" page.
 	 */
 	public String editShelf(Shelf shelf) {
-		rememberUser = user.getRowData();
-		// rememberUser = u;
-		// rememberShelf = shelves.getRowData();
+		changeShelfSituation(true, false, false, true);
 		rememberShelf = shelf;
-		return "shelfList?faces-redirect=true";
+		return "showShelves?faces-redirect=true";
 	}
 
 	/**
-	 * Saves changes to the current shelf and adds a new shelf to the shelves
-	 * list of the user if the shelf is new.
+	 * Creates a shelf list to the user if he does not have one and adds a new
+	 * shelf to the users shelves list or saves changes to a shelf from the list
 	 * 
-	 * @return
+	 * @return String redirecting to the "showShelves" page.
 	 */
 	public String saveShelf() {
 		if (rememberUser.getShelves() == null) {
 			rememberUser.setShelves(new ArrayList<Shelf>());
 		}
 		if (rememberShelf.getSid() == null) {
+			rememberUser.getShelves().add(rememberShelf);
+			rememberShelf.setUser(rememberUser);
 			try {
-				rememberUser.getShelves().add(rememberShelf);
 				utx.begin();
 				em.persist(rememberShelf);
 				user.setWrappedData(em.createNamedQuery("SelectUser").getResultList());
@@ -166,89 +179,60 @@ public class UserAndShelvesHandler implements Serializable {
 			}
 		}
 		newShelf();
-		return "shelfList?faces-redirect=true";
+		return "showShelves?faces-redirect=true";
 	}
 
 	/**
 	 * Deletes the shelf from the current user and the database.
 	 * 
-	 * @return
+	 * @return String redirecting to the "showShelves" page.
 	 */
 	public String deleteShelf(Shelf shelf) {
-		rememberUser = user.getRowData();
-		// rememberUser = u;
-		// rememberShelf = shelves.getRowData();
+		changeShelfSituation(true, false, false, true);
 		rememberShelf = shelf;
 		rememberUser.getShelves().remove(rememberShelf);
-
 		try {
 			utx.begin();
 			rememberShelf = em.merge(rememberShelf);
 			em.remove(rememberShelf);
-
-			// rememberUser = em.merge(rememberUser);
+			rememberUser = em.merge(rememberUser);
 			shelves.setWrappedData(em.createNamedQuery("SelectShelf").getResultList());
 			user.setWrappedData(em.createNamedQuery("SelectUser").getResultList());
 			utx.commit();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
 		newShelf();
-		return "shelfList?faces-redirect=true";
-
-	}
-
-	/**
-	 * Stores the current selected shelf and it's books for listing the books in
-	 * the website.
-	 * 
-	 * @param shelf
-	 *            Selected shelf.
-	 */
-	public void showMyBooks(Shelf shelf) {
-		rememberShelf = shelf;
-		myBooks = shelf.getBooks();
+		return "showShelves?faces-redirect=true";
 	}
 
 	/**
 	 * Creates a new user object for rememberUSer.
 	 */
 	public void newUser() {
-		System.out.println("");
 		rememberUser = new User();
 	}
 
 	/**
 	 * Gets the current user to edit.
 	 * 
-	 * @return String "userAdministration" which is the redirect to
-	 *         userAdministration.xhtml
+	 * @return String "showUser" which is the redirect to showUser.xhtml
 	 */
 	public String editUser() {
 		rememberUser = user.getRowData();
 		return "showUser?faces-redirect=true";
 	}
 
-	// /**
-	// * Saves rememberUser from entity manager an set it into user (datamodel).
-	// *
-	// * @return String "userAdministration" which is the redirect to
-	// * userAdministration.xhtml.
-	// */
-	// public String saveUser() {
-	// try {
-	// utx.begin();
-	// rememberUser = em.merge(rememberUser);
-	// user.setWrappedData(em.createNamedQuery("SelectUser").getResultList());
-	// utx.commit();
-	// } catch (Exception e) {
-	// e.printStackTrace();
-	// }
-	// newUser();
-	// return "showUser?faces-redirect=true";
-	// }
-
+	/**
+	 * Saves a new user or changes to a existing user. Checks for new user, if
+	 * login name is allowed (not existing in database).
+	 * 
+	 * @param title
+	 *            String for message title.
+	 * @param message
+	 *            String for message content.
+	 * @return String "showUser" which is the redirect to showUser.xhtml
+	 */
 	public String saveUser(String title, String message) {
 		if (rememberUser.getUid() == null) {
 			try {
@@ -278,7 +262,6 @@ public class UserAndShelvesHandler implements Serializable {
 					e.printStackTrace();
 				}
 				newUser();
-				System.out.println("USER wurde neu erstellt");
 				return "showUser";
 			}
 		} else {
@@ -294,34 +277,55 @@ public class UserAndShelvesHandler implements Serializable {
 			return "showUser?faces-redirect=true";
 
 		}
-
 	}
 
 	/**
-	 * Deletes rememberUser from user (datamodel).
+	 * Saves changes to current user profile.
 	 * 
-	 * @return String "userAdministration" which is the redirect to
-	 *         userAdministration.xhtml.
+	 * @return String "mainSite" which is the main paige mainSite.xhtml
 	 */
-	public String deleteUser() {
-		rememberUser = user.getRowData();
+	public String saveUserProfile() {
 		try {
 			utx.begin();
 			rememberUser = em.merge(rememberUser);
-			em.remove(rememberUser);
 			user.setWrappedData(em.createNamedQuery("SelectUser").getResultList());
-			shelves.setWrappedData(em.createNamedQuery("SelectShelf").getResultList());
 			utx.commit();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		newUser();
-		return "showUser?faces-redirect=true";
+		return "mainSite";
 	}
 
 	/**
+	 * Deletes a user from database except from the "root" user.
 	 * 
-	 * ======= Cancels the user registration process.
+	 * @return String "showUser" which is the redirect to showUser.xhtml
+	 */
+	public String deleteUser(String title, String message) {
+		rememberUser = user.getRowData();
+		if (rememberUser.getLogin() == "root") {
+			FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, title, message);
+			FacesContext.getCurrentInstance().addMessage(null, msg);
+			return "showUser";
+		} else {
+			try {
+				utx.begin();
+				rememberUser = em.merge(rememberUser);
+				em.remove(rememberUser);
+				user.setWrappedData(em.createNamedQuery("SelectUser").getResultList());
+				shelves.setWrappedData(em.createNamedQuery("SelectShelf").getResultList());
+				utx.commit();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			newUser();
+			return "showUser?faces-redirect=true";
+		}
+	}
+
+	/**
+	 * Cancels the user registration process.
 	 * 
 	 * @return String "login" which is the redirect to login.xhtml.
 	 */
@@ -329,6 +333,18 @@ public class UserAndShelvesHandler implements Serializable {
 		return "login";
 	}
 
+	/**
+	 * Register a new user. Checks if login name is allowed (not existing in
+	 * database).
+	 * 
+	 * @param title
+	 *            String for message title.
+	 * @param message
+	 *            string for message content.
+	 * @return String to "registerUser" page if login name is not allowed or
+	 *         string "login" to the login page, if registration was
+	 *         successfully.
+	 */
 	public String saveUserRegistration(String title, String message) {
 		try {
 			utx.begin();
@@ -366,11 +382,10 @@ public class UserAndShelvesHandler implements Serializable {
 	 * 
 	 * @param book
 	 *            Book to add.
-	 * @return
+	 * @return String "showSehlves" which is the redirect to showShelves.xhtml
 	 */
 	public String addBookToShelf(Book book) {
 		rememberBook = book;
-		rememberShelf = shelves.getRowData();
 		if (rememberShelf.getBooks() == null) {
 			rememberShelf.setBooks(new ArrayList<Book>());
 		}
@@ -379,29 +394,33 @@ public class UserAndShelvesHandler implements Serializable {
 			utx.begin();
 			rememberShelf = em.merge(rememberShelf);
 			shelves.setWrappedData(em.createNamedQuery("SelectShelf").getResultList());
-			user.setWrappedData(em.createNamedQuery("SelectUser").getResultList());
 			utx.commit();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		changeShelfSituation(false, true, false, true);
+		return "showShelves?faces-redirect=true";
+	}
 
-		return "shelfList?faces-redirect=true";
+	/**
+	 * Cancels the view where to add a book to the shelf.
+	 * 
+	 * @return String "showSehlves" which is the redirect to showShelves.xhtml
+	 */
+	public String cancelAddBookToShelf() {
+		return "showShelves?faces-redirect=true";
 	}
 
 	/**
 	 * Deletes a book from the current shelf.
 	 * 
-	 * 
 	 * @param book
 	 *            Book to delete
-	 * @return
+	 * @return String "showShelves" which is the redirect to showShelves.xhtml
 	 */
-
 	public String deleteBookFromShelf(Book book) {
 		rememberBook = book;
-		// rememberShelf = shelves.getRowData();
-		// rememberShelf.getBooks().remove(rememberBook);
-		myBooks.remove(rememberBook);
+		rememberShelf.getBooks().remove(rememberBook);
 		try {
 			utx.begin();
 			rememberShelf = em.merge(rememberShelf);
@@ -411,14 +430,13 @@ public class UserAndShelvesHandler implements Serializable {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return "shelfList?faces-redirect=true";
+		return "showShelves?faces-redirect=true";
 	}
 
 	/**
 	 * Cancels adding or editing process of a user account.
 	 *
-	 * @return String "userAdministration" which is the redirect to
-	 *         userAdministration.xhtml
+	 * @return String "showUser" which is the redirect to showUser.xhtml
 	 */
 	public String cancelUser() {
 		newUser();
@@ -426,12 +444,23 @@ public class UserAndShelvesHandler implements Serializable {
 	}
 
 	/**
+	 * Cancels editing process of a user profile.
+	 *
+	 * @return String "mainSite" which is the redirect to mainSite.xhtml
+	 */
+	public String cancelUserProfile() {
+		newUser();
+		return "mainSite";
+	}
+
+	/**
 	 * Cancels shelf editing mode.
 	 *
-	 * @return
+	 * @return String "showSelves" which is the redirect to showSehlves.xhtml
 	 */
 	public String cancelShelf() {
-		return "XHTML";
+		newShelf();
+		return "showShelves?faces-redirect=true";
 	}
 
 	/**
@@ -530,25 +559,88 @@ public class UserAndShelvesHandler implements Serializable {
 	}
 
 	/**
-	 * Gets the list of books of the current shelf.
+	 * Sets the current user after login.
 	 * 
-	 * @return List of books.
+	 * @param newUser
+	 *            Logged in user.
 	 */
-	public List<Book> getMyBooks() {
-		return myBooks;
+	public void toMainPage(User newUser) {
+		this.rememberUser = newUser;
 	}
 
 	/**
-	 * Sets the list of books of the current shelf.
+	 * Mode flag for showing books in current shelf.
 	 * 
-	 * @param myBooks
-	 *            New list of books.
+	 * @return True for this mode.
 	 */
-	public void setMyBooks(List<Book> myBooks) {
-		this.myBooks = myBooks;
+	public boolean isShelfBooks() {
+		return isShelfBooks;
 	}
 
-	public void toMainPage(User newUser) {
-		this.rememberUser = newUser;
+	/**
+	 * Sets state of mode.
+	 * 
+	 * @param isShelfBooks
+	 *            True for activating.
+	 */
+	public void setShelfBooks(boolean isShelfBooks) {
+		this.isShelfBooks = isShelfBooks;
+	}
+
+	/**
+	 * Mode flag for showing edit shelves.
+	 * 
+	 * @return True for this mode.
+	 */
+	public boolean isShelfEdit() {
+		return isShelfEdit;
+	}
+
+	/**
+	 * Sets state of mode.
+	 * 
+	 * @param isShelfEdit
+	 *            True for activating.
+	 */
+	public void setShelfEdit(boolean isShelfEdit) {
+		this.isShelfEdit = isShelfEdit;
+	}
+
+	/**
+	 * Mode flag for showing library to add books to current shelf.
+	 * 
+	 * @return True for this mode.
+	 */
+	public boolean isShelfLib() {
+		return isShelfLib;
+	}
+
+	/**
+	 * Sets state of mode.
+	 * 
+	 * @param isShelfLib
+	 *            True for activating.
+	 */
+	public void setShelfLib(boolean isShelfLib) {
+		this.isShelfLib = isShelfLib;
+	}
+
+	/**
+	 * Gets the state of showing the user's shelf table.
+	 * 
+	 * @return True if showing.
+	 */
+	public boolean isShelfTable() {
+		return isShelfTable;
+	}
+
+	/**
+	 * Sets the state of showing the user's shelf table.
+	 * 
+	 * @param isShelfTable
+	 *            True for showing.
+	 */
+	public void setShelfTable(boolean isShelfTable) {
+		this.isShelfTable = isShelfTable;
 	}
 }

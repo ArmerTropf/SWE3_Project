@@ -8,14 +8,19 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:p="http://primefaces.org/ui">
 
+<!-- author: Michael Günster, Andre Schriever, Thomas Schrul -->
+
 <h:head>
 	<title><ui:insert name="title">#{msg.applicationTitle}</ui:insert></title>
 </h:head>
 <h:body>
 	<div id="content">
 		<ui:insert name="content">
+
 			<p:graphicImage value="resources/bc_img.jpg" />
+
 			<p:growl id="messages" showDetail="true" autoUpdate="true" />
+
 			<h:form id="form">
 
 				<p:menubar>
@@ -39,8 +44,7 @@
 				<br />
 
 				<p:dataTable sortBy="#{authors.lastname}" id="data" var="authors"
-					value="#{booksHandler.authors}" rowClasses="odd,even"
-					headerClass="header">
+					value="#{booksHandler.authors}" headerClass="header">
 					<f:facet name="header">#{msg.manageAuthors_title}</f:facet>
 					<p:column>
 						<f:facet name="header">#{msg.manageAuthors_lastname}</f:facet>
@@ -50,7 +54,7 @@
 						<f:facet name="header">#{msg.manageAuthors_firstname}</f:facet>
 						<p:outputLabel value="#{authors.firstname}" />
 					</p:column>
-					<p:column style="font-weight: bold;">
+					<p:column>
 						<f:facet name="header">#{msg.manageAuthors_button_edit}</f:facet>
 						<p:commandButton action="#{booksHandler.editAuthor()}"
 							value="#{msg.manageAuthors_button_edit}" update=":form:grid"
@@ -63,11 +67,13 @@
 							update="data" immediate="true" />
 					</p:column>
 				</p:dataTable>
+
 				<br />
 				<p:separator />
 				<br />
+
 				<p:panelGrid id="grid" headerClass="header" footerClass="footer"
-					style="margin-top:0px;margin-left:0px" columns="2">
+					columns="2">
 					<f:facet name="header">
 						<p:row>
 							<p:column colspan="2">#{msg.manageAuthors_addtitle}</p:column>
@@ -77,10 +83,12 @@
 					<p:outputLabel value="#{msg.manageAuthors_firstname}"
 						for="firstname" />
 					<p:inputText id="firstname" required="true"
-						value="#{booksHandler.rememberAuthor.firstname}" />
+						value="#{booksHandler.rememberAuthor.firstname}"
+						validator="nameValidator" />
 					<p:outputLabel value="#{msg.manageAuthors_lastname}" for="lastname" />
 					<p:inputText id="lastname" required="true"
-						value="#{booksHandler.rememberAuthor.lastname}" />
+						value="#{booksHandler.rememberAuthor.lastname}"
+						validator="nameValidator" />
 
 					<f:facet name="footer">
 						<p:commandButton action="#{booksHandler.saveAuthor()}"
@@ -95,6 +103,14 @@
 				</p:panelGrid>
 
 			</h:form>
+		</ui:insert>
+	</div>
+
+	<br />
+
+	<div id="footer" align="center">
+		<ui:insert name="footer">
+		A webapp project created by M.Günster, A.Schriever, T.Schrul
 		</ui:insert>
 	</div>
 </h:body>

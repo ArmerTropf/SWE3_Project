@@ -8,7 +8,9 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQuery;
 import javax.validation.constraints.Size;
 
@@ -43,6 +45,13 @@ public class Shelf implements Serializable {
 	private Integer sid;
 
 	/**
+	 * The user who belongs to the shelf.
+	 */
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "user_id")
+	private User user;
+
+	/**
 	 * Name of the shelf.
 	 */
 	@Size(min = 2, max = 40)
@@ -50,7 +59,7 @@ public class Shelf implements Serializable {
 
 	/**
 	 * A shelf may have many books and a book may appear in different shelves.
-	 * They will be stored in a collection.
+	 * They will be stored in a list.
 	 */
 	@ManyToMany(fetch = FetchType.EAGER)
 	private List<Book> books;
@@ -65,8 +74,7 @@ public class Shelf implements Serializable {
 	}
 
 	/**
-	 * Constructor using fields to create a shelf. Use this constructor to
-	 * create a shelf without books at the beginning.
+	 * Constructor using fields to create a shelf.
 	 * 
 	 * @param name
 	 *            Name of the shelf.
@@ -133,6 +141,25 @@ public class Shelf implements Serializable {
 	 */
 	public void setSid(Integer sid) {
 		this.sid = sid;
+	}
+
+	/**
+	 * Gets the user of the shelf.
+	 * 
+	 * @return Shelf's
+	 */
+	public User getUser() {
+		return user;
+	}
+
+	/**
+	 * Sets the user of the shelf.
+	 * 
+	 * @param user
+	 *            New user.
+	 */
+	public void setUser(User user) {
+		this.user = user;
 	}
 
 	// End ---Getter & Setter---
