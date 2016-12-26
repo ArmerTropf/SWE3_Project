@@ -20,7 +20,6 @@
 		<ui:insert name="content">
 
 			<p:graphicImage value="resources/bc_img.jpg" />
-
 			<h:form id="form">
 				<p:focus for="button_showUser" />
 				<p:menubar>
@@ -34,14 +33,6 @@
 					<p:menuitem value="#{msg.menu_userprofile}" action="userProfile"
 						icon="fa fa-user"
 						rendered="#{!userLoginHandler.loggedInUser.admin}" />
-					<p:submenu label="#{msg.language_titel}" icon="fa fa-language">
-						<p:menuitem value="#{msg.language_de}"
-							action="#{language.changeLanguage('de')}" immediate="true"
-							update="form" />
-						<p:menuitem value="#{msg.language_en}"
-							action="#{language.changeLanguage('en')}" immediate="true"
-							update="form" />
-					</p:submenu>
 					<p:submenu label="Theme" icon="fa fa-eye">
 						<p:menuitem value="afternoon"
 							action="#{userLoginHandler.changeTheme('afternoon','mainSite')}"
@@ -58,24 +49,24 @@
 					</p:submenu>
 					<f:facet name="options">
 						<h:commandLink action="#{language.changeLanguage('')}">
-							<h:graphicImage value="/resources/de.png" width="40" height="20" />
+							<h:graphicImage value="/resources/de.png" width="40" height="20"
+								immediate="true" />
 						</h:commandLink>&nbsp;
 						<h:commandLink action="#{language.changeLanguage('en')}">
-							<h:graphicImage value="/resources/gb.png" width="40" height="20" />
+							<h:graphicImage value="/resources/gb.png" width="40" height="20"
+								immediate="true" />
 						</h:commandLink>
 						&nbsp;
 						<p:outputLabel
 							value="#{msg.menu_login}: #{userLoginHandler.loggedInUser.login}" />
 							&nbsp;
 						<p:commandButton value="#{msg.menu_logout}"
-							action="#{userLoginHandler.logout()}" icon="fa fa-sign-out" />
+							action="#{userLoginHandler.logout()}" icon="fa fa-sign-out"
+							immediate="true" />
 					</f:facet>
 				</p:menubar>
-
 				<br />
-
 			</h:form>
-
 		</ui:insert>
 	</div>
 

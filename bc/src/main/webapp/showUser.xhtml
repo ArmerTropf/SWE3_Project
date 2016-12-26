@@ -11,12 +11,12 @@
 <!-- author: Michael Günster, Andre Schriever, Thomas Schrul -->
 
 <h:head>
-	<link rel="stylesheet" href="resources/bc.css"/>
+	<link rel="stylesheet" href="resources/bc.css" />
 	<title><ui:insert name="title">#{msg.applicationTitle}</ui:insert></title>
 </h:head>
 <h:body>
 	<div id="header" />
-	<div id="content">
+	<div id="content" class="content">
 		<ui:insert name="content">
 
 			<p:graphicImage value="resources/bc_img.jpg" />
@@ -32,33 +32,27 @@
 						icon="fa fa-folder-open" immediate="true" />
 					<p:menuitem value="#{msg.menu_myShelves}" action="showShelves"
 						icon="fa fa-book" immediate="true" />
-					<p:submenu label="#{msg.language_titel}" icon="fa fa-language">
-						<p:menuitem value="#{msg.language_de}"
-							action="#{language.changeLanguage('de')}" immediate="true"
-							update="form" />
-						<p:menuitem value="#{msg.language_en}"
-							action="#{language.changeLanguage('en')}" immediate="true"
-							update="form" />
-					</p:submenu>
 					<p:submenu label="Theme" icon="fa fa-eye">
-							<p:menuitem value="afternoon"
-								action="#{userLoginHandler.changeTheme('afternoon','showUser')}"
-								immediate="true" update="form" />
-							<p:menuitem value="overcast"
-								action="#{userLoginHandler.changeTheme('overcast','showUser')}"
-								immediate="true" update="form" />
-							<p:menuitem value="start"
-								action="#{userLoginHandler.changeTheme('start','showUser')}"
-								immediate="true" update="form" />
-							<p:menuitem value="aristo"
-								action="#{userLoginHandler.changeTheme('aristo','showUser')}"
-								immediate="true" update="form" />
-						</p:submenu>
+						<p:menuitem value="afternoon"
+							action="#{userLoginHandler.changeTheme('afternoon','showUser')}"
+							immediate="true" update="form" />
+						<p:menuitem value="overcast"
+							action="#{userLoginHandler.changeTheme('overcast','showUser')}"
+							immediate="true" update="form" />
+						<p:menuitem value="start"
+							action="#{userLoginHandler.changeTheme('start','showUser')}"
+							immediate="true" update="form" />
+						<p:menuitem value="aristo"
+							action="#{userLoginHandler.changeTheme('aristo','showUser')}"
+							immediate="true" update="form" />
+					</p:submenu>
 					<f:facet name="options">
-						<h:commandLink action="#{language.changeLanguage('')}">
+						<h:commandLink action="#{language.changeLanguage('')}"
+							immediate="true">
 							<h:graphicImage value="/resources/de.png" width="40" height="20" />
 						</h:commandLink>&nbsp;
-						<h:commandLink action="#{language.changeLanguage('en')}">
+						<h:commandLink action="#{language.changeLanguage('en')}"
+							immediate="true">
 							<h:graphicImage value="/resources/gb.png" width="40" height="20" />
 						</h:commandLink>
 						&nbsp;
@@ -66,7 +60,8 @@
 							value="#{msg.menu_login}: #{userLoginHandler.loggedInUser.login}" />
 							&nbsp;
 						<p:commandButton value="#{msg.menu_logout}"
-							action="#{userLoginHandler.logout()}" icon="fa fa-sign-out" />
+							action="#{userLoginHandler.logout()}" icon="fa fa-sign-out"
+							immediate="true" />
 					</f:facet>
 				</p:menubar>
 
@@ -112,7 +107,7 @@
 						<p:commandButton update="@form"
 							action="#{userAndShelvesHandler.deleteUser(msg.userAdministration_msg_deleteUserTitle, msg.userAdministration_msg_deleteUseeText)}"
 							value="#{msg['userAdministration_button_delete']}"
-							icon="fa fa-close" immediate="true" />
+							icon="fa fa-trash" immediate="true" />
 					</p:column>
 				</p:dataTable>
 
