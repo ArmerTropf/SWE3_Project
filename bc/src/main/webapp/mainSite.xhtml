@@ -12,19 +12,20 @@
 
 
 <h:head>
+	<link rel="stylesheet" href="resources/bc.css" />
 	<title><ui:insert name="title">#{msg.applicationTitle}</ui:insert></title>
 </h:head>
 <h:body>
-	<div id="content">
+	<div class="content" id="content">
 		<ui:insert name="content">
 
 			<p:graphicImage value="resources/bc_img.jpg" />
 
 			<h:form id="form">
-
+				<p:focus for="button_showUser" />
 				<p:menubar>
-					<p:menuitem value="#{msg.menu_usermanagement}" action="showUser"
-						immediate="true" icon="fa fa-users"
+					<p:menuitem id="button_showUser" value="#{msg.menu_usermanagement}"
+						action="showUser" immediate="true" icon="fa fa-users"
 						rendered="#{userLoginHandler.loggedInUser.admin}" />
 					<p:menuitem value="#{msg.menu_globalLibrary}" action="showBooks"
 						icon="fa fa-folder-open" />
@@ -41,9 +42,31 @@
 							action="#{language.changeLanguage('en')}" immediate="true"
 							update="form" />
 					</p:submenu>
+					<p:submenu label="Theme" icon="fa fa-eye">
+						<p:menuitem value="afternoon"
+							action="#{userLoginHandler.changeTheme('afternoon','mainSite')}"
+							immediate="true" update="form" />
+						<p:menuitem value="overcast"
+							action="#{userLoginHandler.changeTheme('overcast','mainSite')}"
+							immediate="true" update="form" />
+						<p:menuitem value="start"
+							action="#{userLoginHandler.changeTheme('start','mainSite')}"
+							immediate="true" update="form" />
+						<p:menuitem value="aristo"
+							action="#{userLoginHandler.changeTheme('aristo','mainSite')}"
+							immediate="true" update="form" />
+					</p:submenu>
 					<f:facet name="options">
-						<p:outputLabel style="margin-right:10px"
+						<h:commandLink action="#{language.changeLanguage('')}">
+							<h:graphicImage value="/resources/de.png" width="40" height="20" />
+						</h:commandLink>&nbsp;
+						<h:commandLink action="#{language.changeLanguage('en')}">
+							<h:graphicImage value="/resources/gb.png" width="40" height="20" />
+						</h:commandLink>
+						&nbsp;
+						<p:outputLabel
 							value="#{msg.menu_login}: #{userLoginHandler.loggedInUser.login}" />
+							&nbsp;
 						<p:commandButton value="#{msg.menu_logout}"
 							action="#{userLoginHandler.logout()}" icon="fa fa-sign-out" />
 					</f:facet>

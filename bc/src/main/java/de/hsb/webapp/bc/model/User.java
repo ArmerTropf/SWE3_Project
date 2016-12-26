@@ -88,6 +88,21 @@ public class User implements Serializable {
 	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "user", orphanRemoval = true)
 	private List<Shelf> shelves;
 
+	
+	private String myTheme = "delta";
+	
+	
+	
+
+
+	public String getMyTheme() {
+		return myTheme;
+	}
+
+	public void setMyTheme(String myTheme) {
+		this.myTheme = myTheme;
+	}
+	
 	// End ---Declaration of variables---
 
 	/**

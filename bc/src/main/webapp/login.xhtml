@@ -11,68 +11,80 @@
 <!-- author: Michael Günster, Andre Schriever, Thomas Schrul -->
 
 <h:head>
+	<link rel="stylesheet" href="resources/bc.css" />
 	<title><ui:insert name="title">#{msg.applicationTitle}</ui:insert>
 	</title>
 </h:head>
 <h:body>
-	<div id="content">
+	<div class="content">
 		<ui:insert name="content">
 
 			<p:growl id="messages" showDetail="true" autoUpdate="true" />
+			<div id="login_input_form">
+				<h:form id="form">
+					<!-- 			By hitting the enter key on your keyboard the button with the id btn_login will be pushed -->
+					<p:defaultCommand target="btn_login" />
+					<p:focus for="loginName" />
 
-			<h:form id="form">
+					<p:graphicImage value="resources/bc_img.jpg" />
+					<br />
 
-				<p:graphicImage value="resources/bc_img.jpg" />
 
-				<p:separator />
-				<br />
 
-				<p:commandButton id="language_btn" value="#{msg.language_titel}"
-					icon="fa fa-language" immediate="true" alt="left" />
-				<p:menu overlay="true" trigger="language_btn" my="left bottom"
-					at="left top">
-					<p:menuitem value="#{msg.language_de}"
-						action="#{language.changeLanguage('')}" immediate="true"
-						update="form" />
-					<p:menuitem value="#{msg.language_en}"
-						action="#{language.changeLanguage('en')}" immediate="true"
-						update="form" />
-				</p:menu>
+					<p:commandButton id="language_btn" value="#{msg.language_titel}"
+						icon="fa fa-language" immediate="true" alt="left" />
+					<p:menu overlay="true" trigger="language_btn" my="left bottom"
+						at="left top">
+						<p:menuitem value="#{msg.language_de}"
+							action="#{language.changeLanguage('')}" immediate="true"
+							update="form" />
+						<p:menuitem value="#{msg.language_en}"
+							action="#{language.changeLanguage('en')}" immediate="true"
+							update="form" />
+					</p:menu>
 
-				<br />
-				<br />
+					<br />
+					<br />
 
-				<p:panelGrid headerClass="header" footerClass="footer" columns="2">
-					<f:facet name="header">
-						<p:row>
-							<p:column colspan="2">#{msg.login_title}</p:column>
-						</p:row>
-					</f:facet>
-					<p:outputLabel value="#{msg.login_username}" />
-					<p:inputText required="false"
-						requiredMessage="{msg.login_msg_entry}" id="loginName"
-						value="#{userLoginHandler.username}" />
-					<p:outputLabel value="#{msg.login_password}" />
-					<p:password required="false"
-						requiredMessage="#{msg.login_msg_entry}" id="loginPassword"
-						value="#{userLoginHandler.password}" />
-					<f:facet name="footer">
-						<p:commandButton
-							action="#{userLoginHandler.login(msg.login_msg_error,msg.login_msg_entry)}"
-							value="#{msg.login_button_login}" icon="fa fa-sign-in"/>
-						<p:commandButton action="/registerUser.jsf"
-							value="#{msg.login_button_register}" icon="fa fa-user-plus"/>
-					</f:facet>
-				</p:panelGrid>
-				
-			</h:form>
-			
+					<p:panelGrid headerClass="header" footerClass="footer" columns="2">
+						<f:facet name="header">
+							<p:row>
+								<p:column colspan="2">#{msg.login_title}</p:column>
+							</p:row>
+
+						</f:facet>
+						<p:outputLabel value="#{msg.login_username}" />
+						<p:inputText required="false"
+							requiredMessage="{msg.login_msg_entry}" id="loginName"
+							value="#{userLoginHandler.username}" />
+						<p:outputLabel value="#{msg.login_password}" />
+						<p:password required="false"
+							requiredMessage="#{msg.login_msg_entry}" id="loginPassword"
+							value="#{userLoginHandler.password}" />
+						<f:facet name="footer">
+							<p:commandButton id="btn_login"
+								action="#{userLoginHandler.login(msg.login_msg_error,msg.login_msg_entry)}"
+								value="#{msg.login_button_login}" icon="fa fa-sign-in">
+							</p:commandButton>
+							<p:commandButton action="/registerUser.jsf"
+								value="#{msg.login_button_register}" icon="fa fa-user-plus" />
+							<h:commandLink action="#{language.changeLanguage('')}">
+								<h:graphicImage value="/resources/de.png" width="40" height="20" />
+							</h:commandLink>&nbsp;
+						<h:commandLink action="#{language.changeLanguage('en')}">
+								<h:graphicImage value="/resources/gb.png" width="40" height="20" />
+							</h:commandLink>
+						</f:facet>
+					</p:panelGrid>
+
+				</h:form>
+			</div>
 		</ui:insert>
 	</div>
 
 	<br />
 
-	<div id="footer">
+	<div class="footer">
 		<ui:insert name="footer">
 		A webapp project created by M.Günster, A.Schriever, T.Schrul
 		</ui:insert>

@@ -1,0 +1,27 @@
+/* Alle Sites */
+
+body {
+	background-color: #fffaf0;
+}
+
+div.content {
+	   width: 60%; 
+	   margin-left: auto; 
+	   margin-right: auto;
+
+}
+
+
+hr {
+	width: 200px;
+}
+
+
+
+/* login*/
+
+#login_input_form{
+	align: center;
+	
+}
+
