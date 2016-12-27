@@ -48,12 +48,17 @@
 						<p:menuitem value="aristo"
 							action="#{userLoginHandler.changeTheme('aristo','showBooks')}"
 							immediate="true" update="form" />
+						<p:menuitem value="delta"
+							action="#{userLoginHandler.changeTheme('delta','showBooks')}"
+							immediate="true" update="form" />
 					</p:submenu>
 					<f:facet name="options">
-						<h:commandLink action="#{language.changeLanguage('')}"  immediate="true">
+						<h:commandLink action="#{language.changeLanguage('')}"
+							immediate="true">
 							<h:graphicImage value="/resources/de.png" width="40" height="20" />
 						</h:commandLink>&nbsp;
-						<h:commandLink action="#{language.changeLanguage('en')}" immediate="true">
+						<h:commandLink action="#{language.changeLanguage('en')}"
+							immediate="true">
 							<h:graphicImage value="/resources/gb.png" width="40" height="20" />
 						</h:commandLink>
 						&nbsp;
@@ -92,7 +97,7 @@
 					<p:column>
 						<f:facet name="header">#{msg.showBooksOverview_release}</f:facet>
 						<p:outputLabel value="#{books.release}">
-							<f:convertDateTime pattern="MM.yyyy" />
+							<f:convertDateTime pattern="MM.yyyy" timeZone="CET"/>
 						</p:outputLabel>
 					</p:column>
 					<p:column rendered="#{userLoginHandler.loggedInUser.admin}">
@@ -112,61 +117,64 @@
 				<br />
 				<p:separator />
 				<br />
+				<div align="center">
+					<p:panelGrid id="grid" headerClass="header" footerClass="footer"
+						columns="2" rendered="#{userLoginHandler.loggedInUser.admin}">
+						<f:facet name="header">
+							<p:row>
+								<p:column colspan="2">#{msg.showBooksOverview_addbook}</p:column>
+							</p:row>
+						</f:facet>
 
-				<p:panelGrid id="grid" headerClass="header" footerClass="footer"
-					columns="2" rendered="#{userLoginHandler.loggedInUser.admin}">
-					<f:facet name="header">
-						<p:row>
-							<p:column colspan="2">#{msg.showBooksOverview_addbook}</p:column>
-						</p:row>
-					</f:facet>
+						<p:outputLabel value="#{msg.showBooksOverview_bookTitle}"
+							for="addBook_title" />
+						<p:inputText id="addBook_title" required="true"
+							value="#{booksHandler.rememberBook.title}" />
+						<p:outputLabel value="#{msg.showBooksOverview_ISBN}"
+							for="addBook_isbn" />
+						<p:inputText id="addBook_isbn"
+							value="#{booksHandler.rememberBook.isbn}"
+							validator="isbnValidator" converter="isbnConverter" />
+						<p:outputLabel value="#{msg.showBooksOverview_genre}" for="genre" />
+						<h:selectOneMenu required="true" id="genre"
+							value="#{booksHandler.rememberBook.genre}">
+							<f:selectItems var="form" value="#{booksHandler.genreValues}"
+								itemValue="#{genreType}" itemLabel="#{genreType.genre}" />
+						</h:selectOneMenu>
+						<p:outputLabel value="#{msg.showBooksOverview_release}" for="date" />
+						<h:panelGroup>
+							<p:calendar id="date"
+								value="#{booksHandler.rememberBook.release}" mode="popup"
+								navigator="true" showOn="button" pattern="MM.yyyy" />
+						</h:panelGroup>
+						<p:outputLabel value="#{msg.showBooksOverview_author}"
+							for="author" />
+						<h:selectOneMenu converter="objectConverter" required="true"
+							id="author" value="#{booksHandler.rememberBook.author}">
+							<f:selectItems var="authoren" value="#{booksHandler.authors}"
+								itemValue="#{authoren}"
+								itemLabel="#{authoren.firstname} #{authoren.lastname}" />
+						</h:selectOneMenu>
 
-					<p:outputLabel value="#{msg.showBooksOverview_bookTitle}"
-						for="addBook_title" />
-					<p:inputText id="addBook_title" required="true"
-						value="#{booksHandler.rememberBook.title}" />
-					<p:outputLabel value="#{msg.showBooksOverview_ISBN}"
-						for="addBook_isbn" />
-					<p:inputText id="addBook_isbn"
-						value="#{booksHandler.rememberBook.isbn}"
-						validator="isbnValidator" converter="isbnConverter" />
-					<p:outputLabel value="#{msg.showBooksOverview_genre}" for="genre" />
-					<h:selectOneMenu required="true" id="genre"
-						value="#{booksHandler.rememberBook.genre}">
-						<f:selectItems var="form" value="#{booksHandler.genreValues}"
-							itemValue="#{genreType}" itemLabel="#{genreType.genre}" />
-					</h:selectOneMenu>
-					<p:outputLabel value="#{msg.showBooksOverview_release}" for="date" />
-					<h:panelGroup>
-						<p:calendar id="date" value="#{booksHandler.rememberBook.release}"
-							mode="popup" navigator="true" showOn="button" pattern="MM.yyyy" />
-					</h:panelGroup>
-					<p:outputLabel value="#{msg.showBooksOverview_author}" for="author" />
-					<h:selectOneMenu converter="objectConverter" required="true"
-						id="author" value="#{booksHandler.rememberBook.author}">
-						<f:selectItems var="authoren" value="#{booksHandler.authors}"
-							itemValue="#{authoren}"
-							itemLabel="#{authoren.firstname} #{authoren.lastname}" />
-					</h:selectOneMenu>
+						<f:facet name="footer">
+							<p:commandButton action="#{booksHandler.saveBook()}"
+								value="#{msg.showBooksOverview_button_save}"
+								update=":form:data grid" icon="fa fa-save" />
+						</f:facet>
+						<f:facet name="footer">
+							<p:commandButton action="#{booksHandler.cancelEditOrAddBook()}"
+								value="#{msg.showBooksOverview_button_cancel}" update="grid"
+								immediate="true" icon="fa fa-close" />
+						</f:facet>
+						<f:facet name="footer">
+							<p:commandButton action="manageAuthors"
+								label="#{msg.showBooksOverview_button_author}"
+								value="#{msg.showBooksOverview_button_author}" immediate="true"
+								icon="fa fa-user" />
+						</f:facet>
 
-					<f:facet name="footer">
-						<p:commandButton action="#{booksHandler.saveBook()}"
-							value="#{msg.showBooksOverview_button_save}"
-							update=":form:data grid" icon="fa fa-save" />
-					</f:facet>
-					<f:facet name="footer">
-						<p:commandButton action="#{booksHandler.cancelEditOrAddBook()}"
-							value="#{msg.showBooksOverview_button_cancel}" update="grid"
-							immediate="true" icon="fa fa-close" />
-					</f:facet>
-					<f:facet name="footer">
-						<p:commandButton action="manageAuthors"
-							label="#{msg.showBooksOverview_button_author}"
-							value="#{msg.showBooksOverview_button_author}" immediate="true"
-							icon="fa fa-user" />
-					</f:facet>
-
-				</p:panelGrid>
+					</p:panelGrid>
+				</div>
 
 			</h:form>
 		</ui:insert>

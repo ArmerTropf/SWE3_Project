@@ -49,6 +49,9 @@
 						<p:menuitem value="aristo"
 							action="#{userLoginHandler.changeTheme('aristo','showShelves')}"
 							immediate="true" update="form" />
+						<p:menuitem value="delta"
+							action="#{userLoginHandler.changeTheme('delta','showShelves')}"
+							immediate="true" update="form" />
 					</p:submenu>
 					<f:facet name="options">
 						<h:commandLink action="#{language.changeLanguage('')}"
@@ -135,27 +138,29 @@
 					</p:column>
 				</p:dataTable>
 
-				<p:panelGrid id="grid" headerClass="header" footerClass="footer"
-					columns="2" rendered="#{userAndShelvesHandler.shelfEdit}">
-					<f:facet name="header">
-						<p:row>
-							<p:column colspan="2">#{msg.showShelves_addshelv}</p:column>
-						</p:row>
-					</f:facet>
+				<div align="center">
+					<p:panelGrid id="grid" headerClass="header" footerClass="footer"
+						columns="2" rendered="#{userAndShelvesHandler.shelfEdit}">
+						<f:facet name="header">
+							<p:row>
+								<p:column colspan="2">#{msg.showShelves_addshelv}</p:column>
+							</p:row>
+						</f:facet>
 
-					<p:outputLabel value="#{msg.showShelves_name}" for="name" />
-					<p:inputText id="name" required="true"
-						value="#{userAndShelvesHandler.rememberShelf.name}" />
+						<p:outputLabel value="#{msg.showShelves_name}" for="name" />
+						<p:inputText id="name" required="true"
+							value="#{userAndShelvesHandler.rememberShelf.name}" />
 
-					<f:facet name="footer">
-						<p:commandButton action="#{userAndShelvesHandler.saveShelf()}"
-							value="#{msg.showShelves_save}" update=":form:data grid"
-							icon="fa fa-save" />
-						<p:commandButton action="#{userAndShelvesHandler.cancelShelf()}"
-							value="#{msg.showShelves_cancel}" update="grid"
-							icon="fa fa-close" immediate="true" />
-					</f:facet>
-				</p:panelGrid>
+						<f:facet name="footer">
+							<p:commandButton action="#{userAndShelvesHandler.saveShelf()}"
+								value="#{msg.showShelves_save}" update=":form:data grid"
+								icon="fa fa-save" />
+							<p:commandButton action="#{userAndShelvesHandler.cancelShelf()}"
+								value="#{msg.showShelves_cancel}" update="grid"
+								icon="fa fa-close" immediate="true" />
+						</f:facet>
+					</p:panelGrid>
+				</div>
 
 				<br />
 				<p:separator />
@@ -200,6 +205,19 @@
 							immediate="true" update=":form" />
 					</p:column>
 				</p:dataTable>
+
+				<br />
+
+				<p:panelGrid id="grid2" headerClass="header" footerClass="footer"
+					columns="2" rendered="#{userAndShelvesHandler.shelfBooks}">
+					<f:facet name="footer">
+						<p:commandButton
+							actionListener="#{userAndShelvesHandler.changeShelfSituation(true,false,false,true)}"
+							action="showShelves?faces-redirect=true"
+							value="#{msg.showShelves_newShelf}" immediate="true"
+							update=":form:data :form:grid" icon="fa fa-plus" />
+					</f:facet>
+				</p:panelGrid>
 
 			</h:form>
 		</ui:insert>

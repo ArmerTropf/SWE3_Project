@@ -124,6 +124,8 @@ public class UserAndShelvesHandler implements Serializable {
 	 *            True for showing books in selected shelf.
 	 * @param libmode
 	 *            True for showing library to add books to shelf.
+	 * @param shelftable
+	 *            True for showing the shelf data table.
 	 */
 	public void changeShelfSituation(boolean editmode, boolean bookmode, boolean libmode, boolean shelftable) {
 		this.isShelfBooks = bookmode;
