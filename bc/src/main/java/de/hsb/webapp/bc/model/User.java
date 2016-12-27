@@ -88,21 +88,11 @@ public class User implements Serializable {
 	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "user", orphanRemoval = true)
 	private List<Shelf> shelves;
 
-	
+	/**
+	 * Current theme for the user.
+	 */
 	private String myTheme = "delta";
-	
-	
-	
 
-
-	public String getMyTheme() {
-		return myTheme;
-	}
-
-	public void setMyTheme(String myTheme) {
-		this.myTheme = myTheme;
-	}
-	
 	// End ---Declaration of variables---
 
 	/**
@@ -314,6 +304,25 @@ public class User implements Serializable {
 	 */
 	public void setUid(Integer uid) {
 		this.uid = uid;
+	}
+
+	/**
+	 * Gets the current theme.
+	 * 
+	 * @return String of the theme.
+	 */
+	public String getMyTheme() {
+		return myTheme;
+	}
+
+	/**
+	 * Sets a new theme for the user.
+	 * 
+	 * @param myTheme
+	 *            String for theme.
+	 */
+	public void setMyTheme(String myTheme) {
+		this.myTheme = myTheme;
 	}
 
 	// End ---Getter & Setter---

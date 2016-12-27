@@ -129,7 +129,7 @@ public class UserLogin implements Serializable {
 	}
 
 	/**
-	 * Logs out the user.
+	 * Logs out the user and saves the current theme.
 	 * 
 	 * @return String "login" which is the login page.
 	 */
@@ -139,23 +139,32 @@ public class UserLogin implements Serializable {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
 		loggedInUser = em.merge(loggedInUser);
-		em.persist(loggedInUser);
-		
 		try {
 			utx.commit();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
-//		loggedInUser = new User();
-		
-//		Invoke "PostConstruct"
+
+		// loggedInUser = new User();
+		// Invoke "PostConstruct"
 		FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
-		
 		return "login?faces-redirect=true";
 
+	}
+
+	/**
+	 * Changes the theme and redirects to the current site.
+	 * 
+	 * @param newTheme
+	 *            Theme to change to.
+	 * @param whichSiteToRedirect
+	 *            Site to redirect.
+	 * @return String which is the redirect of the site.
+	 */
+	public String changeTheme(String newTheme, String whichSiteToRedirect) {
+		this.loggedInUser.setMyTheme(newTheme);
+		return whichSiteToRedirect + "?faces-redirect=true";
 	}
 
 	// Start ---Getter & Setter---
@@ -218,10 +227,4 @@ public class UserLogin implements Serializable {
 	}
 
 	// End ---Getter & Setter---
-	
-	public String changeTheme(String newTheme, String whichSiteToRedirect)
-	{
-		this.loggedInUser.setMyTheme(newTheme);
-		return whichSiteToRedirect + "?faces-redirect=true";
-	}
 }
