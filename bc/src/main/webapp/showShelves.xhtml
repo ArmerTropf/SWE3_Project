@@ -11,11 +11,12 @@
 <!-- author: Michael Günster, Andre Schriever, Thomas Schrul -->
 
 <h:head>
+	<link rel="stylesheet" href="resources/bc.css" />
 	<title><ui:insert name="title">#{msg.applicationTitle}</ui:insert></title>
 </h:head>
 <h:body>
 	<div id="header" />
-	<div id="content">
+	<div id="content" class="content">
 		<ui:insert name="content">
 			<f:event
 				listener="#{userAndShelvesHandler.setRememberUser(userLoginHandler.loggedInUser)}"
@@ -35,17 +36,33 @@
 						icon="fa fa-user"
 						rendered="#{!userLoginHandler.loggedInUser.admin}"
 						immediate="true" />
-					<p:submenu label="#{msg.language_titel}" icon="fa fa-language">
-						<p:menuitem value="#{msg.language_de}"
-							action="#{language.changeLanguage('de')}" immediate="true"
-							update="form" />
-						<p:menuitem value="#{msg.language_en}"
-							action="#{language.changeLanguage('en')}" immediate="true"
-							update="form" />
+					<p:submenu label="Theme" icon="fa fa-eye">
+						<p:menuitem value="afternoon"
+							action="#{userLoginHandler.changeTheme('afternoon','showShelves')}"
+							immediate="true" update="form" />
+						<p:menuitem value="overcast"
+							action="#{userLoginHandler.changeTheme('overcast','showShelves')}"
+							immediate="true" update="form" />
+						<p:menuitem value="start"
+							action="#{userLoginHandler.changeTheme('start','showShelves')}"
+							immediate="true" update="form" />
+						<p:menuitem value="aristo"
+							action="#{userLoginHandler.changeTheme('aristo','showShelves')}"
+							immediate="true" update="form" />
 					</p:submenu>
 					<f:facet name="options">
-						<p:outputLabel style="margin-right:10px"
+						<h:commandLink action="#{language.changeLanguage('')}"
+							immediate="true">
+							<h:graphicImage value="/resources/de.png" width="40" height="20" />
+						</h:commandLink>&nbsp;
+						<h:commandLink action="#{language.changeLanguage('en')}"
+							immediate="true">
+							<h:graphicImage value="/resources/gb.png" width="40" height="20" />
+						</h:commandLink>
+						&nbsp;
+						<p:outputLabel
 							value="#{msg.menu_login}: #{userLoginHandler.loggedInUser.login}" />
+							&nbsp;
 						<p:commandButton value="#{msg.menu_logout}"
 							action="#{userLoginHandler.logout()}" icon="fa fa-sign-out"
 							immediate="true" />
@@ -113,7 +130,7 @@
 						<f:facet name="header">#{msg.showShelves_deletebook}</f:facet>
 						<p:commandButton
 							action="#{userAndShelvesHandler.deleteBookFromShelf(book)}"
-							value="#{msg.showShelves_deletebook}" icon="fa fa-minus"
+							value="#{msg.showShelves_deletebook}" icon="fa fa-trash"
 							update="data2" immediate="true" />
 					</p:column>
 				</p:dataTable>
@@ -163,7 +180,7 @@
 						<f:facet name="header">#{msg.showShelves_delete}</f:facet>
 						<p:commandButton
 							action="#{userAndShelvesHandler.deleteShelf(shelf)}"
-							value="#{msg.showShelves_delete}" icon="fa fa-close"
+							value="#{msg.showShelves_delete}" icon="fa fa-trash"
 							update=":form" immediate="true" />
 					</p:column>
 					<p:column>
