@@ -17,13 +17,11 @@
 <h:body>
 	<div class="content" id="content">
 		<ui:insert name="content">
-
+			<f:event listener="#{userLoginHandler.checkUserLogin}"
+				type="preRenderView" />
 			<p:graphicImage value="resources/bc_img.jpg" />
-
 			<p:growl id="messages" showDetail="true" autoUpdate="true" />
-
 			<h:form id="form">
-
 				<p:menubar>
 					<p:submenu label="Theme" icon="fa fa-eye">
 						<p:menuitem value="afternoon"

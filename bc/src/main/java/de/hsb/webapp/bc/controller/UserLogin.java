@@ -152,6 +152,15 @@ public class UserLogin implements Serializable {
 		return "login?faces-redirect=true";
 
 	}
+	
+	public void checkUserLogin()
+	{
+		FacesContext context = FacesContext.getCurrentInstance();
+		if (loggedInUser.getLogin() == null )
+		{	
+			context.getApplication().getNavigationHandler().handleNavigation(context, null, "login.jsf?faces-redirect=true");
+		}		
+	}
 
 	/**
 	 * Changes the theme and redirects to the current site.

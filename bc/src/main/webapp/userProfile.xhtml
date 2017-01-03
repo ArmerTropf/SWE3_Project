@@ -16,8 +16,8 @@
 	<title><ui:insert name="title">#{msg.applicationTitle}</ui:insert></title>
 </h:head>
 <h:body>
-
 	<div id="content" class="content">
+	<f:event listener="#{userLoginHandler.checkUserLogin}" type="preRenderView" />
 		<ui:insert name="content">
 			<f:event
 				listener="#{userAndShelvesHandler.setRememberUser(userLoginHandler.loggedInUser)}"
