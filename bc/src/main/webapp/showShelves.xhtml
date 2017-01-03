@@ -17,10 +17,12 @@
 <h:body>
 	<div id="header" />
 	<div id="content" class="content">
+		<f:event listener="#{userLoginHandler.checkUserLogin}" type="preRenderView" />
 		<ui:insert name="content">
 			<f:event
 				listener="#{userAndShelvesHandler.setRememberUser(userLoginHandler.loggedInUser)}"
 				type="preRenderView"></f:event>
+
 			<p:graphicImage value="resources/bc_img.jpg" />
 			<p:growl id="messages" showDetail="true" autoUpdate="true" />
 			<h:form id="form">

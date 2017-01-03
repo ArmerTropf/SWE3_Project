@@ -3,6 +3,7 @@ package de.hsb.webapp.bc.model;
 import java.io.Serializable;
 import java.util.Date;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -43,6 +44,7 @@ public class Book implements Serializable {
 	 */
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
+	@Column(name = "BOOK_ID")
 	private Integer bid;
 
 	/**

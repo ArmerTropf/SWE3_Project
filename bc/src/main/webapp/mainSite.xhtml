@@ -17,6 +17,7 @@
 </h:head>
 <h:body>
 	<div class="content" id="content">
+	<f:event listener="#{userLoginHandler.checkUserLogin}" type="preRenderView" />
 		<ui:insert name="content">
 
 			<p:graphicImage value="resources/bc_img.jpg" />

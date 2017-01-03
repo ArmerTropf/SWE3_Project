@@ -16,12 +16,11 @@
 </h:head>
 <h:body>
 	<div id="content" class="content">
+		<f:event listener="#{userLoginHandler.checkUserLogin}"
+			type="preRenderView" />
 		<ui:insert name="content">
-
 			<p:graphicImage value="resources/bc_img.jpg" />
-
 			<p:growl id="messages" showDetail="true" autoUpdate="true" />
-
 			<h:form id="form">
 				<p:menubar>
 					<p:menuitem value="#{msg.menu_home}" action="mainSite"
@@ -97,7 +96,7 @@
 					<p:column>
 						<f:facet name="header">#{msg.showBooksOverview_release}</f:facet>
 						<p:outputLabel value="#{books.release}">
-							<f:convertDateTime pattern="MM.yyyy" timeZone="CET"/>
+							<f:convertDateTime pattern="MM.yyyy" timeZone="CET" />
 						</p:outputLabel>
 					</p:column>
 					<p:column rendered="#{userLoginHandler.loggedInUser.admin}">
@@ -136,11 +135,11 @@
 							value="#{booksHandler.rememberBook.isbn}"
 							validator="isbnValidator" converter="isbnConverter" />
 						<p:outputLabel value="#{msg.showBooksOverview_genre}" for="genre" />
-						<h:selectOneMenu required="true" id="genre"
+						<p:selectOneMenu required="true" id="genre"
 							value="#{booksHandler.rememberBook.genre}">
 							<f:selectItems var="form" value="#{booksHandler.genreValues}"
 								itemValue="#{genreType}" itemLabel="#{genreType.genre}" />
-						</h:selectOneMenu>
+						</p:selectOneMenu>
 						<p:outputLabel value="#{msg.showBooksOverview_release}" for="date" />
 						<h:panelGroup>
 							<p:calendar id="date"
