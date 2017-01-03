@@ -117,6 +117,11 @@ public class UserLogin implements Serializable {
 																						// activated
 			msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Your account is not activated!");
 			FacesContext.getCurrentInstance().addMessage(null, msg);
+			try {
+				utx.commit();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 			return "login";
 		} else {
 			try {
@@ -152,14 +157,17 @@ public class UserLogin implements Serializable {
 		return "login?faces-redirect=true";
 
 	}
-	
-	public void checkUserLogin()
-	{
+
+	/**
+	 * Provides that user can visit a website by typing the URL to a xhtml page
+	 * directly into the browser.
+	 */
+	public void checkUserLogin() {
 		FacesContext context = FacesContext.getCurrentInstance();
-		if (loggedInUser.getLogin() == null )
-		{	
-			context.getApplication().getNavigationHandler().handleNavigation(context, null, "login.jsf?faces-redirect=true");
-		}		
+		if (loggedInUser.getLogin() == null) {
+			context.getApplication().getNavigationHandler().handleNavigation(context, null,
+					"login.jsf?faces-redirect=true");
+		}
 	}
 
 	/**
