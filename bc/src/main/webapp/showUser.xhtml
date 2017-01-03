@@ -143,7 +143,7 @@
 						<p:selectBooleanCheckbox id="admin"
 							value="#{userAndShelvesHandler.rememberUser.admin}" />
 						<p:outputLabel value="#{msg.addUser_password}" for="password" />
-						<p:password id="password" match="repeatpassword"
+						<p:password id="password" match="repeatpassword" redisplay="true"
 							promptLabel="#{msg.addUser_msg_passwordPrompt}"
 							weakLabel="#{msg.addUser_msg_passwordWeak}"
 							goodLabel="#{msg.addUser_msg_passwordGood}"
@@ -152,7 +152,7 @@
 							value="#{userAndShelvesHandler.rememberUser.password}" />
 						<p:outputLabel value="#{msg.addUser_repeatPassword}"
 							for="repeatpassword" />
-						<p:password id="repeatpassword" required="true"
+						<p:password id="repeatpassword" required="true" redisplay="true"
 							value="#{userAndShelvesHandler.rememberUser.password}" />
 						<f:facet name="footer">
 							<p:commandButton
