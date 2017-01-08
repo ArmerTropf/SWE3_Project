@@ -109,9 +109,12 @@ public class UserAndShelvesHandler implements Serializable {
 
 	/**
 	 * Creates a new shelf.
+	 * 
+	 * @return String redirecting to the "showShelves" page.
 	 */
-	public void newShelf() {
+	public String newShelf() {
 		rememberShelf = new Shelf();
+		return "showShelves?faces-redirect=true";
 	}
 
 	/**
@@ -180,7 +183,7 @@ public class UserAndShelvesHandler implements Serializable {
 				e.printStackTrace();
 			}
 		}
-		newShelf();
+		setRememberShelf(new Shelf());
 		return "showShelves?faces-redirect=true";
 	}
 
@@ -204,7 +207,7 @@ public class UserAndShelvesHandler implements Serializable {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		newShelf();
+		setRememberShelf(new Shelf());
 		return "showShelves?faces-redirect=true";
 	}
 
@@ -461,7 +464,7 @@ public class UserAndShelvesHandler implements Serializable {
 	 * @return String "showSelves" which is the redirect to showSehlves.xhtml
 	 */
 	public String cancelShelf() {
-		newShelf();
+		setRememberShelf(new Shelf());
 		return "showShelves?faces-redirect=true";
 	}
 

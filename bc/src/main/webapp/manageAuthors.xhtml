@@ -22,6 +22,8 @@
 			<p:graphicImage value="resources/bc_img.jpg" />
 			<p:growl id="messages" showDetail="true" autoUpdate="true" />
 			<h:form id="form">
+				<p:defaultCommand target="save_author" />
+				<p:focus for="firstname" />
 				<p:menubar>
 					<p:submenu label="Theme" icon="fa fa-eye">
 						<p:menuitem value="afternoon"
@@ -110,7 +112,7 @@
 							validator="nameValidator" />
 
 						<f:facet name="footer">
-							<p:commandButton action="#{booksHandler.saveAuthor()}"
+							<p:commandButton id="save_author" action="#{booksHandler.saveAuthor()}"
 								value="#{msg.manageAuthors_button_save}"
 								update=":form:data grid" icon="fa fa-save" />
 						</f:facet>

@@ -17,15 +17,17 @@
 <h:body>
 	<div id="header" />
 	<div id="content" class="content">
-		<f:event listener="#{userLoginHandler.checkUserLogin}" type="preRenderView" />
+		<f:event listener="#{userLoginHandler.checkUserLogin}"
+			type="preRenderView" />
 		<ui:insert name="content">
 			<f:event
 				listener="#{userAndShelvesHandler.setRememberUser(userLoginHandler.loggedInUser)}"
-				type="preRenderView"></f:event>
-
+				type="preRenderView" />
 			<p:graphicImage value="resources/bc_img.jpg" />
 			<p:growl id="messages" showDetail="true" autoUpdate="true" />
 			<h:form id="form">
+				<p:defaultCommand target="save_shelf" />
+				<p:focus for="name" />
 				<p:menubar>
 					<p:menuitem value="#{msg.menu_home}" action="mainSite"
 						icon="fa fa-home" immediate="true" />
@@ -102,7 +104,8 @@
 						<p:commandButton
 							action="#{userAndShelvesHandler.addBookToShelf(books)}"
 							value="#{msg.showShelves_addbook}" icon="fa fa-plus"
-							update=":form:data2" immediate="true" />
+							update=":form:data2 :form:data" immediate="true"
+							oncomplete="refreshcurrentshelf()" />
 					</p:column>
 					<f:facet name="footer">
 						<p:commandButton
@@ -136,7 +139,8 @@
 						<p:commandButton
 							action="#{userAndShelvesHandler.deleteBookFromShelf(book)}"
 							value="#{msg.showShelves_deletebook}" icon="fa fa-trash"
-							update="data2" immediate="true" />
+							update="data2 :form:data" immediate="true"
+							oncomplete="refreshcurrentshelf()" />
 					</p:column>
 				</p:dataTable>
 
@@ -154,7 +158,8 @@
 							value="#{userAndShelvesHandler.rememberShelf.name}" />
 
 						<f:facet name="footer">
-							<p:commandButton action="#{userAndShelvesHandler.saveShelf()}"
+							<p:commandButton id="save_shelf"
+								action="#{userAndShelvesHandler.saveShelf()}"
 								value="#{msg.showShelves_save}" update=":form:data grid"
 								icon="fa fa-save" />
 							<p:commandButton action="#{userAndShelvesHandler.cancelShelf()}"
@@ -177,6 +182,11 @@
 						<p:outputLabel value="#{shelf.name}" />
 					</p:column>
 					<p:column>
+						<f:facet name="header">#{msg.showShelves_amountOfBooks}</f:facet>
+						<p:outputLabel value="#{shelf.books.size()}" />
+					</p:column>
+
+					<p:column>
 						<f:facet name="header">#{msg.showShelves_edit}</f:facet>
 						<p:commandButton
 							action="#{userAndShelvesHandler.editShelf(shelf)}"
@@ -192,7 +202,7 @@
 					</p:column>
 					<p:column>
 						<f:facet name="header">#{msg.showShelves_show}</f:facet>
-						<p:commandButton
+						<p:commandButton id="showShelves"
 							action="#{userAndShelvesHandler.changeShelfSituation(false,true,false,true)}"
 							actionListener="#{userAndShelvesHandler.setRememberShelf(shelf)}"
 							value="#{msg.showShelves_show}" icon="fa fa-book" update=":form"
@@ -201,10 +211,14 @@
 					<p:column>
 						<f:facet name="header">#{msg.showShelves_addbook}</f:facet>
 						<p:commandButton
-							actionListener="#{userAndShelvesHandler.setRememberShelf(shelf)}"
-							action="#{userAndShelvesHandler.changeShelfSituation(false,false,true,false)}"
+							actionListener="#{userAndShelvesHandler.changeShelfSituation(false,false,true,false)}"
+							action="#{userAndShelvesHandler.setRememberShelf(shelf)}"
 							value="#{msg.showShelves_addbook}" icon="fa fa-plus"
 							immediate="true" update=":form" />
+						<p:remoteCommand name="refreshcurrentshelf"
+							action="#{userAndShelvesHandler.changeShelfSituation(false,true,false,true)}"
+							actionListener="#{userAndShelvesHandler.setRememberShelf(shelf)}"
+							update=":form" immediate="true" />
 					</p:column>
 				</p:dataTable>
 
@@ -215,7 +229,7 @@
 					<f:facet name="footer">
 						<p:commandButton
 							actionListener="#{userAndShelvesHandler.changeShelfSituation(true,false,false,true)}"
-							action="showShelves?faces-redirect=true"
+							action="#{userAndShelvesHandler.newShelf()}"
 							value="#{msg.showShelves_newShelf}" immediate="true"
 							update=":form:data :form:grid" icon="fa fa-plus" />
 					</f:facet>

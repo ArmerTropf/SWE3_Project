@@ -159,14 +159,23 @@ public class UserLogin implements Serializable {
 	}
 
 	/**
-	 * Provides that user can visit a website by typing the URL to a xhtml page
-	 * directly into the browser.
+	 * Provides that a non logged in user can visit a website by typing the URL
+	 * to a xhtml page directly into the browser. And provides that a user can
+	 * visit the user management page and provides that an admin can visit the
+	 * user profile page.
 	 */
 	public void checkUserLogin() {
 		FacesContext context = FacesContext.getCurrentInstance();
+		String xhtmlPage = context.getExternalContext().getRequestServletPath();
 		if (loggedInUser.getLogin() == null) {
 			context.getApplication().getNavigationHandler().handleNavigation(context, null,
-					"login.jsf?faces-redirect=true");
+					"login?faces-redirect=true");
+		} else if (xhtmlPage.equals("/showUser.jsf") && !loggedInUser.isAdmin()) {
+			context.getApplication().getNavigationHandler().handleNavigation(context, null,
+					"mainSite?faces-redirect=true");
+		} else if (xhtmlPage.equals("/userProfile.jsf") && loggedInUser.isAdmin()) {
+			context.getApplication().getNavigationHandler().handleNavigation(context, null,
+					"mainSite?faces-redirect=true");
 		}
 	}
 
