@@ -22,6 +22,8 @@
 			<p:graphicImage value="resources/bc_img.jpg" />
 			<p:growl id="messages" showDetail="true" autoUpdate="true" />
 			<h:form id="form">
+				<p:defaultCommand target="save_book" />
+				<p:focus for="addBook_title" />
 				<p:menubar>
 					<p:menuitem value="#{msg.menu_home}" action="mainSite"
 						icon="fa fa-home" immediate="true" />
@@ -156,7 +158,7 @@
 						</h:selectOneMenu>
 
 						<f:facet name="footer">
-							<p:commandButton action="#{booksHandler.saveBook()}"
+							<p:commandButton id="save_book" action="#{booksHandler.saveBook()}"
 								value="#{msg.showBooksOverview_button_save}"
 								update=":form:data grid" icon="fa fa-save" />
 						</f:facet>
