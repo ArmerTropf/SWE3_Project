@@ -1,0 +1,236 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+
+<!-- author: Michael Günster, Andre Schriever, Thomas Schrul -->
+
+<h:head>
+	<link rel="stylesheet" href="resources/bc.css" />
+	<title><ui:insert name="title">#{msg.applicationTitle}</ui:insert></title>
+</h:head>
+<h:body>
+	<div id="header" />
+	<div id="content" class="content">
+		<f:event listener="#{userLoginHandler.checkUserLogin}" type="preRenderView" />
+		<ui:insert name="content">
+			<f:event
+				listener="#{userAndShelvesHandler.setRememberUser(userLoginHandler.loggedInUser)}"
+				type="preRenderView"></f:event>
+
+			<p:graphicImage value="resources/bc_img.jpg" />
+			<p:growl id="messages" showDetail="true" autoUpdate="true" />
+			<h:form id="form">
+				<p:menubar>
+					<p:menuitem value="#{msg.menu_home}" action="mainSite"
+						icon="fa fa-home" immediate="true" />
+					<p:menuitem value="#{msg.menu_usermanagement}" action="showUser"
+						icon="fa fa-users" immediate="true"
+						rendered="#{userLoginHandler.loggedInUser.admin}" />
+					<p:menuitem value="#{msg.menu_globalLibrary}" action="showBooks"
+						icon="fa fa-folder-open" immediate="true" />
+					<p:menuitem value="#{msg.menu_userprofile}" action="userProfile"
+						icon="fa fa-user"
+						rendered="#{!userLoginHandler.loggedInUser.admin}"
+						immediate="true" />
+					<p:submenu label="Theme" icon="fa fa-eye">
+						<p:menuitem value="afternoon"
+							action="#{userLoginHandler.changeTheme('afternoon','showShelves')}"
+							immediate="true" update="form" />
+						<p:menuitem value="overcast"
+							action="#{userLoginHandler.changeTheme('overcast','showShelves')}"
+							immediate="true" update="form" />
+						<p:menuitem value="start"
+							action="#{userLoginHandler.changeTheme('start','showShelves')}"
+							immediate="true" update="form" />
+						<p:menuitem value="aristo"
+							action="#{userLoginHandler.changeTheme('aristo','showShelves')}"
+							immediate="true" update="form" />
+						<p:menuitem value="delta"
+							action="#{userLoginHandler.changeTheme('delta','showShelves')}"
+							immediate="true" update="form" />
+					</p:submenu>
+					<f:facet name="options">
+						<h:commandLink action="#{language.changeLanguage('')}"
+							immediate="true">
+							<h:graphicImage value="/resources/de.png" width="40" height="20" />
+						</h:commandLink>&nbsp;
+						<h:commandLink action="#{language.changeLanguage('en')}"
+							immediate="true">
+							<h:graphicImage value="/resources/gb.png" width="40" height="20" />
+						</h:commandLink>
+						&nbsp;
+						<p:outputLabel
+							value="#{msg.menu_login}: #{userLoginHandler.loggedInUser.login}" />
+							&nbsp;
+						<p:commandButton value="#{msg.menu_logout}"
+							action="#{userLoginHandler.logout()}" icon="fa fa-sign-out"
+							immediate="true" />
+					</f:facet>
+				</p:menubar>
+
+				<br />
+
+				<p:dataTable id="data3" var="books" value="#{booksHandler.books}"
+					rowClasses="odd,even" headerClass="header"
+					rendered="#{userAndShelvesHandler.shelfLib}">
+					<f:facet name="header">#{msg.showShelves_addbooktoshelftitle} #{userAndShelvesHandler.rememberShelf.name}</f:facet>
+					<p:column>
+						<f:facet name="header">#{msg['showBooksOverview_bookTitle']}</f:facet>
+						<p:outputLabel value="#{books.title}" />
+					</p:column>
+					<p:column>
+						<f:facet name="header">#{msg['showBooksOverview_author']}</f:facet>
+						<p:outputLabel value="#{books.author.firstname}" />
+						<p:outputLabel value=" #{books.author.lastname}" />
+					</p:column>
+					<p:column>
+						<f:facet name="header">#{msg['showBooksOverview_ISBN']}</f:facet>
+						<p:outputLabel value="#{books.isbn}" />
+					</p:column>
+					<p:column>
+						<f:facet name="header">#{msg.showBooksOverview_genre}</f:facet>
+						<p:outputLabel value="#{books.genre.genre}" />
+					</p:column>
+					<p:column style="font-weight: bold;">
+						<f:facet name="header">#{msg.showShelves_addbook}</f:facet>
+						<p:commandButton
+							action="#{userAndShelvesHandler.addBookToShelf(books)}"
+							value="#{msg.showShelves_addbook}" icon="fa fa-plus"
+							update=":form:data2" immediate="true" />
+					</p:column>
+					<f:facet name="footer">
+						<p:commandButton
+							actionListener="#{userAndShelvesHandler.changeShelfSituation(true,false,false,true)}"
+							action="#{userAndShelvesHandler.cancelAddBookToShelf()}"
+							immediate="true" value="#{msg.showShelves_cancel}"
+							icon="fa fa-close" />
+					</f:facet>
+				</p:dataTable>
+
+				<p:dataTable id="data2" var="book"
+					value="#{userAndShelvesHandler.rememberShelf.books}"
+					rowClasses="odd,even" headerClass="header"
+					rendered="#{userAndShelvesHandler.shelfBooks}">
+					<f:facet name="header">#{msg.showShelves_mybooks} "#{userAndShelvesHandler.rememberShelf.name}"</f:facet>
+					<p:column>
+						<f:facet name="header">#{msg.showBooksOverview_bookTitle}</f:facet>
+						<p:outputLabel value="#{book.title}" />
+					</p:column>
+					<p:column>
+						<f:facet name="header">#{msg.showBooksOverview_genre}</f:facet>
+						<p:outputLabel value="#{book.genre}" />
+					</p:column>
+					<p:column>
+						<f:facet name="header">#{msg.showBooksOverview_author}</f:facet>
+						<p:outputLabel
+							value="#{book.author.firstname} #{book.author.lastname}" />
+					</p:column>
+					<p:column style="font-weight: bold;">
+						<f:facet name="header">#{msg.showShelves_deletebook}</f:facet>
+						<p:commandButton
+							action="#{userAndShelvesHandler.deleteBookFromShelf(book)}"
+							value="#{msg.showShelves_deletebook}" icon="fa fa-trash"
+							update="data2" immediate="true" />
+					</p:column>
+				</p:dataTable>
+
+				<div align="center">
+					<p:panelGrid id="grid" headerClass="header" footerClass="footer"
+						columns="2" rendered="#{userAndShelvesHandler.shelfEdit}">
+						<f:facet name="header">
+							<p:row>
+								<p:column colspan="2">#{msg.showShelves_addshelv}</p:column>
+							</p:row>
+						</f:facet>
+
+						<p:outputLabel value="#{msg.showShelves_name}" for="name" />
+						<p:inputText id="name" required="true"
+							value="#{userAndShelvesHandler.rememberShelf.name}" />
+
+						<f:facet name="footer">
+							<p:commandButton action="#{userAndShelvesHandler.saveShelf()}"
+								value="#{msg.showShelves_save}" update=":form:data grid"
+								icon="fa fa-save" />
+							<p:commandButton action="#{userAndShelvesHandler.cancelShelf()}"
+								value="#{msg.showShelves_cancel}" update="grid"
+								icon="fa fa-close" immediate="true" />
+						</f:facet>
+					</p:panelGrid>
+				</div>
+
+				<br />
+				<p:separator />
+				<br />
+
+				<p:dataTable sortBy="#{shelf.name}" id="data" var="shelf"
+					value="#{userAndShelvesHandler.rememberUser.shelves}"
+					headerClass="header" rendered="#{userAndShelvesHandler.shelfTable}">
+					<f:facet name="header">#{msg.showShelves_title}</f:facet>
+					<p:column>
+						<f:facet name="header">#{msg.showShelves_name}</f:facet>
+						<p:outputLabel value="#{shelf.name}" />
+					</p:column>
+					<p:column>
+						<f:facet name="header">#{msg.showShelves_edit}</f:facet>
+						<p:commandButton
+							action="#{userAndShelvesHandler.editShelf(shelf)}"
+							value="#{msg.showShelves_edit}" icon="fa fa-edit" update=":form"
+							immediate="true" />
+					</p:column>
+					<p:column>
+						<f:facet name="header">#{msg.showShelves_delete}</f:facet>
+						<p:commandButton
+							action="#{userAndShelvesHandler.deleteShelf(shelf)}"
+							value="#{msg.showShelves_delete}" icon="fa fa-trash"
+							update=":form" immediate="true" />
+					</p:column>
+					<p:column>
+						<f:facet name="header">#{msg.showShelves_show}</f:facet>
+						<p:commandButton
+							action="#{userAndShelvesHandler.changeShelfSituation(false,true,false,true)}"
+							actionListener="#{userAndShelvesHandler.setRememberShelf(shelf)}"
+							value="#{msg.showShelves_show}" icon="fa fa-book" update=":form"
+							immediate="true" />
+					</p:column>
+					<p:column>
+						<f:facet name="header">#{msg.showShelves_addbook}</f:facet>
+						<p:commandButton
+							actionListener="#{userAndShelvesHandler.setRememberShelf(shelf)}"
+							action="#{userAndShelvesHandler.changeShelfSituation(false,false,true,false)}"
+							value="#{msg.showShelves_addbook}" icon="fa fa-plus"
+							immediate="true" update=":form" />
+					</p:column>
+				</p:dataTable>
+
+				<br />
+
+				<p:panelGrid id="grid2" headerClass="header" footerClass="footer"
+					columns="2" rendered="#{userAndShelvesHandler.shelfBooks}">
+					<f:facet name="footer">
+						<p:commandButton
+							actionListener="#{userAndShelvesHandler.changeShelfSituation(true,false,false,true)}"
+							action="showShelves?faces-redirect=true"
+							value="#{msg.showShelves_newShelf}" immediate="true"
+							update=":form:data :form:grid" icon="fa fa-plus" />
+					</f:facet>
+				</p:panelGrid>
+
+			</h:form>
+		</ui:insert>
+	</div>
+
+	<br />
+
+	<div id="footer" align="center">
+		<ui:insert name="footer">
+		A webapp project created by M.Günster, A.Schriever, T.Schrul
+		</ui:insert>
+	</div>
+</h:body>
+</html>

@@ -1,0 +1,19 @@
+/* Alle Sites */
+body {
+	background-color: #fffaf0;
+}
+
+.content {
+	width: 80%;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+div.footer {
+	text-align: center
+}
+
+hr {
+	width: 600px;
+}
+

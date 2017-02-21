@@ -1,0 +1,17 @@
+de\hsb\webapp\bc\controller\IsbnValidator.class
+de\hsb\webapp\bc\controller\UserLogin.class
+de\hsb\webapp\bc\controller\BooksHandler.class
+de\hsb\webapp\bc\model\Book.class
+de\hsb\webapp\bc\model\User_.class
+de\hsb\webapp\bc\controller\NameValidator.class
+de\hsb\webapp\bc\controller\IsbnConverter.class
+de\hsb\webapp\bc\controller\ObjectConverter.class
+de\hsb\webapp\bc\model\User.class
+de\hsb\webapp\bc\model\Author.class
+de\hsb\webapp\bc\model\GenreType.class
+de\hsb\webapp\bc\controller\UserAndShelvesHandler.class
+de\hsb\webapp\bc\model\Shelf_.class
+de\hsb\webapp\bc\controller\Language.class
+de\hsb\webapp\bc\model\Author_.class
+de\hsb\webapp\bc\model\Book_.class
+de\hsb\webapp\bc\model\Shelf.class
