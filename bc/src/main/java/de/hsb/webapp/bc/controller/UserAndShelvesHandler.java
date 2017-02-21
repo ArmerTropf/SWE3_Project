@@ -96,22 +96,12 @@ public class UserAndShelvesHandler implements Serializable {
 	@PostConstruct
 	public void init() {
 		try {
-//			Query query = em.createNamedQuery("User.findByName").setParameter("login", "root").setParameter("password", "12345");
-//			query.setMaxResults(1); // allows a new login process for the same user
-//									// after he logs out
-//			if (query.getResultList().isEmpty()) 
-//			{
-				utx.begin();
-				user = new ListDataModel<User>();
-				user.setWrappedData(em.createNamedQuery("SelectUser").getResultList());
-				shelves = new ListDataModel<Shelf>();
-				shelves.setWrappedData(em.createNamedQuery("SelectShelf").getResultList());
-				utx.commit();
-//			}
-//			else
-//			{
-//				System.out.println("Nutzer gefunden , keine becher hinzugefügt");
-//			}
+			utx.begin();
+			user = new ListDataModel<User>();
+			user.setWrappedData(em.createNamedQuery("SelectUser").getResultList());
+			shelves = new ListDataModel<Shelf>();
+			shelves.setWrappedData(em.createNamedQuery("SelectShelf").getResultList());
+			utx.commit();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -119,9 +109,12 @@ public class UserAndShelvesHandler implements Serializable {
 
 	/**
 	 * Creates a new shelf.
+	 * 
+	 * @return String redirecting to the "showShelves" page.
 	 */
-	public void newShelf() {
+	public String newShelf() {
 		rememberShelf = new Shelf();
+		return "showShelves?faces-redirect=true";
 	}
 
 	/**
@@ -190,7 +183,7 @@ public class UserAndShelvesHandler implements Serializable {
 				e.printStackTrace();
 			}
 		}
-		newShelf();
+		setRememberShelf(new Shelf());
 		return "showShelves?faces-redirect=true";
 	}
 
@@ -214,7 +207,7 @@ public class UserAndShelvesHandler implements Serializable {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		newShelf();
+		setRememberShelf(new Shelf());
 		return "showShelves?faces-redirect=true";
 	}
 
@@ -471,7 +464,7 @@ public class UserAndShelvesHandler implements Serializable {
 	 * @return String "showSelves" which is the redirect to showSehlves.xhtml
 	 */
 	public String cancelShelf() {
-		newShelf();
+		setRememberShelf(new Shelf());
 		return "showShelves?faces-redirect=true";
 	}
 
@@ -656,3 +649,4 @@ public class UserAndShelvesHandler implements Serializable {
 		this.isShelfTable = isShelfTable;
 	}
 }
+

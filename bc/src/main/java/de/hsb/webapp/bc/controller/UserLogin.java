@@ -74,25 +74,22 @@ public class UserLogin implements Serializable {
 	@PostConstruct
 	private void init() {
 		try {
-			
-			Query query = em.createNamedQuery("User.findByName").setParameter("login", "root").setParameter("password", "12345");
-			query.setMaxResults(1); // allows a new login process for the same user
+
+			Query query = em.createNamedQuery("User.findByName").setParameter("login", "root").setParameter("password",
+					"12345");
+			query.setMaxResults(1); // allows a new login process for the same
+									// user
 									// after he logs out
-			if (query.getResultList().isEmpty()) 
-			{
+			if (query.getResultList().isEmpty()) {
 				System.out.println("Nutzer erstellen");
 				utx.begin();
 				em.persist(new User("User", "Super", "12345", "root", true, true));
 				em.persist(new User("User", "Guest", "67890", "guest", true));
-				utx.commit();	
-			}
-			else
-			{
+				utx.commit();
+			} else {
 				System.out.println("Nutzer gefunden , keine Nutzer hinzugefuegt");
 			}
-			
-			
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -126,14 +123,19 @@ public class UserLogin implements Serializable {
 				e.printStackTrace();
 			}
 			return "login";
-		} else if (!(loggedInUser = (User) query.getSingleResult()).isActivated()) { // user
-																						// is
-																						// not
-																						// activated
+		} else if (!((User) query.getSingleResult()).isActivated()) { // user is
+																		// not
+																		// activated
 			msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Your account is not activated!");
 			FacesContext.getCurrentInstance().addMessage(null, msg);
+			try {
+				utx.commit();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 			return "login";
 		} else {
+			loggedInUser = (User) query.getSingleResult();
 			try {
 				utx.commit();
 			} catch (Exception e) {
@@ -161,20 +163,31 @@ public class UserLogin implements Serializable {
 			e.printStackTrace();
 		}
 
-		// loggedInUser = new User();
 		// Invoke "PostConstruct"
 		FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
 		return "login?faces-redirect=true";
 
 	}
-	
-	public void checkUserLogin()
-	{
+
+	/**
+	 * Provides that a non logged in user can visit a website by typing the URL
+	 * to a xhtml page directly into the browser. And provides that a user can
+	 * visit the user management page and provides that an admin can visit the
+	 * user profile page.
+	 */
+	public void checkUserLogin() {
 		FacesContext context = FacesContext.getCurrentInstance();
-		if (loggedInUser.getLogin() == null )
-		{	
-			context.getApplication().getNavigationHandler().handleNavigation(context, null, "login.jsf?faces-redirect=true");
-		}		
+		String xhtmlPage = context.getExternalContext().getRequestServletPath();
+		if (loggedInUser.getLogin() == null) {
+			context.getApplication().getNavigationHandler().handleNavigation(context, null,
+					"login?faces-redirect=true");
+		} else if (xhtmlPage.equals("/showUser.jsf") && !loggedInUser.isAdmin()) {
+			context.getApplication().getNavigationHandler().handleNavigation(context, null,
+					"mainSite?faces-redirect=true");
+		} else if (xhtmlPage.equals("/userProfile.jsf") && loggedInUser.isAdmin()) {
+			context.getApplication().getNavigationHandler().handleNavigation(context, null,
+					"mainSite?faces-redirect=true");
+		}
 	}
 
 	/**

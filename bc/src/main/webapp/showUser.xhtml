@@ -23,6 +23,8 @@
 			<p:graphicImage value="resources/bc_img.jpg" />
 			<p:growl id="messages" showDetail="true" autoUpdate="true" />
 			<h:form id="form">
+				<p:defaultCommand target="save_user" />
+				<p:focus for="firstname" />
 				<p:menubar>
 					<p:menuitem value="#{msg.menu_home}" action="mainSite"
 						icon="fa fa-home" immediate="true" />
@@ -155,7 +157,7 @@
 						<p:password id="repeatpassword" required="true" redisplay="true"
 							value="#{userAndShelvesHandler.rememberUser.password}" />
 						<f:facet name="footer">
-							<p:commandButton
+							<p:commandButton id="save_user"
 								action="#{userAndShelvesHandler.saveUser(Error, msg.addUser_msg_loginExists)}"
 								value="#{msg.addUser_button_save}" icon="fa fa-save"
 								update="@form" />

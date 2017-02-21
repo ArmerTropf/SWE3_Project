@@ -17,7 +17,8 @@
 </h:head>
 <h:body>
 	<div id="content" class="content">
-	<f:event listener="#{userLoginHandler.checkUserLogin}" type="preRenderView" />
+		<f:event listener="#{userLoginHandler.checkUserLogin}"
+			type="preRenderView" />
 		<ui:insert name="content">
 			<f:event
 				listener="#{userAndShelvesHandler.setRememberUser(userLoginHandler.loggedInUser)}"
@@ -26,7 +27,8 @@
 			<p:growl id="messages" showDetail="true" autoUpdate="true" />
 
 			<h:form id="form">
-
+				<p:defaultCommand target="save_user" />
+				<p:focus for="firstname" />
 				<p:menubar>
 					<p:menuitem value="#{msg.menu_home}" action="mainSite"
 						icon="fa fa-home" immediate="true" />
@@ -93,9 +95,6 @@
 						<p:outputLabel value="#{msg.addUser_loginname}" for="login" />
 						<p:inputText disabled="true" id="login" required="true"
 							value="#{userAndShelvesHandler.rememberUser.login}" />
-						<p:outputLabel value="#{msg.addUser_activated}" for="activated" />
-						<p:selectBooleanCheckbox disabled="true" id="activated"
-							value="#{userAndShelvesHandler.rememberUser.activated}" />
 						<p:outputLabel value="#{msg.addUser_password}" for="password" />
 						<p:password id="password" match="repeatpassword"
 							promptLabel="#{msg.addUser_msg_passwordPrompt}"
@@ -109,7 +108,7 @@
 						<p:password id="repeatpassword" required="true"
 							value="#{userAndShelvesHandler.rememberUser.password}" />
 						<f:facet name="footer">
-							<p:commandButton
+							<p:commandButton id="save_user"
 								action="#{userAndShelvesHandler.saveUserProfile()}"
 								value="#{msg.addUser_button_save}" icon="fa fa-save"
 								update="@form" />
